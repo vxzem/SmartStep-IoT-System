@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartStep | System Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lexend:wght@700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-dark: #05162e;
+            --gold: #e5c158;
+            --white: #ffffff;
+            --bg-slate: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-slate); color: var(--text-main); display: flex; height: 100vh; }
+
+        /* --- SIDEBAR --- */
+        .sidebar { width: 260px; background: var(--navy-dark); color: white; padding: 30px 20px; display: flex; flex-direction: column; flex-shrink: 0; }
+        .logo { font-family: 'Lexend', sans-serif; color: var(--gold); font-size: 1.5rem; margin-bottom: 40px; }
+        .nav-link { display: block; padding: 12px 15px; text-decoration: none; color: white; opacity: 0.7; border-radius: 8px; transition: 0.3s; font-size: 0.9rem; margin-bottom: 5px; }
+        .nav-link:hover { background: rgba(229, 193, 88, 0.1); opacity: 1; color: var(--gold); }
+        .nav-link.active { background: rgba(229, 193, 88, 0.15); opacity: 1; color: var(--gold); font-weight: 600; }
+        .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); margin: 20px 0 8px; padding: 0 5px; }
+
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn { display: flex; align-items: center; gap: 8px; padding: 11px 15px; color: rgba(255,255,255,0.4); cursor: pointer; border-radius: 8px; font-size: 0.85rem; transition: 0.2s; }
+        .logout-btn:hover { color: var(--danger); background: rgba(239,68,68,0.08); }
+        .node-info { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; opacity: 0.35; margin-top: 12px; padding: 0 5px; }
+
+        /* --- MAIN CONTENT --- */
+        .main-content { flex: 1; overflow-y: auto; padding: 40px; }
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            min-width: 245px;
+            transition: all 0.25s ease;
+        }
+
+        .user-badge:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.09);
+            border-color: var(--gold);
+            transform: translateY(-1px);
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--navy-dark);
+            font-size: 1rem;
+            flex-shrink: 0;
+            box-shadow: 0 3px 8px rgba(229, 193, 88, 0.4);
+        }
+
+        .user-name {
+            font-size: 0.96rem;
+            font-weight: 600;
+            color: var(--navy-dark);        /* Dark text for visibility */
+            line-height: 1.25;
+            margin: 0;
+        }
+
+        .user-role {
+            font-size: 0.74rem;
+            color: var(--gold);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            letter-spacing: 0.6px;
+            margin: 0;
+        }
+        .top-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            gap: 20px;
+        }
+
+        .page-header-content {
+            flex: 1;
+        }
+
+        .page-header-content h1 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.7rem;
+            color: var(--navy-dark);
+            margin: 0 0 4px 0;
+        }
+
+        .page-header-content p {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin: 0;
+        }
+
+        .right-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .settings-container { max-width: 900px; display: grid; grid-template-columns: 1fr; gap: 24px; }
+        .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 30px; }
+        .card-title { font-size: 0.9rem; font-weight: 700; color: var(--navy-dark); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+
+        /* --- SETTINGS STYLES --- */
+        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f1f5f9; }
+        .setting-row:last-child { border: none; }
+        .setting-info h4 { font-size: 0.95rem; color: var(--navy-dark); margin-bottom: 4px; }
+        .setting-info p { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* Custom Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--navy-dark); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        select, .btn { padding: 10px 16px; border-radius: 8px; font-family: 'Inter'; font-size: 0.85rem; border: 1px solid var(--border); }
+        .btn { cursor: pointer; font-weight: 700; transition: 0.2s; border: none; }
+        .btn-gold { background: var(--gold); color: var(--navy-dark); }
+        .btn-outline { background: transparent; border: 2px solid var(--navy-dark); color: var(--navy-dark); }
+        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .backup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px; }
+        .backup-option { border: 1px solid var(--border); padding: 15px; border-radius: 10px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">⚡ SmartStep</div>
+        <div class="nav-section">Main</div>
+        <nav>
+            <a href="dash.html" class="nav-link">Live Monitoring</a>
+            <a href="analytics.html" class="nav-link">Energy Analytics</a>
+            <a href="maintenance.html" class="nav-link">System Maintenance</a>
+            <a href="security.html" class="nav-link active">System Settings</a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="logout-btn" onclick="window.location.href='login.html'">
+                <span>🚪</span> Sign Out
+            </div>
+            <div class="node-info">Node: ESP8266-031<br>Ver: 1.3.0-PRO · Admin Mode</div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <p style="color: var(--gold); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;"></p>
+            <h1></h1>
+        </header>
+
+           <div class="top-header-row">
+
+        <!-- LEFT: Page Title & Description -->
+        <div class="page-header-content">
+            <p style="color:var(--gold);font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;">
+               System Preference Configuration · Section 4
+            </p>
+            <h1>Global System Preferences</h1>
+            <p> </p>
+        </div>
+
+        <!-- RIGHT: Live Pill + User Badge -->
+        <div class="right-header">
+            <div class="user-badge">
+                <div class="avatar">CM</div>
+                <div>
+                    <div class="user-name">Cheryl Magalso</div>
+                    <div class="user-role">ADMIN · ACTIVE</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+        <div class="settings-container">
+            
+            <section class="card">
+                <h2 class="card-title">1.5.1 User Interface & Units</h2>
+                
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <h4>Measurement Units</h4>
+                        <p>Display energy in Watts (W) or Joules (J).</p>
+                    </div>
+                    <select>
+                        <option>Watts (Standard)</option>
+                        <option>Joules (Scientific)</option>
+                    </select>
+                </div>
+
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <h4>Dark Mode</h4>
+                        <p>Adjust dashboard theme for low-light environments.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-row">
+                    <div class="setting-info">
+                        <h4>Refresh Rate</h4>
+                        <p>How often the ESP8266 pushes data to this UI.</p>
+                    </div>
+                    <select>
+                        <option>Real-time (1s)</option>
+                        <option selected>Balanced (5s)</option>
+                        <option>Power Save (30s)</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2 class="card-title">1.5.2 Data Backup & Export</h2>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
+                    Ensure your harvesting history is safe. Choose your preferred backup method.
+                </p>
+
+                <div class="backup-grid">
+                    <div class="backup-option">
+                        <h4 style="margin-bottom: 10px;">Cloud Backup</h4>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 15px;">Auto-sync data to Firebase/SQL daily.</p>
+                        <button class="btn btn-gold" onclick="alert('Cloud Sync Started')">Sync Now</button>
+                    </div>
+                    <div class="backup-option">
+                        <h4 style="margin-bottom: 10px;">Local Export</h4>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 15px;">Download full history as a CSV file.</p>
+                        <button class="btn btn-outline" onclick="alert('Generating CSV...')">Download .CSV</button>
+                    </div>
+                </div>
+
+                <div class="setting-row" style="margin-top: 20px;">
+                    <div class="setting-info">
+                        <h4>Auto-Backup</h4>
+                        <p>Automatically backup every 24 hours.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </section>
+
+            <div style="text-align: right;">
+                <button class="btn btn-gold" style="padding: 15px 40px; font-size: 1rem;" onclick="alert('Settings Saved Successfully!')">Save All Preferences</button>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartStep | Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lexend:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-dark: #05162e;
+            --gold: #e5c158;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --text-muted: #94a3b8;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+       
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--navy-dark);
+            background-image: radial-gradient(circle at 15% 15%, rgba(229, 193, 88, 0.06) 0%, transparent 45%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: var(--white);
+            overflow: hidden;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 500px;
+            height: 580px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 2px solid var(--gold);
+            border-radius: 20px;
+            padding: 50px 45px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+        }
+
+        .logo-area { text-align: center; margin-bottom: 40px; }
+        .logo-area h1 { 
+            font-family: 'Lexend', sans-serif; 
+            font-size: 2.6rem; 
+            color: var(--gold); 
+            margin-bottom: 8px;
+        }
+        .logo-area p { 
+            font-size: 0.82rem; 
+            color: var(--text-muted); 
+            text-transform: uppercase; 
+            letter-spacing: 3px; 
+        }
+
+        .role-switch {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+        }
+        .role-btn {
+            flex: 1; 
+            padding: 12px; 
+            border: none; 
+            border-radius: 7px;
+            background: transparent; 
+            color: var(--text-muted);
+            font-weight: 700; 
+            font-size: 0.82rem; 
+            cursor: pointer;
+        }
+        .role-btn.active { 
+            background: var(--gold); 
+            color: var(--navy-dark); 
+        }
+
+        .input-group { margin-bottom: 28px; }
+        .input-group label {
+            display: block; 
+            font-size: 0.72rem; 
+            font-weight: 700;
+            color: var(--gold); 
+            margin-bottom: 8px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .input-group input {
+            width: 100%; 
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px; 
+            padding: 15px; 
+            color: white; 
+            font-size: 1rem;
+        }
+        .input-group input:focus { 
+            border-color: var(--gold); 
+            outline: none; 
+            background: rgba(255, 255, 255, 0.12); 
+        }
+
+        .btn-main {
+            width: 100%; 
+            padding: 16px; 
+            background: var(--gold);
+            color: var(--navy-dark); 
+            border: none; 
+            border-radius: 10px;
+            font-weight: 800; 
+            font-size: 1.05rem; 
+            cursor: pointer;
+            margin-top: 10px;
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+        }
+
+        .footer-link { 
+            text-align: center; 
+            margin-top: 40px; 
+            font-size: 0.92rem; 
+            color: var(--text-muted); 
+        }
+        .footer-link span { 
+            color: var(--gold); 
+            cursor: pointer; 
+            font-weight: 700; 
+            text-decoration: underline; 
+        }
+         .back-link {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.85rem;
+            opacity: 0.6;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+            color: var(--gold);
+        }
+    </style>
+</head>
+<body>
+     <a href="landing.html" class="back-link">← Return to Portal</a>
+    <div class="auth-card">
+        <header class="logo-area">
+            <h1>SmartStep</h1>
+            <p>Access Portal</p>
+        </header>
+
+        <div class="form-content">
+        
+           
+            <form id="loginForm">
+                <div class="input-group">
+                    <label id="role-label">Admin Email</label>
+                    <input type="email" id="email" placeholder="email@smartstep.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+
+                <div id="errorMsg" class="error-msg">
+                    Invalid email or password. Please try again.
+                </div>
+
+                <button type="submit" class="btn-main">Sign In</button>
+            </form>
+           
+            <p class="footer-link">New operator? <span onclick="window.location.href='register.html'">Create Account</span></p>
+        </div>
+    </div>
+
+    <script>
+        function setRole(role, btn) {
+            document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('role-label').innerText = role + " Email";
+        }
+
+        // ==================== LOGIN FUNCTIONALITY ====================
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const password = document.getElementById('password').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+
+            // Hide previous error
+            errorMsg.style.display = 'none';
+
+            // Check credentials
+            if (password === "smartstep") {
+                if (email === "cheryl@gmail.com") {
+                    // Admin login
+                    window.location.href = "dash.html";        // or admin-dash.html
+                    return;
+                }
+                else if (email === "rona@gmail.com") {
+                    // User login
+                    window.location.href = "user-dash.html";
+                    return;
+                }
+            }
+
+            // Login failed
+            errorMsg.style.display = 'block';
+        });
+    </script>
+</body>
+</html>

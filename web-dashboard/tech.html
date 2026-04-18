@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technology | SmartStep Engineering</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Lexend:wght@700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-dark: #05162e;
+            --navy-footer: #0a192f;
+            --gold: #e5c158;
+            --white: #ffffff;
+            --text-main: #1a202c;
+            --text-muted: #718096;
+            --bg-light: #f8fafc;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--white); color: var(--text-main); line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* --- UNIFORM HEADER --- */
+        header { background-color: var(--navy-dark); padding: 16px 0; position: sticky; top: 0; z-index: 1000; }
+        nav { display: flex; justify-content: space-between; align-items: center; }
+        .logo { color: var(--gold); font-weight: 700; font-size: 1.4rem; text-decoration: none; display: flex; align-items: center; gap: 8px; font-family: 'Lexend', sans-serif; }
+        .nav-links { display: flex; list-style: none; gap: 32px; }
+        .nav-links a { color: var(--white); text-decoration: none; font-size: 0.9rem; opacity: 0.8; transition: 0.3s; }
+        .nav-links a:hover { opacity: 1; color: var(--gold); }
+        .btn-login { background-color: var(--gold); color: var(--navy-dark); padding: 10px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: 0.3s; }
+        .btn-login:hover { box-shadow: 0 4px 12px rgba(229, 193, 88, 0.3); }
+
+        /* --- TECHNOLOGY HERO --- */
+        .tech-hero {
+            position: relative;
+            background: linear-gradient(rgba(5, 22, 46, 0.75), rgba(5, 22, 46, 0.75)), 
+                        url('https://images.unsplash.com/photo-1581092162384-8987c1d64718?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 0;
+            text-align: center;
+            color: var(--white);
+            border-bottom: 4px solid var(--gold);
+        }
+        .tech-hero h1 { font-family: 'Lexend', sans-serif; font-size: 3.5rem; color: var(--gold); text-transform: uppercase; letter-spacing: 3px; }
+        .tech-hero p { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; opacity: 0.9; margin-top: 10px; letter-spacing: 2px; }
+
+        /* --- HARDWARE SECTION --- */
+        .hardware-section { padding: 100px 0; }
+        .section-title { text-align: center; margin-bottom: 60px; }
+        .section-title h2 { font-family: 'Lexend', sans-serif; font-size: 2.5rem; color: var(--navy-dark); }
+        .hardware-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .hw-card {
+            background: var(--white);
+            padding: 45px 35px;
+            border-radius: 20px;
+            border: 1px solid #edf2f7;
+            text-align: center;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+        }
+        .hw-card:hover { transform: translateY(-12px); border-color: var(--gold); box-shadow: 0 25px 50px rgba(5, 22, 46, 0.08); }
+        .hw-icon { width: 60px; height: 60px; background: #fffcf0; border-radius: 12px; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1.5rem; font-weight: bold; border: 1px solid rgba(229, 193, 88, 0.2); }
+        .hw-card h3 { font-family: 'Lexend', sans-serif; color: var(--navy-dark); margin-bottom: 15px; }
+        .hw-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+        /* --- DIAGRAM SECTION --- */
+        .diagram-outer { padding: 100px 0; background: var(--bg-light); }
+        .diagram-container { background: var(--navy-dark); border-radius: 30px; padding: 60px; border: 1px solid var(--gold); text-align: center; }
+
+        /* --- FLOWCHART SECTION --- */
+        .flow-section { padding: 100px 0; text-align: center; }
+        .flow-wrapper { display: flex; justify-content: space-between; align-items: center; margin-top: 60px; }
+        .step-num { width: 60px; height: 60px; background: var(--navy-dark); color: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-weight: 700; border: 2px solid var(--gold); }
+
+        /* --- UNIFORM FOOTER --- */
+        footer { background-color: var(--navy-footer); padding: 80px 0 30px; color: var(--white); }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
+        .footer-logo h4 { color: var(--gold); font-size: 1.5rem; margin-bottom: 16px; font-family: 'Lexend', sans-serif; }
+        .footer-col h5 { margin-bottom: 24px; font-size: 1rem; color: var(--white); }
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 12px; }
+        .footer-col a { color: var(--white); text-decoration: none; opacity: 0.6; font-size: 0.9rem; transition: 0.3s; }
+        .footer-col a:hover { opacity: 1; color: var(--gold); }
+        .copyright { text-align: center; padding-top: 30px; margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; opacity: 0.5; }
+
+        @media (max-width: 968px) {
+            .hardware-grid, .flow-wrapper, .footer-grid { grid-template-columns: 1fr; flex-direction: column; gap: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="landing.html" class="logo">⚡ SmartStep</a>
+                <ul class="nav-links">
+                    <li><a href="landing.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="tech.html">Technology</a></li>
+                    <li><a href="research.html">Research</a></li>
+                </ul>
+                <a href="login.html" class="btn-login">Login</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="tech-hero">
+        <div class="container">
+            <h1>Our Technology</h1>
+            <p>// SYSTEM_ARCH_REV_02 // HARDWARE OVERVIEW</p>
+        </div>
+    </section>
+
+    <section class="hardware-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Hardware Infrastructure</h2>
+                <p>The engineering core of our piezoelectric energy system.</p>
+            </div>
+            <div class="hardware-grid">
+                <div class="hw-card">
+                    <div class="hw-icon">01</div>
+                    <h3>PZT Array</h3>
+                    <p>High-sensitivity PZT discs that harvest mechanical deflection and convert it into high-frequency AC spikes.</p>
+                </div>
+                <div class="hw-card">
+                    <div class="hw-icon">02</div>
+                    <h3>ESP8266 Logic</h3>
+                    <p>Custom IoT gateway utilizing Deep Sleep cycles to reduce energy standby consumption by 80%.</p>
+                </div>
+                <div class="hw-card">
+                    <div class="hw-icon">03</div>
+                    <h3>BMS Systems</h3>
+                    <p>Intelligent management using TP4056 and INA219 sensors for real-time battery health and monitoring.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="diagram-outer">
+        <div class="container">
+            <div class="diagram-container">
+                <h4 style="color: var(--gold); font-family: 'Lexend'; margin-bottom: 30px;">Technical Mat Assembly</h4>
+                <img src="https://via.placeholder.com/1000x500/05162e/e5c158?text=Exploded+View+Technical+Diagram" alt="Assembly" style="width: 100%; border-radius: 15px;">
+            </div>
+        </div>
+    </section>
+
+    <section class="flow-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Circuit Flow</h2>
+                <p>Visualizing the path from mechanical energy to digital power.</p>
+            </div>
+            <div class="flow-wrapper">
+                <div class="flow-step"><div class="step-num">01</div><h4 style="font-family: 'Lexend'; font-size: 0.9rem;">Footstep</h4></div>
+                <div style="color:var(--gold); font-weight: bold;">→</div>
+                <div class="flow-step"><div class="step-num">02</div><h4 style="font-family: 'Lexend'; font-size: 0.9rem;">AC Spike</h4></div>
+                <div style="color:var(--gold); font-weight: bold;">→</div>
+                <div class="flow-step"><div class="step-num">03</div><h4 style="font-family: 'Lexend'; font-size: 0.9rem;">Rectifier</h4></div>
+                <div style="color:var(--gold); font-weight: bold;">→</div>
+                <div class="flow-step"><div class="step-num">04</div><h4 style="font-family: 'Lexend'; font-size: 0.9rem;">DC Storage</h4></div>
+                <div style="color:var(--gold); font-weight: bold;">→</div>
+                <div class="flow-step"><div class="step-num">05</div><h4 style="font-family: 'Lexend'; font-size: 0.9rem;">USB Output</h4></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-grid">
+            <div class="footer-logo">
+                <h4>⚡ SmartStep</h4>
+                <p>Powering remote communities through innovation.</p>
+            </div>
+            <div class="footer-col">
+                <h5>Company</h5>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="tech.html">Technology</a></li>
+                    <li><a href="research.html">Research</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>Resources</h5>
+                <ul>
+                    <li><a href="#">White Papers</a></li>
+                    <li><a href="#">BMS Schematics</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>Connect</h5>
+                <ul>
+                    <li><a href="#">LinkedIn</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Facebook</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 SmartStep Engineering. All rights reserved.
+        </div>
+    </footer>
+
+</body>
+</html>

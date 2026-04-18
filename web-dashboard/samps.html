@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartStep | Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lexend:wght@700&display=swap
+" rel="stylesheet">
+    <style>
+        :root {
+            --navy-dark: #05162e;
+            --gold: #e5c158;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --text-muted: #94a3b8;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--navy-dark);
+            background-image: radial-gradient(circle at 15% 15%, rgba(229, 193, 88, 0.06) 0%, transparent 45%);
+            display: flex; 
+            align-items: center;
+            justify-content: center;
+            height: 100vh; 
+            color: var(--white);
+            overflow: hidden;
+        }
+
+        /* --- LOCKED CARD SIZE --- */
+        .auth-card {
+            width: 100%;
+            max-width: 500px; 
+            height: 650px; /* FIXED HEIGHT FOR BOTH */
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 2px solid var(--gold); 
+            border-radius: 20px;
+            padding: 50px 45px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .logo-area { text-align: center; margin-bottom: 30px; }
+        .logo-area h1 { font-family: 'Lexend', sans-serif; font-size: 2.4rem; color: var(--gold); }
+        .logo-area p { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 3px; }
+
+        /* --- FORM CONTAINER --- */
+        .form-content { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+        }
+
+        /* --- LOGIN SPECIFIC SPACING (Wider to fill space) --- */
+        #login-view .input-group { margin-bottom: 35px; }
+        #login-view .role-switch { margin-bottom: 40px; }
+
+        /* --- REGISTER SPECIFIC SPACING (Compact to fit) --- */
+        #register-view .input-group { margin-bottom: 15px; }
+        #register-view h2 { margin-bottom: 20px; }
+
+        /* --- ROLE TOGGLE --- */
+        .role-switch {
+            display: flex;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px;
+            border-radius: 10px;
+        }
+        .role-btn {
+            flex: 1; padding: 12px; border: none; border-radius: 7px;
+            background: transparent; color: var(--text-muted);
+            font-weight: 700; font-size: 0.8rem; cursor: pointer;
+        }
+        .role-btn.active { background: var(--gold); color: var(--navy-dark); }
+
+        /* --- GRID SYSTEM --- */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .span-2 { grid-column: span 2; }
+
+        .input-group { text-align: left; }
+        .input-group label {
+            display: block; font-size: 0.7rem; font-weight: 700;
+            color: var(--gold); margin-bottom: 8px; text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .input-group input {
+            width: 100%; background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px; padding: 14px; color: white; font-size: 0.95rem;
+        }
+        .input-group input:focus { border-color: var(--gold); outline: none; background: rgba(255, 255, 255, 0.12); }
+
+        .btn-main {
+            width: 100%; padding: 16px; background: var(--gold);
+            color: var(--navy-dark); border: none; border-radius: 10px;
+            font-weight: 800; font-size: 1rem; cursor: pointer; margin-top: 15px;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .footer-link { text-align: center; margin-top: 30px; font-size: 0.9rem; color: var(--text-muted); }
+        .footer-link span { color: var(--gold); cursor: pointer; font-weight: 700; text-decoration: underline; }
+
+        .hidden { display: none; }
+        .fade { animation: fadeIn 0.4s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <header class="logo-area">
+            <h1>SmartStep</h1>
+            <p>Access Portal</p>
+        </header>
+
+        <div id="login-view" class="form-content fade">
+            <div class="role-switch">
+                <button class="role-btn active" onclick="setRole('Admin', this)">ADMIN</button>
+                <button class="role-btn" onclick="setRole('User', this)">USER</button>
+            </div>
+            
+            <form action="index.html">
+                <div class="input-group">
+                    <label id="role-label">Admin Email</label>
+                    <input type="email" placeholder="email@smartstep.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-main">Sign In</button>
+            </form>
+            
+            <p class="footer-link">New operator? <span onclick="toggleAuth()">Create Account</span></p>
+        </div>
+
+        <div id="register-view" class="form-content hidden">
+            <h2 style="font-size: 1.1rem; color: var(--gold); text-align: center; text-transform: uppercase; letter-spacing: 1px;">Register Account</h2>
+            
+            <form onsubmit="event.preventDefault(); alert('Account Created!'); toggleAuth();">
+                <div class="grid-2">
+                    <div class="input-group">
+                        <label>First Name</label>
+                        <input type="text" placeholder="First" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Last Name</label>
+                        <input type="text" placeholder="Last" required>
+                    </div>
+                    <div class="input-group span-2">
+                        <label>System ID</label>
+                        <input type="text" placeholder="STP-2026-X" required>
+                    </div>
+                    <div class="input-group span-2">
+                        <label>Email Address</label>
+                        <input type="email" placeholder="name@email.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" placeholder="••••" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Confirm</label>
+                        <input type="password" placeholder="••••" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-main">Register Now</button>
+            </form>
+            
+            <p class="footer-link">Already a member? <span onclick="toggleAuth()">Back to Login</span></p>
+        </div>
+    </div>
+
+    <script>
+        function toggleAuth() {
+            const login = document.getElementById('login-view');
+            const register = document.getElementById('register-view');
+            
+            if (login.classList.contains('hidden')) {
+                login.classList.remove('hidden');
+                login.classList.add('fade');
+                register.classList.add('hidden');
+                register.classList.remove('fade');
+            } else {
+                login.classList.add('hidden');
+                login.classList.remove('fade');
+                register.classList.remove('hidden');
+                register.classList.add('fade');
+            }
+        }
+
+        function setRole(role, btn) {
+            document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('role-label').innerText = role + " Email";
+        }
+    </script>
+</body>
+</html>
