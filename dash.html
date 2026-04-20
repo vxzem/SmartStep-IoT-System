@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartStep | Real-Time Energy Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lexend:wght@700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --navy-dark: #05162e;
+            --gold: #e5c158;
+            --gold-soft: #fcf8e8;
+            --white: #ffffff;
+            --bg-slate: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-slate); color: var(--text-main); display: flex; height: 100vh; }
+
+        /* --- SIDEBAR --- */
+        .sidebar { width: 260px; background: var(--navy-dark); color: white; padding: 30px 20px; display: flex; flex-direction: column; flex-shrink: 0; }
+        .logo { font-family: 'Lexend', sans-serif; color: var(--gold); font-size: 1.5rem; margin-bottom: 40px; }
+        .nav-link { display: block; padding: 12px 15px; text-decoration: none; color: white; opacity: 0.7; border-radius: 8px; transition: 0.3s; font-size: 0.9rem; margin-bottom: 5px; }
+        .nav-link:hover { background: rgba(229, 193, 88, 0.1); opacity: 1; color: var(--gold); }
+        .nav-link.active { background: rgba(229, 193, 88, 0.15); opacity: 1; color: var(--gold); font-weight: 600; }
+        .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); margin: 20px 0 8px; padding: 0 5px; }
+
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn { display: flex; align-items: center; gap: 8px; padding: 11px 15px; color: rgba(255,255,255,0.4); cursor: pointer; border-radius: 8px; font-size: 0.85rem; transition: 0.2s; }
+        .logout-btn:hover { color: var(--danger); background: rgba(239,68,68,0.08); }
+        .node-info { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; opacity: 0.35; margin-top: 12px; padding: 0 5px; }
+
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+            min-width: 245px;
+            transition: all 0.25s ease;
+        }
+
+        .user-badge:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.09);
+            border-color: var(--gold);
+            transform: translateY(-1px);
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--navy-dark);
+            font-size: 1rem;
+            flex-shrink: 0;
+            box-shadow: 0 3px 8px rgba(229, 193, 88, 0.4);
+        }
+
+        .user-name {
+            font-size: 0.96rem;
+            font-weight: 600;
+            color: var(--navy-dark);        /* Dark text for visibility */
+            line-height: 1.25;
+            margin: 0;
+        }
+
+        .user-role {
+            font-size: 0.74rem;
+            color: var(--gold);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 500;
+            letter-spacing: 0.6px;
+            margin: 0;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content { flex: 1; overflow-y: auto; padding: 35px; }
+        /* TOP HEADER ROW - Page Title (Left) | Live Pill + User Badge (Right) */
+        .top-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            gap: 20px;
+        }
+
+        .page-header-content {
+            flex: 1;
+        }
+
+        .page-header-content h1 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.7rem;
+            color: var(--navy-dark);
+            margin: 0 0 4px 0;
+        }
+
+        .page-header-content p {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin: 0;
+        }
+
+        .right-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .live-pill {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            padding: 9px 16px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: livePulse 1.5s infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { opacity:1; transform:scale(1); }
+            50% { opacity:0.5; transform:scale(0.8); }
+        }
+        /* --- DASHBOARD GRID --- */
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px; }
+        .card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 20px; transition: 0.3s; }
+        .card:hover { border-color: var(--gold); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .card-title { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; }
+        .big-stat { font-size: 1.8rem; font-weight: 700; color: var(--navy-dark); }
+        .sub-stat { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--success); }
+
+        /* --- ANALYTICS SECTIONS --- */
+        .row-large { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 25px; }
+        .chart-box { height: 300px; width: 100%; }
+
+        /* --- SENSOR & HARDWARE STATUS --- */
+        .sensor-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+        .sensor-item { background: var(--bg-slate); border-radius: 8px; padding: 12px; text-align: center; border: 1px solid var(--border); }
+        .sensor-item p { font-size: 0.7rem; color: var(--text-muted); }
+        .sensor-val { font-weight: 700; color: var(--navy-dark); }
+
+        /* --- STATUS INDICATORS --- */
+        .indicator { height: 10px; width: 100%; background: #eee; border-radius: 5px; margin-top: 8px; overflow: hidden; }
+        .indicator-fill { height: 100%; background: var(--gold); border-radius: 5px; }
+
+        .health-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-top: 10px; }
+        .health-good { background: #dcfce7; color: #166534; }
+        /* Removes default link styling */
+        .nav-link {
+            display: block;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: white; /* Matches sidebar text */
+            opacity: 0.7;
+            border-radius: 8px;
+            transition: 0.3s;
+            font-size: 0.9rem;
+        }
+
+        /* Hover and Active states */
+        .nav-link:hover, .nav-link.active {
+            background: rgba(229, 193, 88, 0.15); /* Subtle gold tint */
+            color: var(--gold);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+    <div class="logo">⚡ SmartStep</div>
+    <div class="nav-section">Main</div>
+     <nav>
+            <a href="dash.html" class="nav-link active">Live Monitoring</a>
+            <a href="analytics.html" class="nav-link">Energy Analytics</a>
+            <a href="maintenance.html" class="nav-link ">System Maintenance</a>
+            <a href="security.html" class="nav-link">System Settings</a>
+        </nav>
+    <div class="sidebar-footer">
+            <div class="logout-btn" onclick="window.location.href='login.html'">
+                <span>🚪</span> Sign Out
+            </div>
+            <div class="node-info">Node: ESP8266-031<br>Ver: 1.3.0-PRO · Admin Mode</div>
+        </div>
+</aside>
+
+    <main class="main-content">
+           <div class="top-header-row">
+
+            <!-- LEFT: Page Title & Description -->
+            <div class="page-header-content">
+                <p style="color:var(--gold);font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;">
+                    Administration Dashboard · Section 1
+                </p>
+                <h1>ESP8266 Gateway Dashboard</h1>
+                <p>Real-time piezoelectric harvesting metrics</p>
+            </div>
+
+            <!-- RIGHT: Live Pill + User Badge -->
+            <div class="right-header">
+                <div class="live-pill">
+                    <div class="live-dot"></div> 
+                    Live · Updates every 5s
+                </div>
+                
+                <div class="user-badge">
+                    <div class="avatar">CM</div>
+                    <div>
+                        <div class="user-name">Cheryl Magalso</div>
+                        <div class="user-role">ADMIN · ACTIVE</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <p class="card-title">Battery Voltage (1.2.2)</p>
+                <div class="big-stat">12.6V</div>
+                <div class="indicator"><div class="indicator-fill" style="width: 85%;"></div></div>
+            </div>
+            <div class="card">
+                <p class="card-title">Main SoC (1.2.2)</p>
+                <div class="big-stat">88.4%</div>
+                <div class="sub-stat">+1.2% harvested</div>
+            </div>
+            <div class="card">
+                <p class="card-title">Today's Steps (1.2.4)</p>
+                <div class="big-stat">4,821</div>
+                <div class="sub-stat" style="color: var(--navy-dark)">Live: 1.2 steps/sec</div>
+            </div>
+            <div class="card">
+                <p class="card-title">5V Charging Port (1.2.5)</p>
+                <div class="big-stat" style="color: var(--success)">ACTIVE</div>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">Device: Phone Connected</p>
+            </div>
+        </div>
+
+        <div class="row-large">
+            <div class="card">
+                <p class="card-title">Energy Analytics (1.2.3): Harvested vs Parasitic Draw</p>
+                <div class="chart-box">
+                    <canvas id="energyChart"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <p class="card-title">Sensor SoC (1.2.1)</p>
+                <div class="sensor-list">
+                    <div class="sensor-item">
+                        <p>Tile 01</p>
+                        <div class="sensor-val">94%</div>
+                    </div>
+                    <div class="sensor-item">
+                        <p>Tile 02</p>
+                        <div class="sensor-val">89%</div>
+                    </div>
+                    <div class="sensor-item">
+                        <p>Tile 03</p>
+                        <div class="sensor-val">91%</div>
+                    </div>
+                    <div class="sensor-item">
+                        <p>Tile 04</p>
+                        <div class="sensor-val" style="color: var(--danger)">76%</div>
+                    </div>
+                </div>
+                <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border);">
+                <p class="card-title">Hardware Health (1.2.6)</p>
+                <div style="text-align: center;">
+                    <p style="font-size: 0.85rem;">Mat Condition</p>
+                    <span class="health-badge health-good">OPTIMAL PERFORMANCE</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Chart.js for Energy Analytics (Harvested vs Loss)
+        const ctx = document.getElementById('energyChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['10:00', '10:15', '10:30', '10:45', '11:00', '11:15'],
+                datasets: [{
+                    label: 'Energy Harvested (mW)',
+                    data: [450, 600, 800, 550, 900, 1100],
+                    borderColor: '#e5c158',
+                    backgroundColor: 'rgba(229, 193, 88, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'Parasitic Draw (mW)',
+                    data: [120, 120, 130, 120, 125, 120],
+                    borderColor: '#05162e',
+                    borderDash: [5, 5],
+                    fill: false,
+                    tension: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

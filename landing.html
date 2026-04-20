@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartStep | Renewable Energy</title>
+    <style>
+        /* --- CSS VARIABLES --- */
+        :root {
+            --navy-dark: #05162e;
+            --navy-footer: #0a192f;
+            --gold: #e5c158;
+            --text-main: #1a202c;
+            --text-muted: #718096;
+            --white: #ffffff;
+            --bg-light: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* --- NAVIGATION --- */
+        header {
+            background-color: var(--navy-dark);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: var(--gold);
+            font-weight: bold;
+            font-size: 1.4rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Added Logo Hover Style */
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            transition: all 0.3s ease; /* Enhanced transition */
+        }
+
+        /* Updated Hover Style to match About Page */
+        .nav-links a:hover { 
+            opacity: 1; 
+            color: var(--gold);
+        }
+
+        .btn-login {
+            background-color: var(--gold);
+            color: var(--navy-dark);
+            padding: 10px 24px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-login:hover {
+            background-color: #f0d481;
+            transform: translateY(-2px);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            align-items: center;
+            padding: 100px 0;
+            gap: 60px;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            color: var(--navy-dark);
+            margin-bottom: 20px;
+        }
+
+        .hero-content p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .btn-gold {
+            background-color: var(--gold);
+            color: var(--navy-dark);
+            padding: 14px 32px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s ease;
+        }
+
+        .btn-gold:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--navy-dark);
+            color: var(--navy-dark);
+            padding: 14px 32px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s ease;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--navy-dark);
+            color: var(--white);
+        }
+
+        .hero-features {
+            display: flex;
+            gap: 32px;
+        }
+
+        .hero-feat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .check-circle {
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .hero-image img {
+            width: 100%;
+            border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+        }
+
+        /* --- FEATURES SECTION --- */
+        .features-section {
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .features-section h2 {
+            font-size: 2.8rem;
+            color: var(--navy-dark);
+            margin-bottom: 16px;
+        }
+
+        .feature-subtitle {
+            max-width: 600px;
+            margin: 0 auto 60px;
+            color: var(--text-muted);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: #fff;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: left;
+            border: 1px solid #f0f4f8;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feat-icon {
+            background: #fffcf0;
+            width: 54px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 1.5rem;
+            margin-bottom: 24px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 16px;
+            color: var(--navy-dark);
+        }
+
+        .feature-card ul {
+            list-style: none;
+            margin-top: 24px;
+        }
+
+        .feature-card li {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-card li::before {
+            content: "✓";
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        /* --- CTA SECTION --- */
+        .cta-box {
+            background-color: var(--navy-dark);
+            color: var(--white);
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .cta-box h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-box p {
+            margin-bottom: 40px;
+            opacity: 0.8;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--navy-footer);
+            padding: 80px 0 30px;
+            color: var(--white);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .footer-logo h4 {
+            color: var(--gold);
+            font-size: 1.5rem;
+            margin-bottom: 16px;
+        }
+
+        .footer-logo p {
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+
+        .footer-col h5 {
+            margin-bottom: 24px;
+            font-size: 1rem;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 12px;
+        }
+
+        .footer-col a {
+            color: var(--white);
+            text-decoration: none;
+            opacity: 0.6;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .footer-col a:hover { opacity: 1; color: var(--gold); }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.8rem;
+            opacity: 0.5;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 968px) {
+            .hero, .feature-grid, .footer-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero-content h1 { font-size: 2.8rem; }
+            .hero-actions, .hero-features { justify-content: center; }
+            .feature-card { text-align: center; }
+            .feat-icon { margin-left: auto; margin-right: auto; }
+            .feature-card li { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="logo">⚡ SmartStep</a>
+                <ul class="nav-links">
+                    <li><a href="landing.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="tech.html">Technology</a></li>
+                    <li><a href="research.html">Research</a></li>
+                </ul>
+                <a href="login.html" class="btn-login">Login</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="container hero">
+        <div class="hero-content">
+            <h1>Step Into the Future <br> of Renewable Energy</h1>
+            <p>Harness the power of every footstep. Our innovative piezoelectric technology transforms kinetic energy from walking into clean, sustainable electricity for a greener tomorrow.</p>
+            
+            <div class="hero-actions">
+                <a href="login.html" class="btn-gold">Start Now →</a>
+                <a href="about.html" class="btn-outline">Learn More</a>
+            </div>
+
+            <div class="hero-features">
+                <div class="hero-feat">
+                    <span class="check-circle">✓</span> Zero Emissions
+                </div>
+                <div class="hero-feat">
+                    <span class="check-circle">✓</span> Scalable Solution
+                </div>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img src="image/div.png" alt="Piezoelectric Hexagon Tiles">
+        </div>
+    </section>
+
+    <section class="container features-section">
+        <h2>Advanced Technology Features</h2>
+        <p class="feature-subtitle">Discover the cutting-edge innovations that power SmartStep's revolutionary energy harvesting system</p>
+        
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feat-icon">⚡</div>
+                <h3>Direct Piezoelectric Effect</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Our advanced piezoelectric crystals convert mechanical pressure from footsteps directly into electrical energy with industry-leading efficiency.</p>
+                <ul>
+                    <li>Instant energy conversion</li>
+                    <li>Zero emissions technology</li>
+                    <li>High durability materials</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feat-icon">⚙️</div>
+                <h3>Intelligent BMS</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Our Battery Management System optimizes energy storage and distribution with AI-powered algorithms, ensuring maximum longevity.</p>
+                <ul>
+                    <li>Smart load balancing</li>
+                    <li>Predictive maintenance</li>
+                    <li>Extended battery life</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <div class="feat-icon">🌐</div>
+                <h3>IoT Real-Time Monitoring</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Monitor your energy generation and consumption in real-time through our cloud-based IoT platform. Access detailed analytics.</p>
+                <ul>
+                    <li>Live energy dashboard</li>
+                    <li>Mobile app integration</li>
+                    <li>Automated alerts & reports</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-box">
+        <div class="container">
+            <h2>Ready to Transform Your Space?</h2>
+            <p>Join hundreds of forward-thinking organizations already generating clean energy with every step. Get started today and make a lasting impact on the environment.</p>
+            <div class="hero-actions" style="justify-content: center;">
+                <a href="#" class="btn-gold">Request a Demo</a>
+                <a href="#" class="btn-outline" style="border-color: var(--gold); color: var(--gold);">Contact Sales</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-grid">
+            <div class="footer-logo">
+                <h4>⚡ SmartStep</h4>
+                <p>Powering the future, one step at a time.</p>
+            </div>
+            <div class="footer-col">
+                <h5>Company</h5>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>Resources</h5>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Case Studies</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>Connect</h5>
+                <ul>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">LinkedIn</a></li>
+                    <li><a href="#">Facebook</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 SmartStep. All rights reserved.
+        </div>
+    </footer>
+
+</body>
+</html>
