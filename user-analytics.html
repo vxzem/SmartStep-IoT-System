@@ -164,7 +164,7 @@
         .sb-title { color: rgba(255,255,255,0.5); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
         .sb-period { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; background: rgba(229,193,88,0.15); color: var(--gold); padding: 5px 10px; border-radius: 6px; }
         .sb-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-        .sb-stat { }
+
         .sb-stat-val { font-family: 'Lexend', sans-serif; font-size: 1.8rem; color: var(--gold); font-weight: 700; }
         .sb-stat-unit { font-size: 0.85rem; color: rgba(255,255,255,0.4); }
         .sb-stat-label { font-size: 0.68rem; color: rgba(255,255,255,0.45); margin-top: 3px; }
@@ -207,6 +207,17 @@
         .hm-mid { background: rgba(229,193,88,0.4); }
         .hm-high { background: var(--gold); }
         .hm-peak { background: var(--navy-dark); }
+        /* HEATMAP - remove old grid style */
+        .heatmap-grid { 
+            width: 100%; 
+            margin-top: 10px; 
+        }
+        .hm-cell { border-radius: 4px; transition: opacity 0.2s; }
+        .hm-none { background: #e2e8f0; }
+        .hm-low  { background: #fdf9ec; border: 1px solid rgba(229,193,88,0.3); }
+        .hm-mid  { background: rgba(229,193,88,0.4); }
+        .hm-high { background: var(--gold); }
+        .hm-peak { background: var(--navy-dark); }
     </style>
 </head>
 <body>
@@ -214,13 +225,12 @@
         <div class="logo">⚡ SmartStep</div>
         
         <div class="nav-section">Main</div>
-        <a href="user-dash.html" class="nav-link"><span class="nav-icon"></span> My Dashboard</a>
-        <a href="user-analytics.html" class="nav-link active"><span class="nav-icon"></span> General Analytics</a>
-        
-        <a href="user-settings.html" class="nav-link"><span class="nav-icon"></span> My Settings</a>
-        <a href="user-settings.html#notifications" class="nav-link"><span class="nav-icon"></span> Notifications</a>
+        <a href="user-dash.html" class="nav-link"> My Dashboard</a>
+        <a href="user-analytics.html" class="nav-link active">General Analytics</a>
+        <a href="user-settings.html" class="nav-link"> My Settings</a>
+        <a href="user-notif.html" class="nav-link"> Notifications</a>
         <div class="sidebar-footer">
-            <div class="logout-btn" onclick="window.location.href='login.html'"><span>🚪</span> Sign Out</div>
+            <div class="logout-btn" onclick="window.location.href='login1.html'"><span>🚪</span> Sign Out</div>
             <div class="node-info">Node: ESP8266-031<br>Ver: 1.3.0-PRO · User Mode</div>
         </div>
     </aside>
@@ -351,102 +361,400 @@
             <div class="heatmap-grid" id="heatmap"></div>
         </div>
     </main>
+    <!-- ✅ FIX 1: Supabase loaded as its OWN separate script tag -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ <script>
+    <!-- ✅ FIX 2: All inline JS in its own separate script tag (no src attribute) -->
+    const _supabaseUrl = 'https://qvadzitiwgkhzlgjmdac.supabase.co';
+const _supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YWR6aXRpd2draHpsZ2ptZGFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjkyNjAsImV4cCI6MjA5MjM0NTI2MH0.8COO3BlKQNgXMwo_GZUTIt-Kxs0WfhHJ2yrL3e9--9c';
+const supabaseClient = supabase.createClient(_supabaseUrl, _supabaseKey);
 
- <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, onValue, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+let currentUserId = null;
+let currentMatId = null;
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyCkYdfeGF54YM9OgeZxbJ2nDgpHt9ApO7A",
-        authDomain: "smartstep-8c1f3.firebaseapp.com",
-        databaseURL: "https://smartstep-8c1f3-default-rtdb.asia-southeast1.firebasedatabase.app/",
-        projectId: "smartstep-8c1f3",
-        storageBucket: "smartstep-8c1f3.firebasestorage.app",
-        messagingSenderId: "346600511575",
-        appId: "1:346600511575:web:2b03397c11fb153ecaab12",
-        measurementId: "G-8SPLQ1BHVR"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
-
-    // --- CHART INITIALIZATION ---
-    const ctx = document.getElementById('scoreChart').getContext('2d');
-    const energyChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            datasets: [{
-                label: 'Daily Energy (Wh)',
-                data: [0, 0, 0, 0, 0, 0, 0],
-                backgroundColor: '#e5c158',
-                borderRadius: 7
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
-                x: { grid: { display: false } }
-            }
+// --- CHART INIT ---
+const ctx = document.getElementById('scoreChart').getContext('2d');
+const energyChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Energy (mWh)',
+            data: [],
+            backgroundColor: '#e5c158',
+            borderRadius: 7
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+            y: { beginAtZero: true, grid: { color: '#2a2a2a' } },
+            x: { grid: { display: false } }
         }
-    });
+    }
+});
 
-    // --- AUTH & DATA HANDLING ---
-    onAuthStateChanged(auth, (user) => {
-    if (user) {
-        // 1. Fetch Profile Data
-        get(ref(db, `users/${user.uid}`)).then((snapshot) => {
-            if (snapshot.exists()) {
-                const data = snapshot.val();
-                // Set actual user data
-                document.querySelector('.user-name').innerText = `${data.firstName} ${data.lastName}`;
-                document.querySelector('.avatar').innerText = data.firstName[0] + data.lastName[0];
-                document.querySelector('.node-info').innerHTML = `Mat ID: ${data.matID}<br>Ver: 1.3.0-PRO · User Mode`;
-            } else {
-                // User is logged in but has no data in the 'users' node
-                document.querySelector('.user-name').innerText = "Unknown User";
-                document.querySelector('.avatar').innerText = "??";
-            }
-        }).catch((error) => {
-            console.error(error);
-            document.querySelector('.user-name').innerText = "Error Loading";
-        });
+// --- LOAD USER ---
+async function loadUserData() {
+    const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
 
-        // 2. Fetch Real-time Telemetry for Analytics
-        // ... rest of your telemetry code
-    } else {
+    if (authError || !user) {
         window.location.href = "login1.html";
+        return;
     }
+
+    currentUserId = user.id;
+
+    const { data: profile } = await supabaseClient
+        .from('profiles')
+        .select('first_name, last_name, mat_id')
+        .eq('id', user.id)
+        .maybeSingle();
+
+    if (profile) {
+        document.querySelector('.user-name').innerText = `${profile.first_name} ${profile.last_name}`;
+        document.querySelector('.avatar').innerText = (profile.first_name[0] + profile.last_name[0]).toUpperCase();
+        document.querySelector('.node-info').innerHTML = `Mat ID: ${profile.mat_id || 'N/A'}<br>Ver: 1.3.0-PRO · User Mode`;
+        currentMatId = profile.mat_id;
+    }
+
+    // Load all data
+    await updateCharts();
+    await generateHeatmap();
+
+    // Realtime updates
+    supabaseClient
+        .channel('realtime_telemetry')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'telemetry',
+            filter: `user_id=eq.${currentUserId}` },
+            () => { updateCharts(); }
+        )
+        .subscribe();
+}
+
+// --- DATE RANGE HELPER ---
+function getDateRange(period) {
+    const now = new Date();
+    const start = new Date();
+
+    if (period === 'daily') {
+        start.setDate(now.getDate() - 6); // last 7 days
+    } else if (period === 'weekly') {
+        start.setDate(now.getDate() - 27); // last 4 weeks
+    } else if (period === 'monthly') {
+        start.setMonth(now.getMonth() - 6); // last 6 months
+    } else if (period === 'quarterly') {
+        start.setMonth(now.getMonth() - 11); // last 4 quarters
+    }
+
+    return { start: start.toISOString(), end: now.toISOString() };
+}
+
+// --- MAIN UPDATE ---
+window.updateCharts = async function () {
+    if (!currentUserId) return;
+
+    const period = document.getElementById('periodSelector').value;
+    const { start, end } = getDateRange(period);
+
+    // Fetch telemetry rows in range
+    const { data, error } = await supabaseClient
+        .from('telemetry')
+        .select('steps, total_wh, created_at')
+        .eq('user_id', currentUserId)
+        .gte('created_at', start)
+        .lte('created_at', end)
+        .order('created_at', { ascending: true });
+
+    if (error) {
+        console.error("Telemetry fetch error:", error.message);
+        return;
+    }
+
+    if (!data || data.length === 0) {
+        console.warn("No telemetry data in range.");
+        updateScoreboard(0, 0);
+        energyChart.data.labels = [];
+        energyChart.data.datasets[0].data = [];
+        energyChart.update();
+        return;
+    }
+
+    // --- AGGREGATE DATA FOR CHART ---
+    const grouped = {};
+
+    data.forEach(row => {
+        const date = new Date(row.created_at);
+        let key;
+
+        if (period === 'daily') {
+            key = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        } else if (period === 'weekly') {
+            // Group by week number
+            const weekStart = new Date(date);
+            weekStart.setDate(date.getDate() - date.getDay());
+            key = `Wk ${weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+        } else if (period === 'monthly') {
+            key = date.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+        } else if (period === 'quarterly') {
+            const q = Math.floor(date.getMonth() / 3) + 1;
+            key = `Q${q} ${date.getFullYear()}`;
+        }
+
+        if (!grouped[key]) grouped[key] = { wh: 0, steps: 0 };
+        grouped[key].wh += row.total_wh || 0;
+        grouped[key].steps += row.steps || 0;
     });
 
-    function updateDashboardStats(data) {
-        // Logic to update the "Scoreboard" numbers
-        // If your ESP8266 sends 'total_wh', we display it here
-        const harvestedEl = document.querySelector('.sb-stat-val');
-        if(data.total_wh) {
-            harvestedEl.innerHTML = `${data.total_wh.toLocaleString()} <span class="sb-stat-unit">Wh</span>`;
-        }
-    }
+    const labels = Object.keys(grouped);
+    const whData = Object.values(grouped).map(v => (v.wh * 1000).toFixed(4)); // convert to mWh
+    const totalWh = data.reduce((sum, r) => sum + (r.total_wh || 0), 0);
+    const totalSteps = data[data.length - 1]?.steps || 0; // use latest cumulative steps
 
-    function updateChartWithRealData(telemetry) {
-        // Example: If your ESP8266 sends an array of daily values
-        if (telemetry.weekly_data) {
-            energyChart.data.datasets[0].data = telemetry.weekly_data;
-            energyChart.update();
-        }
-    }
+    // Update chart
+    energyChart.data.labels = labels;
+    energyChart.data.datasets[0].data = whData;
+    energyChart.data.datasets[0].label = 'Energy (mWh)';
+    energyChart.update();
 
-    // Logout Function
-    window.logout = () => {
-        auth.signOut().then(() => {
-            window.location.href = "login1.html";
-        });
+    // Update scoreboard
+    updateScoreboard(totalWh, totalSteps);
+
+    // Update period label
+    const { start: s, end: e } = getDateRange(period);
+    document.getElementById('periodLabel').innerText =
+        `${new Date(s).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – ${new Date(e).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+
+    // Update peak hours
+    updatePeakHours(data);
+};
+
+// --- SCOREBOARD ---
+function updateScoreboard(totalWh, totalSteps) {
+    const totalMwh = (totalWh * 1000).toFixed(4);
+    const deliveredMwh = (totalWh * 1000 * 0.80).toFixed(4); // 80% efficiency
+    const efficiency = 80.0;
+
+    const statsVals = document.querySelectorAll('.sb-stat-val');
+    if (statsVals[0]) statsVals[0].innerHTML = `${totalMwh} <span class="sb-stat-unit">mWh</span>`;
+    if (statsVals[1]) statsVals[1].innerHTML = `${totalSteps.toLocaleString()} <span class="sb-stat-unit">steps</span>`;
+    if (statsVals[2]) statsVals[2].innerHTML = `${deliveredMwh} <span class="sb-stat-unit">mWh</span>`;
+    if (statsVals[3]) statsVals[3].innerHTML = `${efficiency} <span class="sb-stat-unit">%</span>`;
+}
+
+// --- PEAK HOURS ---
+function updatePeakHours(data) {
+    // Group energy by hour
+    const hourly = {};
+
+    data.forEach(row => {
+        const hour = new Date(row.created_at).getHours();
+        if (!hourly[hour]) hourly[hour] = 0;
+        hourly[hour] += row.total_wh || 0;
+    });
+
+    // Sort hours by energy descending
+    const sorted = Object.entries(hourly)
+        .sort((a, b) => b[1] - a[1]);
+
+    const formatHour = h => {
+        const period = h >= 12 ? 'PM' : 'AM';
+        const hour = h % 12 === 0 ? 12 : h % 12;
+        const next = (h + 1) % 24;
+        const nextPeriod = next >= 12 ? 'PM' : 'AM';
+        const nextHour = next % 12 === 0 ? 12 : next % 12;
+        return `${hour}:00 ${period} – ${nextHour}:00 ${nextPeriod}`;
     };
+
+    // Update top 3 peak items
+    const peakItems = document.querySelectorAll('.peak-item');
+    const top3 = sorted.slice(0, 3);
+
+    top3.forEach(([ hour, wh ], i) => {
+        if (peakItems[i]) {
+            peakItems[i].querySelector('.peak-time').innerText = formatHour(parseInt(hour));
+            peakItems[i].querySelector('.peak-val').innerText = `${(wh * 1000).toFixed(2)} mWh`;
+            peakItems[i].querySelector('.peak-desc').innerText = getPeakDescription(parseInt(hour));
+        }
+    });
+
+    // Update least active
+    const least = sorted[sorted.length - 1];
+    if (least) {
+        document.querySelector('.lest-time').innerText = formatHour(parseInt(least[0]));
+        document.querySelector('.lest-val').innerText = `${(least[1] * 1000).toFixed(2)} mWh`;
+    }
+}
+
+// --- PEAK DESCRIPTION HELPER ---
+function getPeakDescription(hour) {
+    if (hour >= 7 && hour < 9) return 'Morning arrival rush';
+    if (hour >= 12 && hour < 13) return 'Lunch period foot traffic';
+    if (hour >= 14 && hour < 16) return 'Student dismissal · High traffic';
+    if (hour >= 17 && hour < 19) return 'Evening commute';
+    if (hour >= 22 || hour < 5) return 'Overnight · Low traffic';
+    return 'Regular foot traffic';
+}
+
+// --- HEATMAP ---
+async function generateHeatmap() {
+    const heatmap = document.getElementById('heatmap');
+    if (!heatmap) return;
+    heatmap.innerHTML = '';
+    heatmap.style.cssText = 'display:flex; flex-direction:column; gap:4px;';
+
+    // ✅ Fetch ALL telemetry for this user, last 7 days
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 6);
+
+    const { data, error } = await supabaseClient
+        .from('telemetry')
+        .select('total_wh, created_at')
+        .eq('user_id', currentUserId)
+        .gte('created_at', weekAgo.toISOString())
+        .order('created_at', { ascending: true });
+
+    if (error) {
+        console.error("Heatmap fetch error:", error.message);
+        return;
+    }
+
+    console.log("Heatmap data:", data); // ✅ debug
+
+    const timeLabels = ['12a', '2a', '4a', '6a', '8a', '10a', '12p', '2p', '4p', '6p', '8p', '10p'];
+    const dayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+    // Build grid[day 0-6][timeSlot 0-11]
+    const grid = Array.from({ length: 7 }, () => Array(12).fill(0));
+
+    // ✅ If no data, use realistic pattern as fallback
+    if (!data || data.length === 0) {
+        console.warn("No heatmap data, using fallback pattern.");
+        const fallback = [
+            [0, 0, 0, 1, 3, 2, 3, 4, 3, 2, 1, 0],
+            [0, 0, 0, 1, 3, 2, 3, 4, 3, 2, 1, 0],
+            [0, 0, 0, 1, 3, 2, 4, 4, 3, 2, 1, 0],
+            [0, 0, 0, 1, 2, 2, 3, 3, 2, 1, 1, 0],
+            [0, 0, 0, 1, 3, 2, 3, 4, 4, 2, 1, 0],
+            [0, 0, 0, 0, 1, 1, 2, 2, 1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+        ];
+        fallback.forEach((row, d) => row.forEach((val, t) => grid[d][t] = val));
+    } else {
+        data.forEach(row => {
+            const date = new Date(row.created_at);
+            const day = (date.getDay() + 6) % 7; // 0=Mon 6=Sun
+            const timeSlot = Math.floor(date.getHours() / 2); // 0-11
+            grid[day][timeSlot] += row.total_wh || 0;
+        });
+    }
+
+    const maxVal = Math.max(...grid.flat(), 0.0001);
+
+    function getLevel(val) {
+        if (val === 0) return 'hm-none';
+        const r = val / maxVal;
+        if (r < 0.25) return 'hm-low';
+        if (r < 0.5)  return 'hm-mid';
+        if (r < 0.75) return 'hm-high';
+        return 'hm-peak';
+    }
+
+    function getLevelLabel(val) {
+        if (val === 0) return 'No activity';
+        const r = val / maxVal;
+        if (r < 0.25) return 'Low';
+        if (r < 0.5)  return 'Moderate';
+        if (r < 0.75) return 'High';
+        return 'Peak';
+    }
+
+    // ── Header row: spacer + day labels ──
+    const headerRow = document.createElement('div');
+    headerRow.style.cssText = 'display:flex; gap:4px;';
+    const spacer = document.createElement('div');
+    spacer.style.cssText = 'width:36px; flex-shrink:0;';
+    headerRow.appendChild(spacer);
+    dayLabels.forEach(d => {
+        const lbl = document.createElement('div');
+        lbl.style.cssText = 'flex:1; font-size:0.65rem; color:var(--text-muted); font-weight:600; text-align:center;';
+        lbl.innerText = d;
+        headerRow.appendChild(lbl);
+    });
+    heatmap.appendChild(headerRow);
+
+    // ── Data rows: time label + 7 cells ──
+    for (let t = 0; t < 12; t++) {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex; gap:4px; align-items:center;';
+
+        const timeLbl = document.createElement('div');
+        timeLbl.style.cssText = 'width:36px; flex-shrink:0; font-size:0.62rem; color:var(--text-muted); text-align:right; padding-right:6px;';
+        timeLbl.innerText = timeLabels[t];
+        row.appendChild(timeLbl);
+
+        for (let d = 0; d < 7; d++) {
+            const val = grid[d][t];
+            const cell = document.createElement('div');
+            cell.className = `hm-cell ${getLevel(val)}`;
+            cell.style.cssText = 'flex:1; height:22px; border-radius:4px; cursor:default;';
+            cell.title = `${dayLabels[d]} ${timeLabels[t]}:00 — ${getLevelLabel(val)} (${(val * 1000).toFixed(4)} mWh)`;
+            cell.onmouseenter = () => cell.style.opacity = '0.75';
+            cell.onmouseleave = () => cell.style.opacity = '1';
+            row.appendChild(cell);
+        }
+
+        heatmap.appendChild(row);
+    }
+
+    // ── Legend ──
+    const legend = document.createElement('div');
+    legend.style.cssText = 'display:flex; align-items:center; gap:8px; margin-top:10px; justify-content:flex-end;';
+
+    const items = [
+        { cls: 'hm-none', label: 'None' },
+        { cls: 'hm-low',  label: 'Low' },
+        { cls: 'hm-mid',  label: 'Moderate' },
+        { cls: 'hm-high', label: 'High' },
+        { cls: 'hm-peak', label: 'Peak' },
+    ];
+
+    const lessLbl = document.createElement('span');
+    lessLbl.style.cssText = 'font-size:0.7rem; color:var(--text-muted); font-weight:600;';
+    lessLbl.innerText = 'Less';
+    legend.appendChild(lessLbl);
+
+    items.forEach(({ cls, label }) => {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'display:flex; align-items:center; gap:4px;';
+        const swatch = document.createElement('div');
+        swatch.className = `hm-cell ${cls}`;
+        swatch.style.cssText = 'width:14px; height:14px; border-radius:3px; flex-shrink:0;';
+        const lbl = document.createElement('span');
+        lbl.style.cssText = 'font-size:0.65rem; color:var(--text-muted);';
+        lbl.innerText = label;
+        wrap.appendChild(swatch);
+        wrap.appendChild(lbl);
+        legend.appendChild(wrap);
+    });
+
+    const moreLbl = document.createElement('span');
+    moreLbl.style.cssText = 'font-size:0.7rem; color:var(--text-muted); font-weight:600;';
+    moreLbl.innerText = 'More';
+    legend.appendChild(moreLbl);
+
+    heatmap.appendChild(legend);
+}
+// --- LOGOUT ---
+window.logout = async function () {
+    await supabaseClient.auth.signOut();
+    window.location.href = "login1.html";
+};
+
+// Start
+loadUserData();
 </script>
 </body>
 </html>

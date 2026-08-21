@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartStep | Notifications</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-dark: #05162e;
+            --navy-mid: #0a2447;
+            --gold: #e5c158;
+            --gold-soft: #fdf9ec;
+            --white: #ffffff;
+            --bg-slate: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-slate); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+
+        /* SIDEBAR */
+        .sidebar { width: 260px; background: var(--navy-dark); color: white; padding: 30px 20px; display: flex; flex-direction: column; flex-shrink: 0; }
+        .logo { font-family: 'Lexend', sans-serif; color: var(--gold); font-size: 1.5rem; margin-bottom: 8px; }
+        .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); margin: 20px 0 8px; padding: 0 5px; }
+        .nav-link { display: flex; align-items: center; gap: 10px; padding: 11px 15px; text-decoration: none; color: rgba(255,255,255,0.7); border-radius: 8px; transition: 0.2s; font-size: 0.88rem; margin-bottom: 3px; }
+        .nav-link:hover { background: rgba(229,193,88,0.08); color: white; }
+        .nav-link.active { background: rgba(229,193,88,0.15); color: var(--gold); font-weight: 600; }
+        .nav-icon { font-size: 1rem; width: 18px; text-align: center; }
+        .sidebar-footer { margin-top: auto; }
+        .logout-btn { display: flex; align-items: center; gap: 8px; padding: 11px 15px; color: rgba(255,255,255,0.4); cursor: pointer; border-radius: 8px; font-size: 0.85rem; transition: 0.2s; }
+        .logout-btn:hover { color: var(--danger); background: rgba(239,68,68,0.08); }
+        .node-info { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; opacity: 0.35; margin-top: 12px; padding: 0 5px; }
+        .notif-badge { background: var(--gold); color: var(--navy-dark); border-radius: 10px; padding: 1px 7px; font-size: 0.65rem; margin-left: auto; font-weight: 700; }
+
+        /* MAIN */
+        .main-content { flex: 1; overflow-y: auto; padding: 35px; }
+
+        /* TOP HEADER ROW */
+        .top-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; gap: 20px; }
+        .page-header-content { flex: 1; }
+        .page-header-content h1 { font-family: 'Lexend', sans-serif; font-size: 1.7rem; color: var(--navy-dark); margin: 0 0 4px 0; }
+        .page-header-content p { color: var(--text-muted); font-size: 0.88rem; margin: 0; }
+        .right-header { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+
+        /* USER BADGE */
+        .user-badge { display: flex; align-items: center; gap: 12px; background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 12px 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); transition: all 0.25s ease; }
+        .user-badge:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.09); border-color: var(--gold); transform: translateY(-1px); }
+        .avatar { width: 40px; height: 40px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--navy-dark); font-size: 1rem; flex-shrink: 0; box-shadow: 0 3px 8px rgba(229,193,88,0.4); }
+        .user-name { font-size: 0.96rem; font-weight: 600; color: var(--navy-dark); line-height: 1.25; }
+        .user-role { font-size: 0.74rem; color: var(--gold); font-family: 'JetBrains Mono', monospace; font-weight: 500; letter-spacing: 0.6px; }
+
+        /* FILTER + MARK ALL ROW */
+        .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px; }
+        .filter-tabs { display: flex; gap: 4px; background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 4px; }
+        .filter-btn { padding: 7px 16px; border-radius: 7px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); background: transparent; transition: 0.2s; }
+        .filter-btn.active { background: var(--navy-dark); color: var(--white); }
+        .toolbar-actions { display: flex; gap: 8px; }
+        .btn-sm { padding: 8px 16px; border-radius: 8px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.8rem; cursor: pointer; border: none; transition: 0.2s; }
+        .btn-sm:hover { transform: translateY(-1px); }
+        .btn-sm-outline { background: var(--white); border: 1.5px solid var(--border); color: var(--text-muted); }
+        .btn-sm-outline:hover { border-color: var(--navy-dark); color: var(--text-main); }
+        .btn-sm-gold { background: var(--gold); color: var(--navy-dark); }
+
+        /* LAYOUT: 2-col */
+        .notif-layout { display: grid; grid-template-columns: 1fr 340px; gap: 20px; align-items: start; }
+
+        /* CARD */
+        .card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 24px; }
+        .card-title { font-size: 0.72rem; font-weight: 700; color: var(--navy-dark); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .ct-icon { color: var(--gold); }
+        .card-subtitle { font-size: 0.75rem; color: var(--text-muted); margin-left: auto; font-weight: 500; text-transform: none; letter-spacing: 0; font-family: 'JetBrains Mono', monospace; }
+
+        /* ALERT ITEMS */
+        .alert-list { display: flex; flex-direction: column; gap: 10px; }
+        .alert-item {
+            display: flex;
+            gap: 14px;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--white);
+            transition: all 0.2s;
+            cursor: pointer;
+            position: relative;
+        }
+        .alert-item:hover { border-color: var(--gold); box-shadow: 0 4px 12px rgba(229,193,88,0.1); }
+        .alert-item.unread { background: var(--gold-soft); border-color: rgba(229,193,88,0.45); }
+        .alert-item.hidden { display: none; }
+
+        .alert-icon-wrap {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .icon-warning { background: #fffbeb; }
+        .icon-success { background: #f0fdf4; }
+        .icon-info { background: #eff6ff; }
+        .icon-system { background: #f1f5f9; }
+        .icon-report { background: #fdf4ff; }
+        .icon-peak { background: #fff7ed; }
+
+        .alert-body { flex: 1; min-width: 0; }
+        .alert-body h4 { font-size: 0.88rem; font-weight: 600; color: var(--text-main); margin-bottom: 3px; }
+        .alert-body p { font-size: 0.78rem; color: var(--text-muted); line-height: 1.5; }
+        .alert-meta { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+        .alert-time { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); }
+        .alert-tag {
+            font-size: 0.62rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tag-warning { background: #fef3c7; color: #92400e; }
+        .tag-success { background: #d1fae5; color: #065f46; }
+        .tag-info { background: #dbeafe; color: #1e40af; }
+        .tag-system { background: #f1f5f9; color: #475569; }
+        .tag-report { background: #fae8ff; color: #7e22ce; }
+        .tag-peak { background: #ffedd5; color: #9a3412; }
+
+        .unread-dot { width: 8px; height: 8px; background: var(--gold); border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+
+        /* DISMISS BUTTON */
+        .dismiss-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            opacity: 0;
+            transition: opacity 0.15s;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .dismiss-btn:hover { background: var(--border); color: var(--text-main); }
+        .alert-item:hover .dismiss-btn { opacity: 1; }
+
+        /* EMPTY STATE */
+        .empty-state { text-align: center; padding: 48px 24px; }
+        .empty-state .empty-icon { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.4; }
+        .empty-state p { font-size: 0.88rem; color: var(--text-muted); }
+
+        /* SIDEBAR SUMMARY CARD */
+        .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .summary-row:last-child { border: none; padding-bottom: 0; }
+        .summary-label { display: flex; align-items: center; gap: 10px; font-size: 0.83rem; color: var(--text-main); }
+        .summary-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .summary-count { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 700; color: var(--navy-dark); background: var(--bg-slate); padding: 2px 10px; border-radius: 20px; }
+
+        /* ENABLED SOURCES CARD */
+        .source-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .source-row:last-child { border: none; padding-bottom: 0; }
+        .source-name { font-size: 0.82rem; color: var(--text-main); }
+        .source-status { font-size: 0.7rem; font-weight: 600; display: flex; align-items: center; gap: 5px; }
+        .dot-on { width: 7px; height: 7px; background: var(--success); border-radius: 50%; }
+        .dot-off { width: 7px; height: 7px; background: #cbd5e1; border-radius: 50%; }
+        .on-text { color: var(--success); }
+        .off-text { color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="logo">⚡ SmartStep</div>
+
+        <div class="nav-section">Main</div>
+        <a href="user-dash.html" class="nav-link"> My Dashboard</a>
+        <a href="user-analytics.html" class="nav-link"> General Analytics</a>
+        <a href="user-settings.html" class="nav-link"> My Settings</a>
+        <a href="user-notif.html" class="nav-link active">Notifications </a>
+            <span class="notif-badge" id="sidebar-badge" style="display:none;">0</span>
+        </a>
+
+        <div class="sidebar-footer">
+            <div class="logout-btn" onclick="window.location.href='login1.html'">🚪 Sign Out</div>
+            <div class="node-info">Node: ESP8266-031<br>Ver: 1.3.0-PRO</div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="top-header-row">
+            <div class="page-header-content">
+                <p style="color:var(--gold);font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;">
+                    SmartStep Dashboard
+                </p>
+                <h1>Notifications</h1>
+                <p>Alerts from your active notification preferences</p>
+            </div>
+            <div class="right-header">
+                <div class="user-badge">
+                    <div class="avatar" id="user-initials">--</div>
+                    <div>
+                        <div class="user-name" id="user-full-name">Loading...</div>
+                        <div class="user-role">USER · ACTIVE</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <div class="filter-tabs">
+                <button class="filter-btn active" onclick="filterAlerts('all', this)">All</button>
+                <button class="filter-btn" onclick="filterAlerts('unread', this)">Unread</button>
+            </div>
+            <div class="toolbar-actions">
+                <button class="btn-sm btn-sm-outline" onclick="markAllRead()">Mark all read</button>
+                <button class="btn-sm btn-sm-outline" onclick="dismissAll()">Clear all</button>
+            </div>
+        </div>
+
+        <div class="notif-layout">
+            <div class="card">
+                <div class="card-title">
+                    <span class="ct-icon"></span> Alert Feed
+                    <span class="card-subtitle" id="unread-count-label">0 unread</span>
+                </div>
+
+                <div class="alert-list" id="alert-list"></div>
+
+                <div class="empty-state" id="empty-state">
+                    <div class="empty-icon">🔔</div>
+                    <p>No notifications to show.</p>
+                </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:16px;">
+                <div class="card">
+                    <div class="card-title"> Summary</div>
+                    <div id="summary-container">
+                        </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Preferences</div>
+                    <p style="font-size: 0.85rem; margin-bottom: 12px;">Manage which alerts you receive.</p>
+                    <a href="user-settings.html" style="display:block;text-align:center;font-size:0.8rem;font-weight:600;color:var(--navy-dark);text-decoration:none;padding:9px;border:1.5px solid var(--border);border-radius:8px;">
+                        Manage Settings
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const SUPABASE_URL = 'https://qvadzitiwgkhzlgjmdac.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YWR6aXRpd2draHpsZ2ptZGFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjkyNjAsImV4cCI6MjA5MjM0NTI2MH0.8COO3BlKQNgXMwo_GZUTIt-Kxs0WfhHJ2yrL3e9--9c';
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let currentUser = null;
+
+    async function init() {
+        const { data: { user } } = await db.auth.getUser();
+        if (!user) { window.location.href = 'login1.html'; return; }
+        currentUser = user;
+
+        loadProfile();
+        loadNotifications();
+        setupRealtime();
+    }
+ 
+    // 1. Update Header with your name (Vexze)
+    async function loadProfile() {
+        const { data: profile } = await db.from('profiles').select('*').eq('id', currentUser.id).single();
+        if (profile) {
+            document.querySelector('.user-name').textContent = `${profile.first_name} ${profile.last_name}`;
+            document.querySelector('.avatar').textContent = (profile.first_name[0] + profile.last_name[0]).toUpperCase();
+            document.querySelector('.node-info').innerHTML = `Node: ${profile.mat_id || 'ESP8266-031'}<br>Ver: 1.3.0-PRO · User Mode`;
+        }
+    }
+
+
+    // 2. Fetch and Render Notifications
+    async function loadNotifications() {
+        const { data: notices, error } = await db
+            .from('notifications')
+            .select('*')
+            .eq('user_id', currentUser.id)
+            .order('created_at', { ascending: false });
+
+        const list = document.getElementById('alert-list');
+        list.innerHTML = '';
+
+        if (!notices || notices.length === 0) {
+            document.getElementById('empty-state').style.display = 'block';
+            return;
+        }
+
+        notices.forEach(n => {
+            const timeStr = new Date(n.created_at).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+           
+            
+            const item = document.createElement('div');
+            item.className = `alert-item ${n.is_read ? '' : 'unread'}`;
+            item.dataset.id = n.id;
+            item.dataset.type = n.type;
+            
+            item.innerHTML = `
+                <div class="alert-body">
+                    <h4>${n.title}</h4>
+                    <p>${n.message}</p>
+                    <div class="alert-meta">
+                        <span class="alert-time">${timeStr}</span>
+                        <span class="alert-tag tag-${n.type}">${n.tag || 'System'}</span>
+                    </div>
+                </div>
+                ${n.is_read ? '' : '<div class="unread-dot"></div>'}
+                <button class="dismiss-btn" onclick="dismissAlert(${n.id})">✕</button>
+            `;
+            list.appendChild(item);
+        });
+
+        updateSummaryCounts(notices);
+        updateUnreadCount();
+        checkEmpty();
+    }
+    
+
+    // 3. Action: Mark as Read
+    document.getElementById('alert-list').addEventListener('click', async (e) => {
+        const item = e.target.closest('.alert-item');
+        if (!item || e.target.closest('.dismiss-btn')) return;
+        
+        const id = item.dataset.id;
+        if (item.classList.contains('unread')) {
+            await db.from('notifications').update({ is_read: true }).eq('id', id);
+            item.classList.remove('unread');
+            if (item.querySelector('.unread-dot')) item.querySelector('.unread-dot').remove();
+            updateUnreadCount();
+        }
+    });
+
+    // 4. Action: Dismiss/Delete
+    async function dismissAlert(id) {
+        const el = document.querySelector(`.alert-item[data-id="${id}"]`);
+        await db.from('notifications').delete().eq('id', id);
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(20px)';
+        setTimeout(() => {
+            el.remove();
+            updateUnreadCount();
+            checkEmpty();
+        }, 250);
+    }
+
+    // 5. Action: Mark All Read
+    async function markAllRead() {
+        await db.from('notifications').update({ is_read: true }).eq('user_id', currentUser.id).eq('is_read', false);
+        loadNotifications();
+    }
+
+    // Helpers
+    function updateUnreadCount() {
+        const count = document.querySelectorAll('.alert-item.unread').length;
+        document.getElementById('unread-count-label').textContent = count > 0 ? `${count} unread` : 'all read';
+        document.getElementById('sidebar-badge').textContent = count;
+        document.getElementById('sidebar-badge').style.display = count > 0 ? 'flex' : 'none';
+    }
+
+    function updateSummaryCounts(notices) {
+        const types = ['warning', 'info', 'report', 'system', 'peak'];
+        types.forEach(t => {
+            const count = notices.filter(n => n.type === t).length;
+            const el = document.getElementById(`count-${t}`);
+            if (el) el.textContent = count;
+        });
+    }
+
+    function checkEmpty() {
+        const visible = document.querySelectorAll('.alert-item').length;
+        document.getElementById('empty-state').style.display = visible === 0 ? 'block' : 'none';
+    }
+
+    function setupRealtime() {
+        db.channel('notif-updates')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, () => loadNotifications())
+          .subscribe();
+    }
+
+    init();
+</script>
+</body>
+</html>

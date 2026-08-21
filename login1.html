@@ -7,18 +7,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lexend:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --navy-dark: #05162e;
+            --navy-dark: #0b1f3a;
             --gold: #e5c158;
             --white: #ffffff;
             --glass-bg: rgba(255, 255, 255, 0.05);
             --text-muted: #94a3b8;
             --danger: #ef4444;
+            --new: #132c52;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
        
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--navy-dark);
+            background: var(--new);
             background-image: radial-gradient(circle at 15% 15%, rgba(229, 193, 88, 0.06) 0%, transparent 45%);
             display: flex;
             align-items: center;
@@ -31,7 +32,7 @@
         .auth-card {
             width: 100%;
             max-width: 450px;
-            background: var(--glass-bg);
+            background: var(--navy-dark);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(229, 193, 88, 0.3);
@@ -130,14 +131,13 @@
     </style>
 </head>
 <body>
-
     <div class="auth-card">
         <header class="logo-area">
             <h1>SmartStep</h1>
             <p>Access Portal</p>
         </header>
 
-        <div id="errorMsg" class="error-msg">
+        <div id="errorMsg" class="error-msg" style="display: none;">
             Invalid email or password.
         </div>
 
@@ -151,78 +151,71 @@
                 <input type="password" id="password" placeholder="••••••••" required>
             </div>
 
-            <button type="submit" class="btn-main">Sign In</button>
+            <button type="submit" class="btn-main" id="signInBtn">Sign In</button>
         </form>
         
         <p class="footer-link">New operator? <span onclick="window.location.href='register.html'">Create Account</span></p>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const SUPABASE_URL = "https://qvadzitiwgkhzlgjmdac.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YWR6aXRpd2draHpsZ2ptZGFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjkyNjAsImV4cCI6MjA5MjM0NTI2MH0.8COO3BlKQNgXMwo_GZUTIt-Kxs0WfhHJ2yrL3e9--9c";
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCkYdfeGF54YM9OgeZxbJ2nDgpHt9ApO7A",
-            authDomain: "smartstep-8c1f3.firebaseapp.com",
-            // ADD THIS EXACT LINE:
-            databaseURL: "https://smartstep-8c1f3-default-rtdb.asia-southeast1.firebasedatabase.app/",
-            projectId: "smartstep-8c1f3",
-            storageBucket: "smartstep-8c1f3.firebasestorage.app",
-            messagingSenderId: "346600511575",
-            appId: "1:346600511575:web:2b03397c11fb153ecaab12",
-            measurementId: "G-8SPLQ1BHVR"
-        };
+const loginForm = document.getElementById('loginForm');
+const errorMsg = document.getElementById('errorMsg');
+const signInBtn = document.getElementById('signInBtn');
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getDatabase(app);
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
 
-        const loginForm = document.getElementById('loginForm');
-        const errorMsg = document.getElementById('errorMsg');
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
 
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
+    // Reset UI
+    errorMsg.style.display = 'none';
+    signInBtn.innerText = "Authenticating...";
+    signInBtn.disabled = true;
 
-            errorMsg.style.display = 'none';
-
-            signInWithEmailAndPassword(auth, email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
-                    
-                    // FETCH ROLE FROM DATABASE
-                    get(ref(db, 'users/' + user.uid)).then((snapshot) => {
-                        if (snapshot.exists()) {
-                            const userData = snapshot.val();
-                            
-                            // Redirect based on database role
-                            if (userData.role === "admin") {
-                                window.location.href = "dash.html";
-                            } else {
-                                window.location.href = "user-dash.html";
-                            }
-                        } else {
-                            // If no role found, default to user dashboard
-                            window.location.href = "user-dash.html";
-                        }
-                    }).catch((dbErr) => {
-                        console.error("Database Error:", dbErr);
-                        window.location.href = "user-dash.html"; 
-                    });
-                })
-                .catch((error) => {
-                    console.error("Auth Error:", error.code);
-                    errorMsg.style.display = 'block';
-                    if (error.code === 'auth/invalid-credential') {
-                        errorMsg.innerText = "Invalid login credentials.";
-                    } else {
-                        errorMsg.innerText = "Error: " + error.message;
-                    }
-                });
+    try {
+        // STEP 1: Authenticate with Supabase
+        const { data: { user }, error: authError } = await _supabase.auth.signInWithPassword({
+            email: email,
+            password: password
         });
+
+        if (authError) throw authError;
+
+        // STEP 2: Get role from users table using auth UUID
+        const { data: userData, error: dbError } = await _supabase
+            .from('profiles')          // ✅ changed from 'profiles'
+            .select('role')
+            .eq('id', user.id)      // ✅ auth UUID from login
+            .single();
+
+        if (dbError || !userData) {
+            console.warn("No role found, defaulting to user dashboard.");
+            window.location.href = "user-dash.html";
+        } else {
+            // STEP 3: Redirect based on role
+            if (userData.role === "ADMIN") {
+                window.location.href = "dash.html";
+            } else {
+                window.location.href = "user-dash.html";
+            }
+        }
+
+    } catch (error) {
+        console.error("Auth Error:", error.message);
+        errorMsg.style.display = 'block';
+        errorMsg.innerText = error.message;
+
+        // Reset button
+        signInBtn.innerText = "Sign In";
+        signInBtn.disabled = false;
+    }
+});
     </script>
 </body>
 </html>

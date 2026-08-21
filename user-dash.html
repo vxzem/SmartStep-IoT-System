@@ -210,18 +210,13 @@
 <body>
     <aside class="sidebar">
         <div class="logo">⚡ SmartStep</div>
-
-
         <div class="nav-section">Main</div>
-        <a href="user-dash.html" class="nav-link active"><span class="nav-icon"></span> My Dashboard</a>
-        <a href="user-analytics.html" class="nav-link"><span class="nav-icon"></span> General Analytics</a>
-
-        
-        <a href="user-settings.html" class="nav-link"><span class="nav-icon"></span> My Settings</a>
-        <a href="user-settings.html#notifications" class="nav-link"><span class="nav-icon"></span> Notifications</a>
-
+        <a href="user-dash.html" class="nav-link active">My Dashboard</a>
+        <a href="user-analytics.html" class="nav-link">General Analytics</a>
+        <a href="user-settings.html" class="nav-link">My Settings</a>
+        <a href="user-notif.html" class="nav-link">Notifications</a>
         <div class="sidebar-footer">
-            <div class="logout-btn" onclick="window.location.href='login.html'">
+            <div class="logout-btn" onclick="handleLogout()">
                 <span>🚪</span> Sign Out
             </div>
             <div class="node-info">Node: ESP8266-031<br>Ver: 1.3.0-PRO · User Mode</div>
@@ -229,244 +224,231 @@
     </aside>
 
     <main class="main-content">
-    <div class="top-header-row">
-
-            <!-- LEFT: Page Title & Description -->
+        <div class="top-header-row">
             <div class="page-header-content">
-                <p style="color:var(--gold);font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;">
-                    Interactive Dashboard · Section 1.1
-                </p>
+                <p style="color:var(--gold);font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;">Interactive Dashboard · Section 1.1</p>
                 <h1>Visual Energy Flow</h1>
                 <p>Real-time piezoelectric harvesting overview</p>
             </div>
-
-            <!-- RIGHT: Live Pill + User Badge -->
             <div class="right-header">
-                <div class="live-pill">
-                    <div class="live-dot"></div> 
-                    Live · Updates every 5s
-                </div>
-                
+                <div class="live-pill"><div class="live-dot"></div> Live · Updates every 5s</div>
                 <div class="user-badge">
-                        <div class="avatar">?</div>
-                        <div>
-                            <div class="user-name">Loading...</div>
-                            <div class="user-role">USER · ACTIVE</div>
-                        </div>
+                    <div class="avatar">?</div>
+                    <div>
+                        <div class="user-name">Loading...</div>
+                        <div class="user-role">USER · ACTIVE</div>
                     </div>
+                </div>
             </div>
-
         </div>
 
-        <!-- 1.1 VISUAL ENERGY FLOW -->
         <div class="energy-flow-card">
             <div class="ef-label">⚡ Live Energy Pipeline</div>
             <div class="ef-main">
                 <div class="ef-node">
-                    <span class="ef-node-icon"></span>
-                    <div class="ef-node-val">4,821</div>
-                    <div class="ef-node-label">Steps Today</div>
+                    <div class="ef-node-val" id="live-steps">0</div> <div class="ef-node-label">Steps Today</div>
                 </div>
-                <div class="ef-arrow">
-                    <div class="ef-arrow-line"></div>
-                    <span style="color:var(--gold);margin-left:4px;">▶</span>
-                </div>
+                <div class="ef-arrow"><div class="ef-arrow-line"></div></div>
                 <div class="ef-node">
-                    <span class="ef-node-icon"></span>
-                    <div class="ef-node-val">1,240<span style="font-size:1rem;color:rgba(255,255,255,0.5)"> Wh</span></div>
-                    <div class="ef-node-label">Harvested Energy</div>
+                    <div class="ef-node-val" id="live-energy">0<span style="font-size:1rem;color:rgba(255,255,255,0.5)"> Wh</span></div> <div class="ef-node-label">Harvested Energy</div>
                 </div>
-                <div class="ef-arrow">
-                    <div class="ef-arrow-line"></div>
-                    <span style="color:var(--gold);margin-left:4px;">▶</span>
-                </div>
+                <div class="ef-arrow"><div class="ef-arrow-line"></div></div>
                 <div class="ef-node">
-                    <span class="ef-node-icon"></span>
-                    <div class="ef-node-val">88.4<span style="font-size:1rem;color:rgba(255,255,255,0.5)">%</span></div>
+                    <div class="ef-node-val">88.4%</div>
                     <div class="ef-node-label">Battery State</div>
                 </div>
             </div>
-            <div style="display:flex;gap:30px;margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08)">
-                <div>
-                    <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">Voltage</div>
-                    <div style="font-family:'JetBrains Mono',monospace;color:var(--gold);font-size:0.9rem;font-weight:700;">12.6V</div>
-                </div>
-                <div>
-                    <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">Charge Rate</div>
-                    <div style="font-family:'JetBrains Mono',monospace;color:var(--gold);font-size:0.9rem;font-weight:700;">2.4A</div>
-                </div>
-                <div>
-                    <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">Charging Port</div>
-                    <div style="font-family:'JetBrains Mono',monospace;color:#10b981;font-size:0.9rem;font-weight:700;">5V ACTIVE</div>
-                </div>
-                <div>
-                    <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">System Draw</div>
-                    <div style="font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,0.6);font-size:0.9rem;font-weight:700;">120 mW</div>
-                </div>
-            </div>
         </div>
 
-        <!-- 1.2 TODAY'S STATUS -->
         <p style="font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;">Today's Status · Section 1.2</p>
         <div class="status-grid">
             <div class="stat-card">
-                <div class="stat-top">
-                    
-                    <span class="stat-badge badge-live">LIVE</span>
-                </div>
-                <div class="stat-val">4,821 <span class="stat-unit">steps</span></div>
-                <div class="stat-label">Total footsteps counted today</div>
+                <div class="stat-top"><span class="stat-badge badge-live">LIVE</span></div>
+                <div class="stat-val" id="grid-steps">0 <span class="stat-unit">steps</span></div> <div class="stat-label">Total footsteps counted today</div>
                 <div class="mini-bar"><div class="mini-bar-fill" style="width:64%;"></div></div>
             </div>
             <div class="stat-card">
-                <div class="stat-top">
-                    
-                    <span class="stat-badge badge-up">+12%</span>
-                </div>
-                <div class="stat-val">1,240 <span class="stat-unit">Wh</span></div>
-                <div class="stat-label">Total energy harvested today</div>
+                <div class="stat-top"><span class="stat-badge badge-up">+12%</span></div>
+                <div class="stat-val" id="grid-energy">0 <span class="stat-unit">Wh</span></div> <div class="stat-label">Total energy harvested today</div>
                 <div class="mini-bar"><div class="mini-bar-fill" style="width:76%;"></div></div>
             </div>
-            <div class="stat-card">
-                <div class="stat-top">
-                    
-                    <span class="stat-badge badge-up">SAVED</span>
-                </div>
-                <div class="stat-val">842 <span class="stat-unit">Wh</span></div>
+           <div class="stat-card">
+                <div class="stat-top"><span class="stat-badge badge-up">SAVED</span></div>
+                <div class="stat-val" id="grid-saved">0 <span class="stat-unit">mWh</span></div>  <!-- ✅ added id -->
                 <div class="stat-label">Delivered to mobile charging</div>
-                <div class="mini-bar"><div class="mini-bar-fill" style="width:52%;background:var(--success);"></div></div>
+                <div class="mini-bar"><div class="mini-bar-fill" id="saved-bar" style="width:0%;background:var(--success);"></div></div>
             </div>
         </div>
 
-        <!-- 1.3 DEVICE STATUS -->
         <div class="bottom-grid">
             <div class="card">
-                <div class="card-title"><span class="ct-icon">📊</span> Charging Port Status · Real-Time Feedback</div>
-                <div class="chart-wrap">
-                    <canvas id="liveChart"></canvas>
-                </div>
+                <div class="card-title">📊 Charging Port Status</div>
+                <div class="chart-wrap" style="height: 200px;"><canvas id="liveChart"></canvas></div>
             </div>
-
-            <div class="card">
-                <div class="card-title"><span class="ct-icon">🔌</span> Charging Availability</div>
-                <div class="charging-status">
-                    <div class="charge-row active-charge">
-                        <div class="charge-info">
-                            <span class="charge-icon">📱</span>
-                            <div>
-                                <div class="charge-name">USB Port A</div>
-                                <div class="charge-detail">5V · 2.4A · Phone detected</div>
-                            </div>
-                        </div>
-                        <span class="charge-tag tag-active">IN USE</span>
-                    </div>
-                    <div class="charge-row standby">
-                        <div class="charge-info">
-                            <span class="charge-icon">🔌</span>
-                            <div>
-                                <div class="charge-name">USB Port B</div>
-                                <div class="charge-detail">5V · 2.4A · Ready</div>
-                            </div>
-                        </div>
-                        <span class="charge-tag tag-standby">STANDBY</span>
-                    </div>
-                </div>
-
-                
         </div>
     </main>
 
-   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, onValue, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://qvadzitiwgkhzlgjmdac.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YWR6aXRpd2draHpsZ2ptZGFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjkyNjAsImV4cCI6MjA5MjM0NTI2MH0.8COO3BlKQNgXMwo_GZUTIt-Kxs0WfhHJ2yrL3e9--9c";
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const firebaseConfig = {
-    apiKey: "AIzaSyCkYdfeGF54YM9OgeZxbJ2nDgpHt9ApO7A",
-    authDomain: "smartstep-8c1f3.firebaseapp.com",
-    // ADD THIS EXACT LINE:
-    databaseURL: "https://smartstep-8c1f3-default-rtdb.asia-southeast1.firebasedatabase.app/",
-    projectId: "smartstep-8c1f3",
-    storageBucket: "smartstep-8c1f3.firebasestorage.app",
-    messagingSenderId: "346600511575",
-    appId: "1:346600511575:web:2b03397c11fb153ecaab12",
-    measurementId: "G-8SPLQ1BHVR"
-};
+let refreshInterval = null; // ← track so we can clear it
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
+// --- 1. AUTH GUARD ---
+async function checkUser() {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (session) {
+        document.body.style.display = 'flex';
+        loadUserProfile(session.user.id);
+    } else {
+        window.location.href = 'login1.html';
+    }
+}
 
-    // --- 1. AUTH GUARD & PROFILE LOADER ---
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            loadUserProfile(user.uid);
-            setupRealtimeData(); // Only start listening to data if logged in
-        } else {
-            window.location.href = 'login1.html';
-        }
-    });
+checkUser();
 
-    function loadUserProfile(uid) {
-        get(ref(db, 'users/' + uid)).then((snapshot) => {
-            if (snapshot.exists()) {
-                const d = snapshot.val();
-                document.querySelector('.user-name').innerText = `${d.firstName} ${d.lastName}`;
-                document.querySelector('.avatar').innerText = d.firstName[0] + d.lastName[0];
-            }
-        });
+_supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT') window.location.href = 'login1.html';
+});
+
+// --- 2. LOAD USER PROFILE ---
+async function loadUserProfile(authUid) {
+    const { data, error } = await _supabase
+        .from('profiles')
+        .select('first_name, last_name, mat_id, pref_refresh') // ← added pref_refresh
+        .eq('id', authUid)
+        .maybeSingle();
+
+    if (error || !data) {
+        console.error("Failed to load user profile:", error?.message);
+        return;
     }
 
-    // --- 2. REAL-TIME DATA SYNC ---
-    function setupRealtimeData() {
-        // Update Steps & Energy (Section 1.1 & 1.2)
-        onValue(ref(db, 'system_status'), (snapshot) => {
-            const val = snapshot.val();
-            if (val) {
-                // Update Pipeline Card
-                document.getElementById('live-steps').innerText = val.steps_today.toLocaleString();
-                document.getElementById('live-energy').innerHTML = `${val.energy_wh} <span style="font-size:1rem;color:rgba(255,255,255,0.5)"> Wh</span>`;
-                document.getElementById('live-battery').innerHTML = `${val.battery_pct}<span style="font-size:1rem;color:rgba(255,255,255,0.5)">%</span>`;
-                
-                // Update Small Details
-                document.getElementById('live-voltage').innerText = val.voltage + "V";
-                
-                // Update Today's Status Cards (Section 1.2)
-                const statCards = document.querySelectorAll('.stat-val');
-                statCards[0].innerHTML = `${val.steps_today.toLocaleString()} <span class="stat-unit">steps</span>`;
-                statCards[1].innerHTML = `${val.energy_wh} <span class="stat-unit">Wh</span>`;
+    // Update UI
+    document.querySelector('.user-name').innerText = `${data.first_name} ${data.last_name}`;
+    document.querySelector('.avatar').innerText = (data.first_name[0] + data.last_name[0]).toUpperCase();
+    document.querySelector('.node-info').innerHTML = `Node: ${data.mat_id || 'Not Assigned'}<br>Ver: 1.3.0-PRO · User Mode`;
+
+    // ← Parse refresh rate from DB (stored as text e.g. "5", "10", "30")
+    const refreshSeconds = parseInt(data.pref_refresh) || 5;
+
+    // ← Update the live pill label
+    updateLivePill(refreshSeconds);
+
+    if (data.mat_id) {
+        setupRealtimeData(authUid, data.mat_id, refreshSeconds);
+    }
+}
+
+// --- 3. LIVE PILL ---
+function updateLivePill(seconds) {
+    const label = seconds < 60
+        ? `Updates every ${seconds}s`
+        : `Updates every ${seconds / 60}m`;
+
+    document.querySelector('.live-pill').innerHTML =
+        `<div class="live-dot"></div> Live · ${label}`;
+}
+
+// --- 4. DATA SYNC ---
+function setupRealtimeData(authUid, matId, refreshSeconds = 5) {
+    // Clear any existing polling interval first
+    if (refreshInterval) clearInterval(refreshInterval);
+
+    // Realtime channel for new inserts
+    _supabase
+        .channel('live-telemetry')
+        .on('postgres_changes',
+            { event: 'INSERT', schema: 'public',
+              table: 'energy_logs',
+              filter: `user_id=eq.${matId}` },
+            (payload) => {
+                updateChart(payload.new.voltage);
+                refreshUserTotals(authUid);
             }
-        });
+        )
+        .subscribe();
+
+    // Initial load + polling based on user's pref_refresh
+    refreshUserTotals(authUid);
+    refreshInterval = setInterval(() => {
+        refreshUserTotals(authUid);
+    }, refreshSeconds * 1000);
+}
+
+// --- 5. FETCH TELEMETRY ---
+async function refreshUserTotals(authUid) {
+    const { data, error } = await _supabase
+        .from('telemetry')
+        .select('steps, total_wh, created_at')
+        .eq('user_id', authUid)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+    if (error) {
+        console.error("Supabase Telemetry Error:", error.message);
+        updateDashboardUI(0, 0);
+        return;
     }
 
-    // --- 3. CHART LOGIC ---
-    const ctx = document.getElementById('liveChart').getContext('2d');
-    const liveChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['-5m', '-4m', '-3m', '-2m', '-1m', 'Now'],
-            datasets: [{
-                label: 'Energy Harvested (mW)',
-                data: [0, 0, 0, 0, 0, 0],
-                borderColor: '#e5c158', backgroundColor: 'rgba(229,193,88,0.08)',
-                fill: true, tension: 0.4
-            }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-    });
+    if (data) {
+        updateDashboardUI(data.steps, data.total_wh);
+    } else {
+        updateDashboardUI(0, 0);
+    }
+}
 
-    // Listen for new power spikes to update the chart
-    onValue(ref(db, 'live_telemetry/power_mw'), (snapshot) => {
-        const newData = snapshot.val();
-        liveChart.data.datasets[0].data.shift();
-        liveChart.data.datasets[0].data.push(newData);
-        liveChart.update();
-    });
+// --- 6. UPDATE UI ---
+function updateDashboardUI(steps, energy) {
+    const savedMwh = (energy * 1000) * 0.80;
+    const harvestedMwh = energy * 1000;
 
-    // --- 4. LOGOUT ---
-    window.handleLogout = () => {
-        signOut(auth).then(() => { window.location.href = 'login1.html'; });
-    };
-</script>
+    const barWidth = Math.min((harvestedMwh / 10) * 100, 100).toFixed(1);
+    const savedBarWidth = Math.min((savedMwh / 10) * 100, 100).toFixed(1);
+
+    document.getElementById('live-steps').innerText = steps.toLocaleString();
+    document.getElementById('live-energy').innerHTML =
+        `${harvestedMwh.toFixed(4)} <span style="font-size:1rem;color:rgba(255,255,255,0.5)"> mWh</span>`;
+
+    document.getElementById('grid-steps').innerHTML =
+        `${steps.toLocaleString()} <span class="stat-unit">steps</span>`;
+    document.getElementById('grid-energy').innerHTML =
+        `${harvestedMwh.toFixed(4)} <span class="stat-unit">mWh</span>`;
+    document.getElementById('grid-saved').innerHTML =
+        `${savedMwh.toFixed(4)} <span class="stat-unit">mWh</span>`;
+
+    document.querySelector('#grid-energy').closest('.stat-card').querySelector('.mini-bar-fill').style.width = `${barWidth}%`;
+    document.getElementById('saved-bar').style.width = `${savedBarWidth}%`;
+}
+
+// --- 7. CHART ---
+const ctx = document.getElementById('liveChart').getContext('2d');
+const liveChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['-5m', '-4m', '-3m', '-2m', '-1m', 'Now'],
+        datasets: [{
+            label: 'Voltage (V)',
+            data: [0, 0, 0, 0, 0, 0],
+            borderColor: '#e5c158', backgroundColor: 'rgba(229,193,88,0.08)',
+            fill: true, tension: 0.4
+        }]
+    },
+    options: { responsive: true, maintainAspectRatio: false }
+});
+
+function updateChart(val) {
+    liveChart.data.datasets[0].data.shift();
+    liveChart.data.datasets[0].data.push(val);
+    liveChart.update();
+}
+
+// --- 8. LOGOUT ---
+window.handleLogout = async () => {
+    await _supabase.auth.signOut();
+};</script>
 </body>
 </html>

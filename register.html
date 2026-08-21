@@ -163,95 +163,102 @@
                     </div>
                 </div>
                 <div id="regError" style="color: #ff6b6b; font-size: 0.8rem; margin-bottom: 10px; display: none;"></div>
-                <button type="submit" class="btn-main">Register Now</button>
+                <button type="submit" id="regBtn" class="btn-main">Register Now</button>
             </form>
             
-            <p class="footer-link">Already have an account? <span onclick="window.location.href='login.html'">Sign In</span></p>
+            <p class="footer-link">Already have an account? <span onclick="window.location.href='login1.html'">Sign In</span></p>
         </div>
     </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    const firebaseConfig = {
-    apiKey: "AIzaSyCkYdfeGF54YM9OgeZxbJ2nDgpHt9ApO7A",
-    authDomain: "smartstep-8c1f3.firebaseapp.com",
-    // ADD THIS EXACT LINE:
-    databaseURL: "https://smartstep-8c1f3-default-rtdb.asia-southeast1.firebasedatabase.app/",
-    projectId: "smartstep-8c1f3",
-    storageBucket: "smartstep-8c1f3.firebasestorage.app",
-    messagingSenderId: "346600511575",
-    appId: "1:346600511575:web:2b03397c11fb153ecaab12",
-    measurementId: "G-8SPLQ1BHVR"
-};
+    <script type="module">
+        const SUPABASE_URL = "https://qvadzitiwgkhzlgjmdac.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YWR6aXRpd2draHpsZ2ptZGFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjkyNjAsImV4cCI6MjA5MjM0NTI2MH0.8COO3BlKQNgXMwo_GZUTIt-Kxs0WfhHJ2yrL3e9--9c"; 
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
-        const confirmPass = document.getElementById('confirmPassword').value;
-        const firstName = document.getElementById('firstName').value.trim();
-        const lastName = document.getElementById('lastName').value.trim();
-        const matID = document.getElementById('matID').value.trim();
+        const registerForm = document.getElementById('registerForm');
         const errorDiv = document.getElementById('regError');
+        const regBtn = document.getElementById('regBtn');
 
-        errorDiv.style.display = 'none';
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-        // 1. Validation Logic
-        if (password.length < 6) {
-            errorDiv.innerText = "Password must be at least 6 characters.";
-            errorDiv.style.display = 'block';
-            return;
-        }
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const matID = document.getElementById('matID').value.trim();
 
-        if (password !== confirmPass) {
-            errorDiv.innerText = "Passwords do not match!";
-            errorDiv.style.display = 'block';
-            return;
-        }
+            errorDiv.style.display = 'none';
 
-        try {
-            // 2. Create User in Firebase Auth
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-
-            // 3. Save User Details to Realtime Database
-            // We use 'set' here. Because 'user.uid' is unique, 
-            // this will create a brand new entry for every new person.
-            await set(ref(db, 'users/' + user.uid), {
-                firstName: firstName,
-                lastName: lastName,
-                matID: matID,
-                email: email,
-                role: "user", // Defaulting everyone to "user" for safety
-                createdAt: new Date().toISOString()
-            });
-
-            alert("Registration successful, " + firstName + "!");
-            // Redirecting to your login page
-            window.location.href = 'login1.html'; 
-
-        } catch (error) {
-            console.error("Registration Error:", error.code);
-            errorDiv.style.display = 'block';
-            
-            // Helpful error messages for common issues
-            if (error.code === 'auth/email-already-in-use') {
-                errorDiv.innerText = "This email is already registered.";
-            } else if (error.code === 'auth/weak-password') {
-                errorDiv.innerText = "Password is too weak.";
-            } else {
-                errorDiv.innerText = "Error: " + error.message;
+            // 1. Validation
+            if (password.length < 6) {
+                errorDiv.innerText = "Password must be at least 6 characters.";
+                errorDiv.style.display = 'block';
+                return;
             }
-        }
-    });
-</script>
+
+            if (password !== confirmPass) {
+                errorDiv.innerText = "Passwords do not match!";
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            regBtn.innerText = "Creating Account...";
+            regBtn.disabled = true;
+
+            try {
+                // 2. Sign up in Supabase Auth
+                // We pass firstName and lastName in metadata so the Trigger can pick it up
+                const { data: authData, error: authError } = await _supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            first_name: firstName,
+                            last_name: lastName,
+                            mat_id: matID
+                        }
+                    }
+                });
+
+                if (authError) throw authError;
+
+                const user = authData.user;
+
+                if (user) {
+                    // 3. Manually insert into profiles (Only if you didn't set up the SQL Trigger yet)
+                    const { error: profileError } = await _supabase
+                        .from('profiles')
+                        .insert([
+                            { 
+                                id: user.id, 
+                                first_name: firstName, 
+                                last_name: lastName,
+                                mat_id: matID,
+                                role: 'user' 
+                            }
+                        ]);
+
+                    if (profileError) {
+                        console.warn("Profile auto-insert failed, check if trigger exists:", profileError.message);
+                    }
+
+                    alert("Registration successful, " + firstName + "!");
+                    window.location.href = 'login1.html'; 
+                }
+
+            } catch (error) {
+                console.error("Registration Error:", error.message);
+                errorDiv.style.display = 'block';
+                errorDiv.innerText = error.message;
+            } finally {
+                regBtn.innerText = "Register Now";
+                regBtn.disabled = false;
+            }
+        });
+    </script>
 </body>
-</html>
