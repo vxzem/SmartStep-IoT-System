@@ -1,412 +1,500 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartStep | Advanced Analytics Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lexend:wght@700&family=JetBrains+Mono&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --navy-dark: #05162e;
-            --gold: #e5c158;
-            --gold-soft: #fdf9ec;
-            --white: #ffffff;
-            --bg-slate: #f8fafc;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-        }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SmartStep · Energy Analytics</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --navy-dark: #05162e;
+    --navy-mid:  #0a2447;
+    --gold:      #e5c158;
+    --gold-soft: #fdf9ec;
+    --white:     #ffffff;
+    --bg-slate:  #f8fafc;
+    --text-main: #1e293b;
+    --text-muted:#64748b;
+    --border:    #e2e8f0;
+    --success:   #10b981;
+    --danger:    #ef4444;
+    --warning:   #f59e0b;
+  }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-slate); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg-slate); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-        /* --- SIDEBAR --- */
-        .sidebar { width: 260px; background: var(--navy-dark); color: white; padding: 30px 20px; display: flex; flex-direction: column; flex-shrink: 0; }
-        .logo { font-family: 'Lexend', sans-serif; color: var(--gold); font-size: 1.5rem; margin-bottom: 40px; }
-        .nav-link { display: block; padding: 12px 15px; text-decoration: none; color: white; opacity: 0.7; border-radius: 8px; transition: 0.3s; font-size: 0.9rem; margin-bottom: 5px; }
-        .nav-link:hover { background: rgba(229, 193, 88, 0.1); opacity: 1; color: var(--gold); }
-        .nav-link.active { background: rgba(229, 193, 88, 0.15); opacity: 1; color: var(--gold); font-weight: 600; }
-        .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); margin: 20px 0 8px; padding: 0 5px; }
+  /* ── SIDEBAR ── */
+  .sidebar { width: 250px; background: var(--navy-dark); color: white; padding: 28px 18px; display: flex; flex-direction: column; flex-shrink: 0; }
+  .logo { font-family: 'Lexend', sans-serif; color: var(--gold); font-size: 1.4rem; margin-bottom: 30px; }
+  .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); margin: 18px 0 8px; padding: 0 5px; }
+  .nav-link { display: flex; align-items: center; gap: 10px; padding: 10px 14px; text-decoration: none; color: rgba(255,255,255,0.7); border-radius: 8px; transition: 0.2s; font-size: 0.87rem; margin-bottom: 2px; }
+  .nav-link:hover { background: rgba(229,193,88,0.08); color: white; }
+  .nav-link.active { background: rgba(229,193,88,0.15); color: var(--gold); font-weight: 600; }
+  .sidebar-footer { margin-top: auto; }
+  .logout-btn { display: flex; align-items: center; gap: 8px; padding: 10px 14px; color: rgba(255,255,255,0.4); cursor: pointer; border-radius: 8px; font-size: 0.83rem; transition: 0.2s; }
+  .logout-btn:hover { color: var(--danger); background: rgba(239,68,68,0.08); }
+  .node-info { font-family: 'JetBrains Mono', monospace; font-size: 0.63rem; opacity: 0.35; margin-top: 10px; padding: 0 5px; line-height: 1.5; }
 
-        .user-badge {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 12px 20px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-            min-width: 245px;
-            transition: all 0.25s ease;
-        }
+  /* ── MAIN ── */
+  .main-content { flex: 1; overflow-y: auto; padding: 32px 36px; }
 
-        .user-badge:hover {
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.09);
-            border-color: var(--gold);
-            transform: translateY(-1px);
-        }
+  /* ── HEADER ── */
+  .top-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; gap: 20px; }
+  .page-header-content { flex: 1; }
+  .page-header-content h1 { font-family: 'Lexend', sans-serif; font-size: 1.55rem; color: var(--navy-dark); margin: 0 0 4px 0; }
+  .page-header-content p { color: var(--text-muted); font-size: 0.87rem; margin: 0; }
+  .eyebrow { color: var(--gold); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
+  .right-header { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 
-        .avatar {
-            width: 40px;
-            height: 40px;
-            background: var(--gold);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: var(--navy-dark);
-            font-size: 1rem;
-            flex-shrink: 0;
-            box-shadow: 0 3px 8px rgba(229, 193, 88, 0.4);
-        }
+  /* ── LIVE PILL ── */
+  .live-pill { display: flex; align-items: center; gap: 7px; background: var(--white); border: 1px solid var(--border); padding: 8px 16px; border-radius: 12px; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+  .live-dot { width: 7px; height: 7px; background: var(--success); border-radius: 50%; }
 
-        .user-name {
-            font-size: 0.96rem;
-            font-weight: 600;
-            color: var(--navy-dark);        /* Dark text for visibility */
-            line-height: 1.25;
-            margin: 0;
-        }
+  /* ── USER BADGE ── */
+  .user-badge { display: flex; align-items: center; gap: 10px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 8px 16px; min-width: 190px; }
+  .avatar { width: 34px; height: 34px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--navy-dark); font-size: 0.85rem; flex-shrink: 0; }
+  .user-name { font-size: 0.86rem; font-weight: 600; color: var(--navy-dark); line-height: 1.2; }
+  .user-role { font-size: 0.68rem; color: var(--gold); font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
 
-        .user-role {
-            font-size: 0.74rem;
-            color: var(--gold);
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 500;
-            letter-spacing: 0.6px;
-            margin: 0;
-        }
+  /* ── SELECTOR BAR ── */
+  .selector-bar { display: flex; align-items: center; gap: 16px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 14px 22px; margin-bottom: 24px; flex-wrap: wrap; }
+  .selector-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+  .mat-select, .control-select { padding: 9px 14px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--bg-slate); font-family: 'Inter', sans-serif; font-weight: 600; color: var(--navy-dark); cursor: pointer; font-size: 0.86rem; transition: 0.2s; }
+  .mat-select { min-width: 220px; }
+  .mat-select:focus, .control-select:focus { outline: none; border-color: var(--navy-dark); background: var(--white); }
+  .selected-uid { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--text-muted); background: var(--bg-slate); padding: 4px 10px; border-radius: 6px; }
+  .selector-divider { width: 1px; height: 22px; background: var(--border); }
+  .control-group { display: flex; align-items: center; gap: 10px; }
+  .control-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+  .selector-status { margin-left: auto; display: none; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 600; color: var(--success); }
+  .selector-status.visible { display: flex; }
+  .selector-status-dot { width: 7px; height: 7px; background: var(--success); border-radius: 50%; }
 
+  /* ── MAIN GRID ── */
+  .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; }
 
-        .sidebar-footer { margin-top: auto; }
-        .logout-btn { display: flex; align-items: center; gap: 8px; padding: 11px 15px; color: rgba(255,255,255,0.4); cursor: pointer; border-radius: 8px; font-size: 0.85rem; transition: 0.2s; }
-        .logout-btn:hover { color: var(--danger); background: rgba(239,68,68,0.08); }
-        .node-info { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; opacity: 0.35; margin-top: 12px; padding: 0 5px; }
+  /* ── CARD ── */
+  .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
+  .card-title { font-size: 0.92rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 18px; display: flex; align-items: center; }
+  .card-subtitle { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--text-muted); font-weight: 500; }
 
+  /* ── CHART ── */
+  .chart-wrap { position: relative; height: 240px; }
+  .chart-wrap.tall { height: 280px; }
 
-        /* --- MAIN CONTENT --- */
-        .main-content { flex: 1; overflow-y: auto; padding: 40px; }
-        .top-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-            gap: 20px;
-        }
+  /* ── PEAK STATS ── */
+  .peak-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .peak-box { background: var(--bg-slate); padding: 16px; border-radius: 10px; }
+  .peak-label { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .peak-value { font-family: 'Lexend', sans-serif; font-size: 1.3rem; color: var(--navy-dark); line-height: 1; margin-bottom: 5px; }
+  .peak-time { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-muted); }
 
-        .page-header-content {
-            flex: 1;
-        }
+  /* ── REPORT ROWS ── */
+  .report-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--border); }
+  .report-row:last-child { border: none; }
+  .report-label { font-size: 0.82rem; font-weight: 500; color: var(--text-main); }
+  .report-data { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--navy-dark); font-size: 0.86rem; }
+  .efficiency-bar { height: 6px; background: #e2e8f0; border-radius: 3px; margin-top: 10px; overflow: hidden; }
+  .efficiency-fill { height: 100%; border-radius: 3px; background: var(--gold); transition: width 0.6s ease; }
 
-        .page-header-content h1 {
-            font-family: 'Lexend', sans-serif;
-            font-size: 1.7rem;
-            color: var(--navy-dark);
-            margin: 0 0 4px 0;
-        }
-
-        .page-header-content p {
-            color: var(--text-muted);
-            font-size: 0.88rem;
-            margin: 0;
-        }
-
-        /* RIGHT SIDE: Period Selector + User Badge */
-        .right-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-shrink: 0;
-        }
-
-        /* PERIOD SELECTOR */
-        .period-row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            background: var(--white);
-            padding: 8px 14px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-        }
-
-        .period-label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        .period-select {
-            padding: 8px 14px;
-            border-radius: 8px;
-            border: 2px solid var(--navy-dark);
-            background: white;
-            font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            color: var(--navy-dark);
-            cursor: pointer;
-            font-size: 0.85rem;
-        }
-
-        .period-row {
-            display: flex; gap: 10px; align-items: center;
-            background: var(--white); padding: 8px 14px; border-radius: 12px;
-            border: 1px solid var(--border);
-        }
-        .period-label {
-            font-size: 0.75rem; font-weight: 700; color: var(--text-muted);
-            text-transform: uppercase; white-space: nowrap;
-        }
-        .period-select {
-            padding: 8px 14px; border-radius: 8px; border: 2px solid var(--navy-dark);
-            background: white; font-family: 'Inter', sans-serif; font-weight: 600;
-            color: var(--navy-dark); cursor: pointer; font-size: 0.85rem;
-        }
-        .period-select:focus { outline: none; border-color: var(--gold); }
-        /* --- ANALYTICS GRID --- */
-        .analytics-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
-        .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .card-title { font-size: 0.8rem; font-weight: 700; color: var(--navy-dark); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
-        .card-title span { color: var(--gold); }
-
-        /* --- 1.3.2 PEAK PERFORMANCE --- */
-        .peak-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .peak-box { background: var(--bg-slate); padding: 20px; border-radius: 12px; border-left: 4px solid var(--gold); }
-        .peak-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
-        .peak-value { font-size: 1.4rem; font-weight: 700; color: var(--navy-dark); }
-        .peak-time { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--gold); font-weight: 600; }
-
-        /* --- 1.3.3 CONSUMPTION REPORTS --- */
-        .report-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border); }
-        .report-row:last-child { border: none; }
-        .report-label { font-size: 0.9rem; font-weight: 500; }
-        .report-data { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--navy-dark); }
-        .efficiency-bar { height: 8px; background: #eee; border-radius: 4px; margin-top: 10px; overflow: hidden; }
-        .efficiency-fill { height: 100%; background: var(--navy-dark); }
-
-        .chart-container { height: 350px; width: 100%; position: relative; }
-        .nav-link {
-            display: block;
-            padding: 12px 15px;
-            text-decoration: none;
-            color: white; /* Matches sidebar text */
-            opacity: 0.7;
-            border-radius: 8px;
-            transition: 0.3s;
-            font-size: 0.9rem;
-        }
-
-        /* Hover and Active states */
-        .nav-link:hover, .nav-link.active {
-            background: rgba(229, 193, 88, 0.15); /* Subtle gold tint */
-            color: var(--gold);
-            opacity: 1;
-        }
-    </style>
+  /* ── NO DATA ── */
+  .no-data { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.85rem; }
+  .no-data-icon { font-size: 2rem; margin-bottom: 8px; opacity: 0.4; }
+</style>
 </head>
 <body>
 
-    <aside class="sidebar">
-    <div class="logo">⚡ SmartStep</div>
-    <div class="nav-section">Main</div>
-     <nav>
-            <a href="dash.html" class="nav-link">Live Monitoring</a>
-            <a href="analytics.html" class="nav-link active">Energy Analytics</a>
-            <a href="maintenance.html" class="nav-link ">System Maintenance</a>
-            <a href="security.html" class="nav-link">System Settings</a>
-        </nav>
-    
-    <div class="sidebar-footer">
-            <div class="logout-btn" onclick="window.location.href='login.html'">
-                <span>🚪</span> Sign Out
-            </div>
-            <div class="node-info">Node: ESP8266-031<br>Ver: 1.3.0-PRO · Admin Mode</div>
-        </div>
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+  <div class="logo">SmartStep</div>
+  <div class="nav-section">Admin</div>
+  <nav>
+    <a href="ad_dash.html"         class="nav-link">Live Monitoring</a>
+    <a href="analytics.html"       class="nav-link active">Energy Analytics</a>
+    <a href="maintenance(2).html"  class="nav-link">System Maintenance</a>
+    <a href="security.html"        class="nav-link">System Settings</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="logout-btn" id="logoutBtn">Sign Out</div>
+    <div class="node-info">Node: ESP8266-031<br>Ver: 1.3.0-PRO · Admin Mode</div>
+  </div>
 </aside>
 
-    <main class="main-content">
-        <div class="top-header-row">
+<!-- ── MAIN ── -->
+<main class="main-content">
 
-            <!-- LEFT: Page Title & Description -->
-            <div class="page-header-content">
-                <p style="color:var(--gold);font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;">
-                     Analytics · Section 2
-                </p>
-                <h1>Advanced Analytics Hub</h1>
-                <p>Track energy generation and usage patterns over time</p>
-            </div>
-
-            <!-- RIGHT: Period Selector + User Badge -->
-            <div class="right-header">
-                <div class="period-row">
-                    <span class="period-label">Period:</span>
-                    <select class="period-select" id="periodSelector" onchange="updateCharts()">
-                        <option value="daily">Daily View</option>
-                        <option value="weekly" selected>Weekly View</option>
-                        <option value="monthly">Monthly View</option>
-                        <option value="quarterly">Quarterly View</option>
-                    </select>
-                </div>
-                
-                <div class="user-badge">
-                    <div class="avatar">CM</div>
-                    <div>
-                        <div class="user-name">Cheryl Maglaso</div>
-                        <div class="user-role">ADMIN · ACTIVE</div>
-                    </div>
-                </div>
-            </div>
-
+  <!-- HEADER -->
+  <div class="top-header-row">
+    <div class="page-header-content">
+      <p class="eyebrow">Administration Dashboard · Section 2</p>
+      <h1>Energy Analytics</h1>
+      <p>Generation forecasts, peak performance, and consumption reports per user mat</p>
+    </div>
+    <div class="right-header">
+      <div class="live-pill">
+        <div class="live-dot"></div> <span>Live · Auto-refresh 10s</span>
+      </div>
+      <div class="user-badge">
+        <div class="avatar" id="adminAvatar">--</div>
+        <div>
+          <div class="user-name" id="adminName">Loading...</div>
+          <div class="user-role">ADMIN · ACTIVE</div>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="analytics-grid">
-            <div class="card">
-                <div class="card-title"><span>📊</span> Time-Series Energy Forecasting</div>
-                <div class="chart-container">
-                    <canvas id="forecastChart"></canvas>
-                </div>
-            </div>
+  <!-- SELECTOR BAR -->
+  <div class="selector-bar">
+    <span class="selector-label">Monitoring:</span>
+    <select class="mat-select" id="matSelector" onchange="onMatChange()">
+      <option value="">— Select a User —</option>
+    </select>
+    <span class="selected-uid" id="selectedUid">UID: —</span>
+    <div class="selector-divider"></div>
+    <div class="control-group">
+      <span class="control-label">Period:</span>
+      <select class="control-select" id="periodSelector" onchange="updateCharts()">
+        <option value="daily">Daily View</option>
+        <option value="weekly" selected>Weekly View</option>
+        <option value="monthly">Monthly View</option>
+        <option value="quarterly">Quarterly View</option>
+      </select>
+    </div>
+    <div class="selector-status" id="selectorStatus">
+      <span class="selector-status-dot"></span> Data streaming
+    </div>
+  </div>
 
-            <div style="display: flex; flex-direction: column; gap: 24px;">
-                <div class="card">
-                    <div class="card-title"><span>🔥</span> Peak Performance</div>
-                    <div class="peak-stats">
-                        <div class="peak-box">
-                            <p class="peak-label">Peak Charge Rate</p>
-                            <p class="peak-value">2.4A</p>
-                            <p class="peak-time">@ 14:30 PM</p>
-                        </div>
-                        <div class="peak-box">
-                            <p class="peak-label">Peak Footfall</p>
-                            <p class="peak-value">142</p>
-                            <p class="peak-time">Steps / Min</p>
-                        </div>
-                    </div>
-                    <p style="font-size: 0.75rem; color: var(--text-muted);">Highest generation recorded during student dismissal hours.</p>
-                </div>
+  <!-- ANALYTICS GRID -->
+  <div class="main-grid">
 
-                <div class="card">
-                    <div class="card-title"><span>🔋</span> Consumption vs Generation</div>
-                    <div class="report-row">
-                        <span class="report-label">Total Generated</span>
-                        <span class="report-data">1,240 Wh</span>
-                    </div>
-                    <div class="report-row">
-                        <span class="report-label">Mobile Charging Use</span>
-                        <span class="report-data">842 Wh</span>
-                    </div>
-                    <div class="report-row">
-                        <span class="report-label">System Parasitic Draw</span>
-                        <span class="report-data">115 Wh</span>
-                    </div>
-                    
-                    <div style="margin-top: 20px;">
-                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700;">
-                            <span>STORAGE EFFICIENCY</span>
-                            <span style="color: var(--gold);">76.5%</span>
-                        </div>
-                        <div class="efficiency-bar">
-                            <div class="efficiency-fill" style="width: 76.5%;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Forecast Chart -->
+    <div class="card">
+      <div class="card-title">
+        Harvested vs Consumed Energy
+        <span class="card-subtitle" id="currentUserLabel">GLOBAL AVERAGE</span>
+      </div>
+      <div class="chart-wrap tall">
+        <canvas id="forecastChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Right column -->
+    <div style="display:flex; flex-direction:column; gap:18px;">
+
+      <!-- Peak Performance -->
+      <div class="card">
+        <div class="card-title">Peak Performance</div>
+        <div class="peak-stats">
+          <div class="peak-box">
+            <div class="peak-label">Peak Output</div>
+            <div class="peak-value" id="peakOutputValue">— mW</div>
+            <div class="peak-time" id="peakOutputTime">—</div>
+          </div>
+          <div class="peak-box">
+            <div class="peak-label">Avg. Daily Harvest</div>
+            <div class="peak-value" id="avgDailyValue">— Wh</div>
+            <div class="peak-time" id="avgDailyLabel">—</div>
+          </div>
         </div>
-    </main>
+      </div>
 
-  <script>
-        // ==================== FORECAST CHART DATA ====================
-        const chartData = {
-            daily: {
-                labels: ['6AM', '9AM', '12PM', '3PM', '6PM', '9PM'],
-                actual: [180, 650, 1240, 1580, 920, 340],
-                forecast: [null, null, null, null, 1100, 1250]
-            },
-            weekly: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                actual: [1240, 1380, 1190, 1520, 1680, 890, 450],
-                forecast: [null, null, null, null, null, 1050, 1320]
-            },
-            monthly: {
-                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5 (Fcst)'],
-                actual: [8200, 9100, 8750, 12400, null],
-                forecast: [null, null, null, null, 13800]
-            },
-            quarterly: {
-                labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Q5 (Fcst)'],
-                actual: [28500, 31200, 29800, 34100, null],
-                forecast: [null, null, null, null, 37200]
-            }
-        };
+      <!-- Consumption Report -->
+      <div class="card">
+        <div class="card-title">Consumption Report</div>
+        <div class="report-row">
+          <span class="report-label">Total Harvested</span>
+          <span class="report-data" id="totalHarvestedValue">— Wh</span>
+        </div>
+        <div class="report-row">
+          <span class="report-label">Parasitic Draw</span>
+          <span class="report-data" id="parasiticDrawValue">— Wh</span>
+        </div>
+        <div class="report-row">
+          <span class="report-label">Net Energy</span>
+          <span class="report-data" id="netEnergyValue">— Wh</span>
+        </div>
+        <div class="report-row">
+          <span class="report-label">Efficiency</span>
+          <span class="report-data" id="efficiencyValue">—%</span>
+        </div>
+        <div class="efficiency-bar">
+          <div class="efficiency-fill" id="efficiencyFill" style="width:0%"></div>
+        </div>
+      </div>
 
-        let forecastChart;
+    </div>
+  </div>
 
-        function initChart() {
-            const ctx = document.getElementById('forecastChart').getContext('2d');
-            
-            forecastChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: chartData.weekly.labels,
-                    datasets: [
-                        {
-                            label: 'Actual Generation (Wh)',
-                            data: chartData.weekly.actual,
-                            backgroundColor: '#05162e',   // Navy bar
-                            borderRadius: 6,
-                        },
-                        {
-                            label: 'Forecasted Generation (Wh)',
-                            data: chartData.weekly.forecast,
-                            backgroundColor: '#e5c158',   // Gold bar
-                            borderRadius: 6,
-                            borderDash: [4, 3]
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { 
-                            position: 'bottom',
-                            labels: { font: { family: 'Inter', weight: '600' } }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: '#f1f5f9' },
-                            ticks: { callback: value => value + ' Wh' }
-                        },
-                        x: { grid: { display: false } }
-                    }
-                }
-            });
+</main>
+
+<script>
+  const SUPABASE_URL      = "https://qvadzitiwgkhzlgjmdac.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YWR6aXRpd2draHpsZ2ptZGFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjkyNjAsImV4cCI6MjA5MjM0NTI2MH0.8COO3BlKQNgXMwo_GZUTIt-Kxs0WfhHJ2yrL3e9--9c";
+  const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  let currentUserId = null;
+  let currentMatId  = null;
+  let forecastChart = null;
+
+  // ── INIT ──
+  async function init() {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (!session) { window.location.href = 'login1.html'; return; }
+    await loadAdminProfile(session.user.id);
+    await loadUserList();
+    initChart();
+    refreshDashboard();
+  }
+
+  // ── AUTH GUARD ──
+  _supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT' || !session) window.location.href = 'login1.html';
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await _supabase.auth.signOut();
+  });
+
+  async function loadAdminProfile(uid) {
+    const { data, error } = await _supabase.from('profiles').select('first_name, last_name').eq('id', uid).single();
+    if (error) { console.error('loadAdminProfile error:', error.message); return; }
+    if (data) {
+      const first = (data.first_name || '').trim();
+      const last  = (data.last_name  || '').trim();
+      const fullName = `${first} ${last}`.trim();
+      document.getElementById('adminName').textContent   = fullName || 'Admin';
+      document.getElementById('adminAvatar').textContent = ((first[0] || '') + (last[0] || '')).toUpperCase() || 'A';
+    }
+  }
+
+  async function loadUserList() {
+    const { data, error } = await _supabase.from('profiles').select('id, first_name, last_name, mat_id').eq('role', 'user').order('first_name');
+    if (error) { console.error(error); return; }
+    const sel = document.getElementById('matSelector');
+    sel.innerHTML = '<option value="">— Select a User —</option>';
+    (data || []).forEach(u => {
+      const opt = document.createElement('option');
+      opt.value = u.id;
+      opt.textContent = `${(u.first_name || '').trim()} ${(u.last_name || '').trim()}`.trim() || 'Unnamed User';
+      opt.dataset.matId = u.mat_id || '—';
+      sel.appendChild(opt);
+    });
+  }
+
+  function onMatChange() {
+    const sel = document.getElementById('matSelector');
+    currentUserId = sel.value;
+    currentMatId  = currentUserId ? (sel.options[sel.selectedIndex].dataset.matId || null) : null;
+    if (currentMatId === '—') currentMatId = null;
+    const userName = sel.options[sel.selectedIndex].text;
+
+    document.getElementById('selectedUid').textContent = currentUserId ? `UID: ${currentUserId.slice(0, 8)}...` : 'UID: —';
+    document.getElementById('selectorStatus').classList.toggle('visible', !!currentUserId);
+    document.getElementById('currentUserLabel').textContent = currentUserId
+      ? `NODE CONTEXT: ${userName.toUpperCase()}`
+      : 'GLOBAL AVERAGE';
+
+    refreshDashboard();
+  }
+
+  // ── PERIOD LOOKBACK WINDOWS (days) ──
+  const PERIOD_DAYS = { daily: 1, weekly: 7, monthly: 28, quarterly: 90 };
+
+  function getSinceIso(period) {
+    const days = PERIOD_DAYS[period] || 7;
+    return new Date(Date.now() - days * 24 * 3600 * 1000).toISOString();
+  }
+
+  // ── FETCH REAL TELEMETRY ──
+  // Time-bucketing (the "heatmap") is derived entirely from telemetry.created_at.
+  async function fetchTelemetry(matId, sinceIso) {
+    let query = _supabase
+      .from('telemetry')
+      .select('created_at, harvest_wh, harvest_mw, consume_wh, consume_mw, total_wh, steps')
+      .gte('created_at', sinceIso)
+      .order('created_at', { ascending: true });
+    if (matId) query = query.eq('mat_id', matId);
+
+    const { data, error } = await query;
+    if (error) { console.error('telemetry fetch error:', error); return []; }
+    return data || [];
+  }
+
+  // ── BUCKET ROWS BY TIME, KEYED OFF created_at ──
+  function bucketRows(period, rows) {
+    if (period === 'daily') {
+      const labels = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'];
+      const harvest = new Array(6).fill(0);
+      const consume = new Array(6).fill(0);
+      rows.forEach(r => {
+        const idx = Math.min(5, Math.floor(new Date(r.created_at).getHours() / 4));
+        harvest[idx] += r.harvest_wh || 0;
+        consume[idx] += r.consume_wh || 0;
+      });
+      return { labels, harvest, consume };
+    }
+
+    if (period === 'weekly') {
+      const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      const harvest = new Array(7).fill(0);
+      const consume = new Array(7).fill(0);
+      rows.forEach(r => {
+        const day = new Date(r.created_at).getDay(); // 0=Sun..6=Sat
+        const idx = day === 0 ? 6 : day - 1;          // remap so Mon=0..Sun=6
+        harvest[idx] += r.harvest_wh || 0;
+        consume[idx] += r.consume_wh || 0;
+      });
+      return { labels, harvest, consume };
+    }
+
+    if (period === 'monthly') {
+      const labels = ['Wk 1', 'Wk 2', 'Wk 3', 'Wk 4'];
+      const harvest = new Array(4).fill(0);
+      const consume = new Array(4).fill(0);
+      const now = Date.now();
+      rows.forEach(r => {
+        const daysAgo = Math.floor((now - new Date(r.created_at).getTime()) / 86400000);
+        const idxFromNow = Math.min(3, Math.floor(daysAgo / 7)); // 0=this week..3=4wks ago
+        const idx = 3 - idxFromNow; // Wk 1 = oldest week, Wk 4 = most recent
+        harvest[idx] += r.harvest_wh || 0;
+        consume[idx] += r.consume_wh || 0;
+      });
+      return { labels, harvest, consume };
+    }
+
+    // quarterly — bucket by real calendar month
+    const now = new Date();
+    const labels = [];
+    const monthKeys = [];
+    for (let i = 2; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      labels.push(d.toLocaleString('en-US', { month: 'short' }));
+      monthKeys.push(`${d.getFullYear()}-${d.getMonth()}`);
+    }
+    const harvest = new Array(3).fill(0);
+    const consume = new Array(3).fill(0);
+    rows.forEach(r => {
+      const d = new Date(r.created_at);
+      const idx = monthKeys.indexOf(`${d.getFullYear()}-${d.getMonth()}`);
+      if (idx !== -1) {
+        harvest[idx] += r.harvest_wh || 0;
+        consume[idx] += r.consume_wh || 0;
+      }
+    });
+    return { labels, harvest, consume };
+  }
+
+  // ── PEAK / CONSUMPTION STATS FROM RAW ROWS ──
+  function computeStats(rows) {
+    if (!rows.length) return null;
+
+    let peak = rows[0];
+    rows.forEach(r => { if ((r.harvest_mw || 0) > (peak.harvest_mw || 0)) peak = r; });
+
+    const totalHarvest = rows.reduce((s, r) => s + (r.harvest_wh || 0), 0);
+    const totalConsume = rows.reduce((s, r) => s + (r.consume_wh || 0), 0);
+    const net = totalHarvest - totalConsume;
+    const efficiency = totalHarvest > 0 ? (net / totalHarvest) * 100 : 0;
+
+    const byDay = {};
+    rows.forEach(r => {
+      const day = new Date(r.created_at).toDateString();
+      byDay[day] = (byDay[day] || 0) + (r.harvest_wh || 0);
+    });
+    const dayTotals = Object.values(byDay);
+    const avgDaily = dayTotals.length ? dayTotals.reduce((a, b) => a + b, 0) / dayTotals.length : 0;
+
+    return { peak, totalHarvest, totalConsume, net, efficiency, avgDaily, dayCount: dayTotals.length };
+  }
+
+  function formatPeakTime(iso) {
+    const d = new Date(iso);
+    const day = d.toLocaleString('en-US', { weekday: 'short' }).toUpperCase();
+    const hh  = String(d.getHours()).padStart(2, '0');
+    const mm  = String(d.getMinutes()).padStart(2, '0');
+    return `${day} ${hh}:${mm}`;
+  }
+
+  function fmtNum(n, decimals = 0) {
+    return Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  }
+
+  function initChart() {
+    const ctx = document.getElementById('forecastChart').getContext('2d');
+    forecastChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: [],
+        datasets: [
+          { label: 'Harvested (Wh)', data: [], backgroundColor: '#05162e', borderRadius: 4 },
+          { label: 'Consumed (Wh)',  data: [], backgroundColor: '#e5c158', borderRadius: 4 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels: { color: '#64748b', font: { family: 'Inter', size: 11 }, boxWidth: 14 } } },
+        scales: {
+          y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { callback: v => v + ' Wh', color: '#94a3b8', font: { family: 'JetBrains Mono', size: 10 } } },
+          x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono', size: 10 } } }
         }
+      }
+    });
+  }
 
-        function updateCharts() {
-            const period = document.getElementById('periodSelector').value;
-            const data = chartData[period];
+  // ── MAIN REFRESH: pulls telemetry, buckets by time, updates chart + stat cards ──
+  async function refreshDashboard() {
+    const period = document.getElementById('periodSelector').value || 'weekly';
+    const since = getSinceIso(period);
+    const rows = await fetchTelemetry(currentMatId, since);
 
-            if (forecastChart) {
-                forecastChart.data.labels = data.labels;
-                forecastChart.data.datasets[0].data = data.actual;
-                forecastChart.data.datasets[1].data = data.forecast;
-                forecastChart.update();
-            }
-        }
+    // Chart
+    const bucketed = bucketRows(period, rows);
+    if (forecastChart) {
+      forecastChart.data.labels = bucketed.labels;
+      forecastChart.data.datasets[0].data = bucketed.harvest;
+      forecastChart.data.datasets[1].data = bucketed.consume;
+      forecastChart.update();
+    }
 
-        // Initialize chart on page load
-        window.onload = function() {
-            initChart();
-        };
-    </script>
-    </script>
+    // Stat cards
+    const stats = computeStats(rows);
+    const periodLabelMap = { daily: 'LAST 24H', weekly: 'THIS WEEK', monthly: 'LAST 4 WEEKS', quarterly: 'LAST 3 MONTHS' };
+
+    if (!stats) {
+      document.getElementById('peakOutputValue').textContent = '— mW';
+      document.getElementById('peakOutputTime').textContent  = 'NO DATA';
+      document.getElementById('avgDailyValue').textContent   = '— Wh';
+      document.getElementById('avgDailyLabel').textContent   = periodLabelMap[period];
+      document.getElementById('totalHarvestedValue').textContent = '— Wh';
+      document.getElementById('parasiticDrawValue').textContent  = '— Wh';
+      document.getElementById('netEnergyValue').textContent      = '— Wh';
+      document.getElementById('efficiencyValue').textContent     = '—%';
+      document.getElementById('efficiencyFill').style.width      = '0%';
+      return;
+    }
+
+    document.getElementById('peakOutputValue').textContent = `${fmtNum(stats.peak.harvest_mw, 0)} mW`;
+    document.getElementById('peakOutputTime').textContent  = formatPeakTime(stats.peak.created_at);
+    document.getElementById('avgDailyValue').textContent   = `${fmtNum(stats.avgDaily, 0)} Wh`;
+    document.getElementById('avgDailyLabel').textContent   = periodLabelMap[period];
+
+    document.getElementById('totalHarvestedValue').textContent = `${fmtNum(stats.totalHarvest, 0)} Wh`;
+    document.getElementById('parasiticDrawValue').textContent  = `${fmtNum(stats.totalConsume, 0)} Wh`;
+    document.getElementById('netEnergyValue').textContent      = `${fmtNum(stats.net, 0)} Wh`;
+    const effClamped = Math.max(0, Math.min(100, stats.efficiency));
+    document.getElementById('efficiencyValue').textContent     = `${fmtNum(stats.efficiency, 1)}%`;
+    document.getElementById('efficiencyFill').style.width      = `${effClamped}%`;
+  }
+
+  function updateCharts() { refreshDashboard(); }
+
+  window.onload = init;
+</script>
 </body>
 </html>

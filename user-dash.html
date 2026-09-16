@@ -1,472 +1,495 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartStep | My Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        :root {
-            --navy-dark: #05162e;
-            --navy-mid: #0a2447;
-            --gold: #e5c158;
-            --gold-soft: #fdf9ec;
-            --white: #ffffff;
-            --bg-slate: #f8fafc;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-slate); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartStep | My Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    :root {
+        --navy-dark: #05162e;
+        --navy-mid: #0a2447;
+        --gold: #e5c158;
+        --gold-soft: #fdf9ec;
+        --white: #ffffff;
+        --bg-slate: #f8fafc;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+        --success: #10b981;
+        --success-soft: #dcfce7;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg-slate); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-        /* SIDEBAR */
-        .sidebar { width: 260px; background: var(--navy-dark); color: white; padding: 30px 20px; display: flex; flex-direction: column; flex-shrink: 0; }
-        .logo { font-family: 'Lexend', sans-serif; color: var(--gold); font-size: 1.5rem; margin-bottom: 8px; }
-        /* USER BADGE - Top Right (Visible & Professional) */
-        .user-badge {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 12px 20px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-            min-width: 245px;
-            transition: all 0.25s ease;
-        }
+    /* SIDEBAR */
+    .sidebar { width: 250px; background: var(--navy-dark); color: white; padding: 28px 18px; display: flex; flex-direction: column; flex-shrink: 0; }
+    .logo { font-family: 'Lexend', sans-serif; color: var(--gold); font-size: 1.4rem; margin-bottom: 30px; }
+    .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); margin: 18px 0 8px; padding: 0 5px; }
+    .nav-link { display: flex; align-items: center; gap: 10px; padding: 10px 14px; text-decoration: none; color: rgba(255,255,255,0.7); border-radius: 8px; transition: 0.2s; font-size: 0.87rem; margin-bottom: 2px; }
+    .nav-link:hover { background: rgba(229,193,88,0.08); color: white; }
+    .nav-link.active { background: rgba(229,193,88,0.15); color: var(--gold); font-weight: 600; }
+    .sidebar-footer { margin-top: auto; }
+    .logout-btn { display: flex; align-items: center; gap: 8px; padding: 10px 14px; color: rgba(255,255,255,0.4); cursor: pointer; border-radius: 8px; font-size: 0.83rem; transition: 0.2s; }
+    .logout-btn:hover { color: var(--danger); background: rgba(239,68,68,0.08); }
+    .node-info { font-family: 'JetBrains Mono', monospace; font-size: 0.63rem; opacity: 0.35; margin-top: 10px; padding: 0 5px; line-height: 1.5; }
 
-        .user-badge:hover {
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.09);
-            border-color: var(--gold);
-            transform: translateY(-1px);
-        }
+    /* MAIN */
+    .main-content { flex: 1; overflow-y: auto; padding: 32px 36px; }
 
-        .avatar {
-            width: 40px;
-            height: 40px;
-            background: var(--gold);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: var(--navy-dark);
-            font-size: 1rem;
-            flex-shrink: 0;
-            box-shadow: 0 3px 8px rgba(229, 193, 88, 0.4);
-        }
+    .top-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; gap: 20px; }
+    .page-header-content h1 { font-family: 'Lexend', sans-serif; font-size: 1.55rem; color: var(--navy-dark); margin-bottom: 4px; }
+    .page-header-content p { color: var(--text-muted); font-size: 0.87rem; }
+    .right-header { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 
-        .user-name {
-            font-size: 0.96rem;
-            font-weight: 600;
-            color: var(--navy-dark);        /* Dark text for visibility */
-            line-height: 1.25;
-            margin: 0;
-        }
+    .live-pill { display: flex; align-items: center; gap: 7px; background: var(--white); border: 1px solid var(--border); padding: 8px 14px; border-radius: 20px; font-size: 0.76rem; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+    .live-dot { width: 7px; height: 7px; background: var(--success); border-radius: 50%; animation: livePulse 1.5s infinite; }
+    @keyframes livePulse { 0%,100% { opacity:1; transform:scale(1);} 50% { opacity:0.5; transform:scale(0.8);} }
 
-        .user-role {
-            font-size: 0.74rem;
-            color: var(--gold);
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 500;
-            letter-spacing: 0.6px;
-            margin: 0;
-        }
+    .user-badge { display: flex; align-items: center; gap: 10px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 8px 16px; min-width: 190px; }
+    .avatar { width: 34px; height: 34px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--navy-dark); font-size: 0.85rem; flex-shrink: 0; }
+    .user-name { font-size: 0.86rem; font-weight: 600; color: var(--navy-dark); line-height: 1.2; }
+    .user-role { font-size: 0.68rem; color: var(--gold); font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
 
-        .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); margin: 20px 0 8px; padding: 0 5px; }
-        .nav-link { display: block; padding: 11px 15px; text-decoration: none; color: rgba(255,255,255,0.7); border-radius: 8px; transition: 0.2s; font-size: 0.88rem; margin-bottom: 3px; display: flex; align-items: center; gap: 10px; }
-        .nav-link:hover { background: rgba(229,193,88,0.08); color: white; }
-        .nav-link.active { background: rgba(229,193,88,0.15); color: var(--gold); font-weight: 600; }
-        .nav-icon { font-size: 1rem; width: 18px; text-align: center; }
+    /* SECTION LABEL */
+    .section-label { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.4px; margin: 26px 0 12px; }
+    .section-label:first-of-type { margin-top: 0; }
 
-        .sidebar-footer { margin-top: auto; }
-        .logout-btn { display: flex; align-items: center; gap: 8px; padding: 11px 15px; color: rgba(255,255,255,0.4); cursor: pointer; border-radius: 8px; font-size: 0.85rem; transition: 0.2s; }
-        .logout-btn:hover { color: var(--danger); background: rgba(239,68,68,0.08); }
-        .node-info { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; opacity: 0.35; margin-top: 12px; padding: 0 5px; }
+    /* ===== BATTERY HERO CARD ===== */
+    .battery-card { background: linear-gradient(135deg, var(--navy-dark), var(--navy-mid)); border-radius: 20px; padding: 30px 32px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 32px; position: relative; overflow: hidden; }
+    .battery-card::after { content: ''; position: absolute; top: -80px; right: 10%; width: 240px; height: 240px; background: radial-gradient(circle, rgba(229,193,88,0.12), transparent 70%); border-radius: 50%; pointer-events: none; }
 
-        /* MAIN */
-        .main-content { flex: 1; overflow-y: auto; padding: 35px; }
-        /* TOP HEADER ROW - Page Title (Left) | Live Pill + User Badge (Right) */
-        .top-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-            gap: 20px;
-        }
+    .charge-ring-wrap { position: relative; width: 118px; height: 118px; flex-shrink: 0; }
+    .charge-ring-wrap svg { transform: rotate(-90deg); width: 100%; height: 100%; }
+    .ring-track { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 9; }
+    .ring-fill { fill: none; stroke: var(--gold); stroke-width: 9; stroke-linecap: round; transition: stroke-dashoffset 0.8s ease, stroke 0.4s ease; }
+    .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .ring-pct { font-family: 'Lexend', sans-serif; font-size: 1.5rem; color: white; line-height: 1; }
+    .ring-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 8px; background: rgba(255,255,255,0.5); }
+    .ring-dot.charging { background: var(--success); animation: dotPulse 1.4s ease-in-out infinite; }
+    @keyframes dotPulse { 0%,100% { opacity: 0.5; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1.15); } }
 
-        .page-header-content {
-            flex: 1;
-        }
+    .battery-info { color: white; }
+    .battery-status-text { font-family: 'Lexend', sans-serif; font-size: 1.15rem; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
+    .status-chip { font-size: 0.62rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .chip-charging { background: rgba(16,185,129,0.2); color: #6ee7b7; }
+    .chip-idle { background: rgba(229,193,88,0.2); color: var(--gold); }
+    .chip-discharging { background: rgba(239,68,68,0.18); color: #fca5a5; }
+    .battery-sub { font-size: 0.82rem; color: rgba(255,255,255,0.55); }
 
-        .page-header-content h1 {
-            font-family: 'Lexend', sans-serif;
-            font-size: 1.7rem;
-            color: var(--navy-dark);
-            margin: 0 0 4px 0;
-        }
+    .battery-flow-detail { text-align: right; color: rgba(255,255,255,0.7); font-size: 0.78rem; font-family: 'JetBrains Mono', monospace; line-height: 1.9; }
+    .battery-flow-detail b { color: var(--gold); font-weight: 600; }
 
-        .page-header-content p {
-            color: var(--text-muted);
-            font-size: 0.88rem;
-            margin: 0;
-        }
+    /* ===== TWO-COLUMN GROUPS ===== */
+    .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 
-        .right-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-shrink: 0;
-        }
+    .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
+    .card-title { font-size: 0.92rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+    .card-subtitle { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 18px; }
 
-        .live-pill {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            background: var(--white);
-            border: 1px solid var(--border);
-            padding: 9px 16px;
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            white-space: nowrap;
-        }
+    .metric-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 18px; }
+    .metric { background: var(--bg-slate); border-radius: 12px; padding: 14px 12px; }
+    .metric-val { font-family: 'Lexend', sans-serif; font-size: 1.25rem; color: var(--navy-dark); line-height: 1; }
+    .metric-unit { font-size: 0.68rem; color: var(--text-muted); font-weight: 500; }
+    .metric-label { font-size: 0.68rem; color: var(--text-muted); margin-top: 5px; }
 
-        .live-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--success);
-            border-radius: 50%;
-            animation: livePulse 1.5s infinite;
-        }
+    .headline-stat { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+    .headline-val { font-family: 'Lexend', sans-serif; font-size: 2rem; color: var(--navy-dark); }
+    .headline-unit { font-size: 1rem; color: var(--text-muted); }
+    .headline-label { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 18px; }
 
-        @keyframes livePulse {
-            0%, 100% { opacity:1; transform:scale(1); }
-            50% { opacity:0.5; transform:scale(0.8); }
-        }
+    .chart-wrap { height: 150px; }
 
-
-        /* ENERGY FLOW VISUAL - 1.1 */
-        .energy-flow-card { background: var(--navy-dark); border-radius: 20px; padding: 30px; margin-bottom: 25px; position: relative; overflow: hidden; }
-        .energy-flow-card::before { content: ''; position: absolute; top: -60px; right: -60px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(229,193,88,0.15), transparent 70%); border-radius: 50%; }
-        .ef-label { color: rgba(255,255,255,0.5); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px; }
-        .ef-main { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; gap: 0; }
-        .ef-node { text-align: center; }
-        .ef-node-icon { font-size: 2.2rem; margin-bottom: 8px; display: block; }
-        .ef-node-val { font-family: 'Lexend', sans-serif; font-size: 1.6rem; color: var(--gold); font-weight: 700; }
-        .ef-node-label { font-size: 0.72rem; color: rgba(255,255,255,0.55); margin-top: 3px; }
-        .ef-arrow { display: flex; align-items: center; justify-content: center; padding: 0 15px; }
-        .ef-arrow-line { width: 60px; height: 3px; background: linear-gradient(90deg, rgba(229,193,88,0.3), rgba(229,193,88,0.8)); border-radius: 2px; position: relative; overflow: hidden; }
-        .ef-arrow-line::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); animation: flowAnim 2s linear infinite; }
-        @keyframes flowAnim { to { left: 100%; } }
-
-        /* STATUS GRID - 1.2 */
-        .status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 25px; }
-        .stat-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 22px; transition: 0.2s; }
-        .stat-card:hover { border-color: var(--gold); box-shadow: 0 8px 24px rgba(0,0,0,0.06); }
-        .stat-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px; }
-        .stat-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-        .icon-gold { background: var(--gold-soft); }
-        .icon-green { background: #dcfce7; }
-        .icon-blue { background: #eff6ff; }
-        .stat-badge { font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; }
-        .badge-up { background: #dcfce7; color: #166534; }
-        .badge-live { background: rgba(229,193,88,0.15); color: var(--navy-dark); }
-        .stat-val { font-family: 'Lexend', sans-serif; font-size: 2rem; color: var(--navy-dark); line-height: 1; }
-        .stat-unit { font-size: 0.9rem; color: var(--text-muted); font-family: 'Inter'; font-weight: 400; }
-        .stat-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; }
-        .mini-bar { height: 5px; background: #f1f5f9; border-radius: 3px; margin-top: 14px; overflow: hidden; }
-        .mini-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--navy-dark), var(--gold)); }
-
-        /* DEVICE STATUS - 1.3 */
-        .bottom-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; }
-        .card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 22px; }
-        .card-title { font-size: 0.72rem; font-weight: 700; color: var(--navy-dark); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
-        .card-title .ct-icon { color: var(--gold); }
-
-        /* Charging Status */
-        .charging-status { display: flex; flex-direction: column; gap: 12px; }
-        .charge-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: var(--bg-slate); border-radius: 10px; border-left: 3px solid transparent; }
-        .charge-row.active-charge { border-left-color: var(--success); }
-        .charge-row.standby { border-left-color: var(--gold); }
-        .charge-info { display: flex; align-items: center; gap: 12px; }
-        .charge-icon { font-size: 1.4rem; }
-        .charge-name { font-size: 0.88rem; font-weight: 600; color: var(--text-main); }
-        .charge-detail { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
-        .charge-tag { font-size: 0.7rem; font-weight: 700; padding: 5px 10px; border-radius: 6px; }
-        .tag-active { background: #dcfce7; color: #166534; }
-        .tag-standby { background: var(--gold-soft); color: var(--navy-dark); }
-
-      
-    </style>
+    .health-list { display: flex; flex-direction: column; gap: 10px; }
+    .health-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; background: var(--bg-slate); border-radius: 10px; }
+    .health-key { font-size: 0.8rem; color: var(--text-muted); }
+    .health-val { font-size: 0.82rem; font-weight: 600; color: var(--navy-dark); font-family: 'JetBrains Mono', monospace; }
+    .health-val.ok { color: var(--success); }
+    .health-val.warn { color: var(--warning); }
+</style>
 </head>
 <body>
     <aside class="sidebar">
-        <div class="logo">⚡ SmartStep</div>
-
-
+        <div class="logo">SmartStep</div>
         <div class="nav-section">Main</div>
-        <a href="user-dash.html" class="nav-link active"><span class="nav-icon"></span> My Dashboard</a>
-        <a href="user-analytics.html" class="nav-link"><span class="nav-icon"></span> General Analytics</a>
-
-        
-        <a href="user-settings.html" class="nav-link"><span class="nav-icon"></span> My Settings</a>
-        <a href="user-settings.html#notifications" class="nav-link"><span class="nav-icon"></span> Notifications</a>
-
+        <a href="user-dash.html" class="nav-link active">My Dashboard</a>
+        <a href="user-analytics.html" class="nav-link">General Analytics</a>
+        <a href="user-settings.html" class="nav-link">My Settings</a>
+        <a href="user-notif.html" class="nav-link">Notifications</a>
         <div class="sidebar-footer">
-            <div class="logout-btn" onclick="window.location.href='login.html'">
-                <span>🚪</span> Sign Out
-            </div>
-            <div class="node-info">Node: ESP8266-031<br>Ver: 1.3.0-PRO · User Mode</div>
+            <div class="logout-btn" onclick="handleLogout()">Sign Out</div>
+            <div class="node-info">Node: —<br>Ver: 1.3.0-PRO · User Mode</div>
         </div>
     </aside>
 
     <main class="main-content">
-    <div class="top-header-row">
-
-            <!-- LEFT: Page Title & Description -->
+        <div class="top-header-row">
             <div class="page-header-content">
-                <p style="color:var(--gold);font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;">
-                    Interactive Dashboard · Section 1.1
-                </p>
-                <h1>Visual Energy Flow</h1>
-                <p>Real-time piezoelectric harvesting overview</p>
+                <h1>My Dashboard</h1>
+                <p>Real-time harvesting overview</p>
             </div>
-
-            <!-- RIGHT: Live Pill + User Badge -->
             <div class="right-header">
-                <div class="live-pill">
-                    <div class="live-dot"></div> 
-                    Live · Updates every 5s
-                </div>
-                
+                <div class="live-pill"><div class="live-dot"></div> Live · Updates every 5s</div>
                 <div class="user-badge">
-                        <div class="avatar">?</div>
-                        <div>
-                            <div class="user-name">Loading...</div>
-                            <div class="user-role">USER · ACTIVE</div>
-                        </div>
+                    <div class="avatar">?</div>
+                    <div>
+                        <div class="user-name">Loading...</div>
+                        <div class="user-role">USER · ACTIVE</div>
                     </div>
-            </div>
-
-        </div>
-
-        <!-- 1.1 VISUAL ENERGY FLOW -->
-        <div class="energy-flow-card">
-            <div class="ef-label">⚡ Live Energy Pipeline</div>
-            <div class="ef-main">
-                <div class="ef-node">
-                    <span class="ef-node-icon"></span>
-                    <div class="ef-node-val">4,821</div>
-                    <div class="ef-node-label">Steps Today</div>
-                </div>
-                <div class="ef-arrow">
-                    <div class="ef-arrow-line"></div>
-                    <span style="color:var(--gold);margin-left:4px;">▶</span>
-                </div>
-                <div class="ef-node">
-                    <span class="ef-node-icon"></span>
-                    <div class="ef-node-val">1,240<span style="font-size:1rem;color:rgba(255,255,255,0.5)"> Wh</span></div>
-                    <div class="ef-node-label">Harvested Energy</div>
-                </div>
-                <div class="ef-arrow">
-                    <div class="ef-arrow-line"></div>
-                    <span style="color:var(--gold);margin-left:4px;">▶</span>
-                </div>
-                <div class="ef-node">
-                    <span class="ef-node-icon"></span>
-                    <div class="ef-node-val">88.4<span style="font-size:1rem;color:rgba(255,255,255,0.5)">%</span></div>
-                    <div class="ef-node-label">Battery State</div>
-                </div>
-            </div>
-            <div style="display:flex;gap:30px;margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08)">
-                <div>
-                    <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">Voltage</div>
-                    <div style="font-family:'JetBrains Mono',monospace;color:var(--gold);font-size:0.9rem;font-weight:700;">12.6V</div>
-                </div>
-                <div>
-                    <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">Charge Rate</div>
-                    <div style="font-family:'JetBrains Mono',monospace;color:var(--gold);font-size:0.9rem;font-weight:700;">2.4A</div>
-                </div>
-                <div>
-                    <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">Charging Port</div>
-                    <div style="font-family:'JetBrains Mono',monospace;color:#10b981;font-size:0.9rem;font-weight:700;">5V ACTIVE</div>
-                </div>
-                <div>
-                    <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;">System Draw</div>
-                    <div style="font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,0.6);font-size:0.9rem;font-weight:700;">120 mW</div>
                 </div>
             </div>
         </div>
 
-        <!-- 1.2 TODAY'S STATUS -->
-        <p style="font-size:0.72rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:12px;">Today's Status · Section 1.2</p>
-        <div class="status-grid">
-            <div class="stat-card">
-                <div class="stat-top">
-                    
-                    <span class="stat-badge badge-live">LIVE</span>
+        <!-- BATTERY STATUS -->
+        <div class="section-label">Battery Status</div>
+        <div class="battery-card">
+            <div class="charge-ring-wrap">
+                <svg viewBox="0 0 120 120">
+                    <circle class="ring-track" cx="60" cy="60" r="52"></circle>
+                    <circle id="ring-fill" class="ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"></circle>
+                </svg>
+                <div class="ring-center">
+                    <div class="ring-pct" id="soc-pct">—%</div>
+                    <div class="ring-dot" id="soc-bolt"></div>
                 </div>
-                <div class="stat-val">4,821 <span class="stat-unit">steps</span></div>
-                <div class="stat-label">Total footsteps counted today</div>
-                <div class="mini-bar"><div class="mini-bar-fill" style="width:64%;"></div></div>
             </div>
-            <div class="stat-card">
-                <div class="stat-top">
-                    
-                    <span class="stat-badge badge-up">+12%</span>
+            <div class="battery-info">
+                <div class="battery-status-text">
+                    <span id="charge-headline">Reading battery…</span>
+                    <span class="status-chip chip-idle" id="charge-chip">—</span>
                 </div>
-                <div class="stat-val">1,240 <span class="stat-unit">Wh</span></div>
-                <div class="stat-label">Total energy harvested today</div>
-                <div class="mini-bar"><div class="mini-bar-fill" style="width:76%;"></div></div>
+                <div class="battery-sub" id="charge-sub">Waiting for live telemetry</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-top">
-                    
-                    <span class="stat-badge badge-up">SAVED</span>
-                </div>
-                <div class="stat-val">842 <span class="stat-unit">Wh</span></div>
-                <div class="stat-label">Delivered to mobile charging</div>
-                <div class="mini-bar"><div class="mini-bar-fill" style="width:52%;background:var(--success);"></div></div>
+            <div class="battery-flow-detail">
+                <div>Harvest: <b id="flow-harvest">0 mW</b></div>
+                <div>Load: <b id="flow-load">0 mW</b></div>
+                <div>Net: <b id="flow-net">0 mW</b></div>
             </div>
         </div>
 
-        <!-- 1.3 DEVICE STATUS -->
-        <div class="bottom-grid">
+        <!-- POWER GENERATION + SYSTEM HEALTH -->
+        <div class="section-label">Power Generation &amp; System Health</div>
+        <div class="split-grid">
             <div class="card">
-                <div class="card-title"><span class="ct-icon">📊</span> Charging Port Status · Real-Time Feedback</div>
-                <div class="chart-wrap">
-                    <canvas id="liveChart"></canvas>
+                <div class="card-title">Power Harvesting</div>
+                <div class="card-subtitle">Piezoelectric input from footstep activity</div>
+                <div class="headline-stat">
+                    <span class="headline-val" id="steps-val">0</span>
+                    <span class="headline-unit">steps today</span>
                 </div>
+                <div class="headline-label">Total footsteps counted on this mat</div>
+                <div class="metric-row">
+                    <div class="metric">
+                        <div class="metric-val" id="harvest-v">0<span class="metric-unit"> V</span></div>
+                        <div class="metric-label">Harvest voltage</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-val" id="harvest-ma">0<span class="metric-unit"> mA</span></div>
+                        <div class="metric-label">Harvest current</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-val" id="harvest-wh">0<span class="metric-unit"> Wh</span></div>
+                        <div class="metric-label">Session energy</div>
+                    </div>
+                </div>
+                <div class="chart-wrap"><canvas id="powerChart"></canvas></div>
             </div>
 
             <div class="card">
-                <div class="card-title"><span class="ct-icon">🔌</span> Charging Availability</div>
-                <div class="charging-status">
-                    <div class="charge-row active-charge">
-                        <div class="charge-info">
-                            <span class="charge-icon">📱</span>
-                            <div>
-                                <div class="charge-name">USB Port A</div>
-                                <div class="charge-detail">5V · 2.4A · Phone detected</div>
-                            </div>
-                        </div>
-                        <span class="charge-tag tag-active">IN USE</span>
+                <div class="card-title">System Health</div>
+                <div class="card-subtitle">Load, connectivity and device status</div>
+                <div class="metric-row">
+                    <div class="metric">
+                        <div class="metric-val" id="consume-mw">0<span class="metric-unit"> mW</span></div>
+                        <div class="metric-label">Current load</div>
                     </div>
-                    <div class="charge-row standby">
-                        <div class="charge-info">
-                            <span class="charge-icon">🔌</span>
-                            <div>
-                                <div class="charge-name">USB Port B</div>
-                                <div class="charge-detail">5V · 2.4A · Ready</div>
-                            </div>
-                        </div>
-                        <span class="charge-tag tag-standby">STANDBY</span>
+                    <div class="metric">
+                        <div class="metric-val" id="consume-ma">0<span class="metric-unit"> mA</span></div>
+                        <div class="metric-label">Load current</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-val" id="consume-wh">0<span class="metric-unit"> Wh</span></div>
+                        <div class="metric-label">Session drawn</div>
                     </div>
                 </div>
-
-                
+                <div class="health-list">
+                    <div class="health-row">
+                        <span class="health-key">Connection</span>
+                        <span class="health-val ok" id="conn-status">Connecting…</span>
+                    </div>
+                    <div class="health-row">
+                        <span class="health-key">Last reading</span>
+                        <span class="health-val" id="last-reading">—</span>
+                    </div>
+                    <div class="health-row">
+                        <span class="health-key">Mat ID</span>
+                        <span class="health-val" id="mat-id-val">—</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
-   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, onValue, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = "https://qvadzitiwgkhzlgjmdac.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_sXpXQDgC4HXXlUnecf-TaA_T-tjEsA7";
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const firebaseConfig = {
-    apiKey: "AIzaSyCkYdfeGF54YM9OgeZxbJ2nDgpHt9ApO7A",
-    authDomain: "smartstep-8c1f3.firebaseapp.com",
-    // ADD THIS EXACT LINE:
-    databaseURL: "https://smartstep-8c1f3-default-rtdb.asia-southeast1.firebasedatabase.app/",
-    projectId: "smartstep-8c1f3",
-    storageBucket: "smartstep-8c1f3.firebasestorage.app",
-    messagingSenderId: "346600511575",
-    appId: "1:346600511575:web:2b03397c11fb153ecaab12",
-    measurementId: "G-8SPLQ1BHVR"
-};
+// Assumed nominal capacity of the mat's storage cell. Adjust to match the
+// real hardware spec — this is not stored in the telemetry table, so it is
+// the one modeling assumption the "Time to Full" estimate depends on.
+const BATTERY_CAPACITY_WH = 5.0;
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
+let refreshInterval = null;
+let currentMatId = null;
 
-    // --- 1. AUTH GUARD & PROFILE LOADER ---
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            loadUserProfile(user.uid);
-            setupRealtimeData(); // Only start listening to data if logged in
-        } else {
-            window.location.href = 'login1.html';
-        }
-    });
+// --- 1. AUTH GUARD ---
+async function checkUser() {
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (session) {
+        document.body.style.display = 'flex';
+        loadUserProfile(session.user.id);
+    } else {
+        window.location.href = 'login1.html';
+    }
+}
+checkUser();
 
-    function loadUserProfile(uid) {
-        get(ref(db, 'users/' + uid)).then((snapshot) => {
-            if (snapshot.exists()) {
-                const d = snapshot.val();
-                document.querySelector('.user-name').innerText = `${d.firstName} ${d.lastName}`;
-                document.querySelector('.avatar').innerText = d.firstName[0] + d.lastName[0];
-            }
-        });
+_supabase.auth.onAuthStateChange((event) => {
+    if (event === 'SIGNED_OUT') window.location.href = 'login1.html';
+});
+
+// --- 2. LOAD USER PROFILE ---
+async function loadUserProfile(authUid) {
+    const { data, error } = await _supabase
+        .from('profiles')
+        .select('first_name, last_name, mat_id, pref_refresh')
+        .eq('id', authUid)
+        .maybeSingle();
+
+    if (error || !data) {
+        console.error("Failed to load user profile:", error?.message);
+        return;
     }
 
-    // --- 2. REAL-TIME DATA SYNC ---
-    function setupRealtimeData() {
-        // Update Steps & Energy (Section 1.1 & 1.2)
-        onValue(ref(db, 'system_status'), (snapshot) => {
-            const val = snapshot.val();
-            if (val) {
-                // Update Pipeline Card
-                document.getElementById('live-steps').innerText = val.steps_today.toLocaleString();
-                document.getElementById('live-energy').innerHTML = `${val.energy_wh} <span style="font-size:1rem;color:rgba(255,255,255,0.5)"> Wh</span>`;
-                document.getElementById('live-battery').innerHTML = `${val.battery_pct}<span style="font-size:1rem;color:rgba(255,255,255,0.5)">%</span>`;
-                
-                // Update Small Details
-                document.getElementById('live-voltage').innerText = val.voltage + "V";
-                
-                // Update Today's Status Cards (Section 1.2)
-                const statCards = document.querySelectorAll('.stat-val');
-                statCards[0].innerHTML = `${val.steps_today.toLocaleString()} <span class="stat-unit">steps</span>`;
-                statCards[1].innerHTML = `${val.energy_wh} <span class="stat-unit">Wh</span>`;
+    document.querySelector('.user-name').innerText = `${data.first_name} ${data.last_name}`;
+    document.querySelector('.avatar').innerText = (data.first_name[0] + data.last_name[0]).toUpperCase();
+    document.querySelector('.node-info').innerHTML = `Node: ${data.mat_id || 'Not Assigned'}<br>Ver: 1.3.0-PRO · User Mode`;
+    document.getElementById('mat-id-val').innerText = data.mat_id || 'Not assigned';
+
+    const refreshSeconds = parseInt(data.pref_refresh) || 5;
+    updateLivePill(refreshSeconds);
+
+    if (data.mat_id) {
+        currentMatId = data.mat_id;
+        setupRealtimeData(data.mat_id, refreshSeconds);
+    } else {
+        document.getElementById('conn-status').innerText = 'No mat assigned';
+        document.getElementById('conn-status').className = 'health-val warn';
+    }
+}
+
+// --- 3. LIVE PILL ---
+function updateLivePill(seconds) {
+    const label = seconds < 60 ? `Updates every ${seconds}s` : `Updates every ${seconds / 60}m`;
+    document.querySelector('.live-pill').innerHTML = `<div class="live-dot"></div> Live · ${label}`;
+}
+
+// --- 4. DATA SYNC (subscribes to the real "telemetry" table, filtered by mat_id) ---
+function setupRealtimeData(matId, refreshSeconds = 5) {
+    if (refreshInterval) clearInterval(refreshInterval);
+
+    _supabase
+        .channel('live-telemetry')
+        .on('postgres_changes',
+            { event: 'INSERT', schema: 'public', table: 'telemetry', filter: `mat_id=eq.${matId}` },
+            (payload) => {
+                applyTelemetry(payload.new);
+                document.getElementById('conn-status').innerText = 'Live';
+                document.getElementById('conn-status').className = 'health-val ok';
             }
-        });
+        )
+        .subscribe();
+
+    refreshLatestTelemetry(matId);
+    refreshInterval = setInterval(() => refreshLatestTelemetry(matId), refreshSeconds * 1000);
+}
+
+// --- 5. FETCH LATEST TELEMETRY ROW ---
+async function refreshLatestTelemetry(matId) {
+    const { data, error } = await _supabase
+        .from('telemetry')
+        .select('steps, total_wh, harvest_v, harvest_ma, harvest_mw, harvest_wh, consume_v, consume_ma, consume_mw, consume_wh, created_at')
+        .eq('mat_id', matId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+    if (error) {
+        console.error("Supabase Telemetry Error:", error.message);
+        document.getElementById('conn-status').innerText = 'Error';
+        document.getElementById('conn-status').className = 'health-val warn';
+        return;
     }
 
-    // --- 3. CHART LOGIC ---
-    const ctx = document.getElementById('liveChart').getContext('2d');
-    const liveChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['-5m', '-4m', '-3m', '-2m', '-1m', 'Now'],
-            datasets: [{
-                label: 'Energy Harvested (mW)',
-                data: [0, 0, 0, 0, 0, 0],
-                borderColor: '#e5c158', backgroundColor: 'rgba(229,193,88,0.08)',
-                fill: true, tension: 0.4
-            }]
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-    });
+    if (data) {
+        applyTelemetry(data);
+        document.getElementById('conn-status').innerText = 'Connected';
+        document.getElementById('conn-status').className = 'health-val ok';
+    } else {
+        document.getElementById('conn-status').innerText = 'No data yet';
+        document.getElementById('conn-status').className = 'health-val warn';
+    }
+}
 
-    // Listen for new power spikes to update the chart
-    onValue(ref(db, 'live_telemetry/power_mw'), (snapshot) => {
-        const newData = snapshot.val();
-        liveChart.data.datasets[0].data.shift();
-        liveChart.data.datasets[0].data.push(newData);
-        liveChart.update();
-    });
+// --- 6. APPLY A TELEMETRY ROW TO THE UI ---
+function applyTelemetry(row) {
+    const steps = row.steps || 0;
+    const harvestV = row.harvest_v || 0;
+    const harvestMa = row.harvest_ma || 0;
+    const harvestMw = row.harvest_mw || 0;
+    const harvestWh = row.harvest_wh || 0;
+    const consumeV = row.consume_v || 0;
+    const consumeMa = row.consume_ma || 0;
+    const consumeMw = row.consume_mw || 0;
+    const consumeWh = row.consume_wh || 0;
+    const totalWh = row.total_wh || 0;
 
-    // --- 4. LOGOUT ---
-    window.handleLogout = () => {
-        signOut(auth).then(() => { window.location.href = 'login1.html'; });
-    };
+    // Power Generation
+    document.getElementById('steps-val').innerText = steps.toLocaleString();
+    document.getElementById('harvest-v').innerHTML = `${harvestV.toFixed(2)}<span class="metric-unit"> V</span>`;
+    document.getElementById('harvest-ma').innerHTML = `${harvestMa.toFixed(1)}<span class="metric-unit"> mA</span>`;
+    document.getElementById('harvest-wh').innerHTML = `${harvestWh.toFixed(3)}<span class="metric-unit"> Wh</span>`;
+
+    // System Health
+    document.getElementById('consume-mw').innerHTML = `${consumeMw.toFixed(1)}<span class="metric-unit"> mW</span>`;
+    document.getElementById('consume-ma').innerHTML = `${consumeMa.toFixed(1)}<span class="metric-unit"> mA</span>`;
+    document.getElementById('consume-wh').innerHTML = `${consumeWh.toFixed(3)}<span class="metric-unit"> Wh</span>`;
+    document.getElementById('last-reading').innerText = row.created_at ? formatTimeAgo(row.created_at) : '—';
+
+    // Battery / charge estimate
+    updateBattery(totalWh, harvestMw, consumeMw);
+
+    // Chart
+    updateChart(harvestMw, consumeMw);
+}
+
+// --- 7. BATTERY STATE OF CHARGE + TIME-TO-FULL ---
+const RING_CIRCUMFERENCE = 2 * Math.PI * 52;
+
+function updateBattery(totalWh, harvestMw, consumeMw) {
+    const socRaw = (totalWh / BATTERY_CAPACITY_WH) * 100;
+    const soc = Math.max(0, Math.min(100, socRaw));
+
+    const harvestW = harvestMw / 1000;
+    const consumeW = consumeMw / 1000;
+    const netW = harvestW - consumeW;
+
+    // Ring
+    const offset = RING_CIRCUMFERENCE * (1 - soc / 100);
+    const ring = document.getElementById('ring-fill');
+    ring.style.strokeDasharray = RING_CIRCUMFERENCE;
+    ring.style.strokeDashoffset = offset;
+    document.getElementById('soc-pct').innerText = `${soc.toFixed(0)}%`;
+
+    const bolt = document.getElementById('soc-bolt');
+    const chip = document.getElementById('charge-chip');
+    const headline = document.getElementById('charge-headline');
+    const sub = document.getElementById('charge-sub');
+    const NET_THRESHOLD = 0.005; // W — ignore noise around zero net power
+
+    if (soc >= 99.5) {
+        ring.style.stroke = 'var(--gold)';
+        bolt.classList.remove('charging');
+        bolt.style.background = 'var(--gold)';
+        chip.textContent = 'Idle';
+        chip.className = 'status-chip chip-idle';
+        headline.textContent = '100% · Fully Charged';
+        sub.textContent = 'Battery topped up — no net charge needed';
+    } else if (netW > NET_THRESHOLD) {
+        const remainingWh = BATTERY_CAPACITY_WH * (1 - soc / 100);
+        const hoursToFull = remainingWh / netW;
+        ring.style.stroke = 'var(--success)';
+        bolt.classList.add('charging');
+        chip.textContent = 'Charging';
+        chip.className = 'status-chip chip-charging';
+        headline.textContent = `Charging · ${formatDuration(hoursToFull)} to full`;
+        sub.textContent = `Net gain of ${(netW * 1000).toFixed(0)} mW from harvesting`;
+    } else if (netW < -NET_THRESHOLD) {
+        const remainingWh = BATTERY_CAPACITY_WH * (soc / 100);
+        const hoursLeft = remainingWh / Math.abs(netW);
+        ring.style.stroke = 'var(--danger)';
+        bolt.classList.remove('charging');
+        bolt.style.background = 'var(--danger)';
+        chip.textContent = 'Discharging';
+        chip.className = 'status-chip chip-discharging';
+        headline.textContent = `${formatDuration(hoursLeft)} of runtime left`;
+        sub.textContent = `Drawing ${(Math.abs(netW) * 1000).toFixed(0)} mW more than is being harvested`;
+    } else {
+        ring.style.stroke = 'var(--gold)';
+        bolt.classList.remove('charging');
+        bolt.style.background = 'rgba(255,255,255,0.5)';
+        chip.textContent = 'Idle';
+        chip.className = 'status-chip chip-idle';
+        headline.textContent = `${soc.toFixed(0)}% · Idle`;
+        sub.textContent = 'Harvest and load are balanced — no net charge or drain';
+    }
+
+    document.getElementById('flow-harvest').textContent = `${harvestMw.toFixed(0)} mW`;
+    document.getElementById('flow-load').textContent = `${consumeMw.toFixed(0)} mW`;
+    document.getElementById('flow-net').textContent = `${(netW * 1000).toFixed(0)} mW`;
+}
+
+function formatDuration(hours) {
+    if (!isFinite(hours) || hours < 0) return '—';
+    const totalMinutes = Math.round(hours * 60);
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    if (h <= 0) return `~${m}m`;
+    return `~${h}h ${m}m`;
+}
+
+function formatTimeAgo(isoString) {
+    const seconds = Math.max(0, Math.round((Date.now() - new Date(isoString).getTime()) / 1000));
+    if (seconds < 60) return `${seconds}s ago`;
+    const minutes = Math.round(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    const hrs = Math.round(minutes / 60);
+    return `${hrs}h ago`;
+}
+
+// --- 8. POWER CHART (harvest vs. load, mW) ---
+const ctx = document.getElementById('powerChart').getContext('2d');
+const powerChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['-5', '-4', '-3', '-2', '-1', 'Now'],
+        datasets: [
+            { label: 'Harvest (mW)', data: [0,0,0,0,0,0], borderColor: '#e5c158', backgroundColor: 'rgba(229,193,88,0.08)', fill: true, tension: 0.4 },
+            { label: 'Load (mW)', data: [0,0,0,0,0,0], borderColor: '#94a3b8', backgroundColor: 'rgba(148,163,184,0.06)', fill: true, tension: 0.4 }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: true, labels: { boxWidth: 10, font: { size: 10 } } } }
+    }
+});
+
+function updateChart(harvestMw, consumeMw) {
+    powerChart.data.datasets[0].data.shift();
+    powerChart.data.datasets[0].data.push(harvestMw);
+    powerChart.data.datasets[1].data.shift();
+    powerChart.data.datasets[1].data.push(consumeMw);
+    powerChart.update();
+}
+
+// --- 9. LOGOUT ---
+window.handleLogout = async () => { await _supabase.auth.signOut(); };
 </script>
 </body>
 </html>

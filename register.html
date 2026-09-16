@@ -8,134 +8,475 @@
     <style>
         :root {
             --navy-dark: #05162e;
+            --navy-mid: #0a2447;
             --gold: #e5c158;
             --white: #ffffff;
             --glass-bg: rgba(255, 255, 255, 0.05);
             --text-muted: #94a3b8;
+            --danger: #ef4444;
+            --new: #f8fafc;
+            --border: #e2e8f0;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-       
+
+        html, body { height: 100%; font-family: 'Inter', sans-serif; }
+
         body {
-            font-family: 'Inter', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* LEFT SIDE — 60% white */
+        .side-white {
+            flex: 0 0 60%;
+            max-width: 60%;
+            background: #ffffff;
+            background-image: radial-gradient(circle at 80% 20%, rgba(229, 193, 88, 0.07) 0%, transparent 45%),
+                               radial-gradient(circle at 20% 80%, rgba(5, 22, 46, 0.04) 0%, transparent 50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 80px 90px;
+            position: relative;
+        }
+
+        .side-white .brand-mark {
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.4rem;
+            color: var(--navy-dark);
+            letter-spacing: 1px;
+            margin-bottom: 60px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .side-white .brand-mark::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--gold);
+            display: inline-block;
+        }
+
+        .side-white h1 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 3.2rem;
+            line-height: 1.15;
+            color: var(--navy-dark);
+            margin-bottom: 22px;
+            max-width: 520px;
+        }
+
+        .side-white h1 span { color: var(--gold); }
+
+        .side-white p.subtext {
+            font-size: 1.05rem;
+            color: #64748b;
+            max-width: 460px;
+            line-height: 1.6;
+        }
+
+        .stat-row {
+            display: flex;
+            gap: 50px;
+            margin-top: 60px;
+        }
+
+        .stat-row .stat-item h3 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.8rem;
+            color: var(--navy-dark);
+        }
+
+        .stat-row .stat-item p {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        /* RIGHT SIDE — 40% navy blue */
+        .side-navy {
+            flex: 0 0 40%;
+            max-width: 40%;
             background: var(--navy-dark);
-            background-image: radial-gradient(circle at 15% 15%, rgba(229, 193, 88, 0.06) 0%, transparent 45%);
+            background-image: radial-gradient(circle at 85% 15%, rgba(229, 193, 88, 0.08) 0%, transparent 45%);
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            color: var(--white);
-            overflow: hidden;
+            padding: 40px 30px;
+            overflow-y: auto;
         }
 
         .auth-card {
             width: 100%;
-            max-width: 650px;
-            height: 750px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 2px solid var(--gold);
-            border-radius: 20px;
-            padding: 50px 45px;
+            max-width: 420px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+            color: var(--white);
         }
 
-        .logo-area { text-align: center; margin-bottom: 30px; }
-        .logo-area h1 { 
-            font-family: 'Lexend', sans-serif; 
-            font-size: 2.4rem; 
-            color: var(--gold); 
+        .logo-area { text-align: center; margin-bottom: 28px; }
+        .logo-area h1 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 2.2rem;
+            color: var(--gold);
+            margin-bottom: 6px;
         }
-        .logo-area p { 
-            font-size: 0.8rem; 
-            color: var(--text-muted); 
-            text-transform: uppercase; 
-            letter-spacing: 3px; 
+        .logo-area p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 400;
         }
+
+        /* Step indicator */
+        .step-track {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 8px;
+        }
+        .step-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            color: var(--text-muted);
+            transition: 0.3s;
+            flex-shrink: 0;
+        }
+        .step-dot.active {
+            background: var(--gold);
+            color: var(--navy-dark);
+            border-color: var(--gold);
+        }
+        .step-dot.done {
+            background: rgba(229, 193, 88, 0.2);
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: rgba(255,255,255,0.1);
+            max-width: 40px;
+        }
+        .step-line.done { background: var(--gold); }
 
         h2 {
-            font-size: 1.15rem; 
-            color: var(--gold); 
-            text-align: center; 
-            text-transform: uppercase; 
+            font-size: 1.02rem;
+            color: var(--gold);
+            text-align: center;
+            text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 25px;
+            margin-bottom: 6px;
+        }
+        .step-sub {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
         }
 
-        .grid-2 { 
-            display: grid; 
-            grid-template-columns: 1fr 1fr; 
-            gap: 15px; 
+        .form-step { display: none; }
+        .form-step.active { display: block; }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
         .span-2 { grid-column: span 2; }
 
         .input-group { margin-bottom: 18px; }
         .input-group label {
-            display: block; 
-            font-size: 0.7rem; 
+            display: block;
+            font-size: 0.7rem;
             font-weight: 700;
-            color: var(--gold); 
-            margin-bottom: 8px; 
+            color: var(--gold);
+            margin-bottom: 8px;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
         .input-group input {
-            width: 100%; 
+            width: 100%;
             background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px; 
-            padding: 14px; 
-            color: white; 
+            border: 1px solid rgba(229, 193, 88, 0.15);
+            border-radius: 10px;
+            padding: 14px;
+            color: white;
             font-size: 0.95rem;
+            transition: 0.3s;
         }
-        .input-group input:focus { 
-            border-color: var(--gold); 
-            outline: none; 
-            background: rgba(255, 255, 255, 0.12); 
+        .input-group input:focus {
+            border-color: var(--gold);
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 15px rgba(229, 193, 88, 0.1);
+        }
+        .input-group input::placeholder { color: rgba(255,255,255,0.35); }
+
+        /* Password visibility toggle */
+        .password-wrapper {
+            position: relative;
+        }
+        .password-wrapper input {
+            padding-right: 46px;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+        .toggle-password:hover { color: var(--gold); }
+        .toggle-password svg { display: block; }
+        .toggle-password .icon-eye-off { display: none; }
+        .toggle-password.shown .icon-eye { display: none; }
+        .toggle-password.shown .icon-eye-off { display: block; }
+
+        .otp-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        .otp-inputs input {
+            width: 46px;
+            height: 54px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(229, 193, 88, 0.15);
+            border-radius: 10px;
+            color: white;
+        }
+        .otp-inputs input:focus {
+            border-color: var(--gold);
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
         }
 
         .btn-main {
-            width: 100%; 
-            padding: 16px; 
+            width: 100%;
+            padding: 16px;
             background: var(--gold);
-            color: var(--navy-dark); 
-            border: none; 
+            color: var(--navy-dark);
+            border: none;
             border-radius: 10px;
-            font-weight: 800; 
-            font-size: 1.05rem; 
+            font-weight: 800;
+            font-size: 1.02rem;
             cursor: pointer;
-            margin-top: 20px;
-            text-transform: uppercase; 
+            margin-top: 8px;
+            text-transform: uppercase;
             letter-spacing: 1px;
+            transition: 0.2s;
+        }
+        .btn-main:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(229, 193, 88, 0.3);
+        }
+        .btn-main:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        .footer-link { 
-            text-align: center; 
-            margin-top: 35px; 
-            font-size: 0.92rem; 
-            color: var(--text-muted); 
+        .btn-secondary {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.2s;
         }
-        .footer-link span { 
-            color: var(--gold); 
-            cursor: pointer; 
-            font-weight: 700; 
-            text-decoration: underline; 
+        .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+        .btn-row { display: flex; gap: 12px; margin-top: 8px; }
+        .btn-row .btn-main { margin-top: 0; }
+        .btn-back {
+            flex: 0 0 auto;
+            padding: 16px 20px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-weight: 700;
+            transition: 0.2s;
+        }
+        .btn-back:hover { border-color: var(--gold); color: var(--gold); }
+
+        .resend-row {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+        .resend-row span {
+            color: var(--gold);
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .resend-row span.disabled {
+            color: var(--text-muted);
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+
+        .error-msg {
+            display: none;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ff8080;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.83rem;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .success-msg {
+            display: none;
+            background: rgba(34, 197, 94, 0.1);
+            color: #86efac;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.83rem;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .footer-link {
+            text-align: center;
+            margin-top: 26px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .footer-link span {
+            color: var(--gold);
+            cursor: pointer;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .footer-link span:hover { text-decoration: underline; }
+
+        .hint {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        /* Responsive: stack on small screens */
+        @media (max-width: 900px) {
+            body { flex-direction: column; overflow-y: auto; height: auto; }
+            .side-white, .side-navy {
+                flex: 1 1 auto;
+                max-width: 100%;
+                width: 100%;
+            }
+            .side-white {
+                padding: 50px 30px;
+                text-align: center;
+                align-items: center;
+            }
+            .side-white h1 { font-size: 2.2rem; }
+            .stat-row { justify-content: center; }
+            .side-navy { padding: 50px 30px; }
         }
     </style>
 </head>
 <body>
-    <div class="auth-card">
-        <header class="logo-area">
-            <h1>SmartStep</h1>
-            <p>Access Portal</p>
-        </header>
 
-        <div class="form-content">
-            <h2>Register New Account</h2>
-           
-            <form id="registerForm">
+    <!-- LEFT: 60% white informational side -->
+    <section class="side-white">
+        <h1>Join <span>SmartStep</span> </h1>
+        <p class="subtext">Create your account in a few quick steps and start having Footsteps into Energy: Walk. Generate. Sustain..</p>
+        
+    </section>
+
+    <!-- RIGHT: 40% navy registration side -->
+    <section class="side-navy">
+        <div class="auth-card">
+            <header class="logo-area">
+                <h1>SmartStep</h1>
+            </header>
+
+            <!-- Step indicator -->
+            <div class="step-track">
+                <div class="step-dot active" id="dot-1">1</div>
+                <div class="step-line" id="line-1"></div>
+                <div class="step-dot" id="dot-2">2</div>
+                <div class="step-line" id="line-2"></div>
+                <div class="step-dot" id="dot-3">3</div>
+            </div>
+
+            <div id="globalError" class="error-msg"></div>
+            <div id="globalSuccess" class="success-msg"></div>
+
+            <!-- STEP 1: Email + OTP -->
+            <section class="form-step active" id="step-1">
+                <h2>Verify Your Email</h2>
+
+                <div id="emailPhase">
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" id="email" placeholder="name@email.com" required>
+                    </div>
+                    <button type="button" id="sendOtpBtn" class="btn-main">Send Code</button>
+                </div>
+
+                <div id="otpPhase" style="display:none;">
+                    <p class="hint" style="margin-bottom:18px;">Enter the 6-digit code sent to <span id="emailDisplay" style="color:var(--gold); font-weight:700;"></span></p>
+                    <div class="otp-inputs">
+                        <input type="text" maxlength="1" inputmode="numeric" class="otp-digit">
+                        <input type="text" maxlength="1" inputmode="numeric" class="otp-digit">
+                        <input type="text" maxlength="1" inputmode="numeric" class="otp-digit">
+                        <input type="text" maxlength="1" inputmode="numeric" class="otp-digit">
+                        <input type="text" maxlength="1" inputmode="numeric" class="otp-digit">
+                        <input type="text" maxlength="1" inputmode="numeric" class="otp-digit">
+                    </div>
+                    <button type="button" id="verifyOtpBtn" class="btn-main">Verify Code</button>
+                    <div class="resend-row">
+                        Didn't get it? <span id="resendBtn">Resend code</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STEP 2: Personal details -->
+            <section class="form-step" id="step-2">
+                <h2>Your Details</h2>
+
                 <div class="grid-2">
                     <div class="input-group">
                         <label>First Name</label>
@@ -149,109 +490,385 @@
                         <label>Mat ID</label>
                         <input type="text" id="matID" placeholder="MAT-1234" required>
                     </div>
-                    <div class="input-group span-2">
-                        <label>Email Address</label>
-                        <input type="email" id="email" placeholder="name@email.com" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Password</label>
-                        <input type="password" id="password" placeholder="••••" required>
-                    </div>
-                    <div class="input-group">
-                        <label>Confirm Password</label>
-                        <input type="password" id="confirmPassword" placeholder="••••" required>
+                </div>
+
+                <div class="btn-row">
+                    <button type="button" class="btn-back" id="backTo1">Back</button>
+                    <button type="button" id="toStep3Btn" class="btn-main">Continue</button>
+                </div>
+            </section>
+
+            <!-- STEP 3: Password -->
+            <section class="form-step" id="step-3">
+                <h2>Create Password</h2>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" placeholder="••••••••" required>
+                        <button type="button" class="toggle-password" data-target="password" aria-label="Toggle password visibility">
+                            <svg class="icon-eye" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg class="icon-eye-off" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a18.5 18.5 0 0 1 4.22-5.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        </button>
                     </div>
                 </div>
-                <div id="regError" style="color: #ff6b6b; font-size: 0.8rem; margin-bottom: 10px; display: none;"></div>
-                <button type="submit" class="btn-main">Register Now</button>
-            </form>
-            
-            <p class="footer-link">Already have an account? <span onclick="window.location.href='login.html'">Sign In</span></p>
+                <div class="input-group">
+                    <label>Confirm Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirmPassword" placeholder="••••••••" required>
+                        <button type="button" class="toggle-password" data-target="confirmPassword" aria-label="Toggle password visibility">
+                            <svg class="icon-eye" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg class="icon-eye-off" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a18.5 18.5 0 0 1 4.22-5.06M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="btn-row">
+                    <button type="button" class="btn-back" id="backTo2">Back</button>
+                    <button type="button" id="finishBtn" class="btn-main">Create Account</button>
+                </div>
+            </section>
+
+            <p class="footer-link">Already have an account? <span onclick="window.location.href='login1.html'">Sign In</span></p>
         </div>
-    </div>
+    </section>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module">
+        const SUPABASE_URL = "https://qvadzitiwgkhzlgjmdac.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YWR6aXRpd2draHpsZ2ptZGFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjkyNjAsImV4cCI6MjA5MjM0NTI2MH0.8COO3BlKQNgXMwo_GZUTIt-Kxs0WfhHJ2yrL3e9--9c";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const firebaseConfig = {
-    apiKey: "AIzaSyCkYdfeGF54YM9OgeZxbJ2nDgpHt9ApO7A",
-    authDomain: "smartstep-8c1f3.firebaseapp.com",
-    // ADD THIS EXACT LINE:
-    databaseURL: "https://smartstep-8c1f3-default-rtdb.asia-southeast1.firebasedatabase.app/",
-    projectId: "smartstep-8c1f3",
-    storageBucket: "smartstep-8c1f3.firebasestorage.app",
-    messagingSenderId: "346600511575",
-    appId: "1:346600511575:web:2b03397c11fb153ecaab12",
-    measurementId: "G-8SPLQ1BHVR"
-};
+        // ---- State ----
+        let currentStep = 1;
+        let verifiedEmail = "";
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
+        // ---- Elements ----
+        const globalError = document.getElementById('globalError');
+        const globalSuccess = document.getElementById('globalSuccess');
 
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
+        const emailInput = document.getElementById('email');
+        const sendOtpBtn = document.getElementById('sendOtpBtn');
+        const emailPhase = document.getElementById('emailPhase');
+        const otpPhase = document.getElementById('otpPhase');
+        const emailDisplay = document.getElementById('emailDisplay');
+        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+        const resendBtn = document.getElementById('resendBtn');
+        const otpDigits = Array.from(document.querySelectorAll('.otp-digit'));
 
-        const email = document.getElementById('email').value.trim();
-        const password = document.getElementById('password').value;
-        const confirmPass = document.getElementById('confirmPassword').value;
-        const firstName = document.getElementById('firstName').value.trim();
-        const lastName = document.getElementById('lastName').value.trim();
-        const matID = document.getElementById('matID').value.trim();
-        const errorDiv = document.getElementById('regError');
+        const toStep3Btn = document.getElementById('toStep3Btn');
+        const backTo1 = document.getElementById('backTo1');
+        const backTo2 = document.getElementById('backTo2');
+        const finishBtn = document.getElementById('finishBtn');
 
-        errorDiv.style.display = 'none';
-
-        // 1. Validation Logic
-        if (password.length < 6) {
-            errorDiv.innerText = "Password must be at least 6 characters.";
-            errorDiv.style.display = 'block';
-            return;
+        // ---- Helpers ----
+        function showError(msg) {
+            globalSuccess.style.display = 'none';
+            globalError.innerText = msg;
+            globalError.style.display = 'block';
+        }
+        function showSuccess(msg) {
+            globalError.style.display = 'none';
+            globalSuccess.innerText = msg;
+            globalSuccess.style.display = 'block';
+        }
+        function clearMessages() {
+            globalError.style.display = 'none';
+            globalSuccess.style.display = 'none';
         }
 
-        if (password !== confirmPass) {
-            errorDiv.innerText = "Passwords do not match!";
-            errorDiv.style.display = 'block';
-            return;
-        }
+        function goToStep(n) {
+            document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+            document.getElementById(`step-${n}`).classList.add('active');
 
-        try {
-            // 2. Create User in Firebase Auth
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-
-            // 3. Save User Details to Realtime Database
-            // We use 'set' here. Because 'user.uid' is unique, 
-            // this will create a brand new entry for every new person.
-            await set(ref(db, 'users/' + user.uid), {
-                firstName: firstName,
-                lastName: lastName,
-                matID: matID,
-                email: email,
-                role: "user", // Defaulting everyone to "user" for safety
-                createdAt: new Date().toISOString()
-            });
-
-            alert("Registration successful, " + firstName + "!");
-            // Redirecting to your login page
-            window.location.href = 'login1.html'; 
-
-        } catch (error) {
-            console.error("Registration Error:", error.code);
-            errorDiv.style.display = 'block';
-            
-            // Helpful error messages for common issues
-            if (error.code === 'auth/email-already-in-use') {
-                errorDiv.innerText = "This email is already registered.";
-            } else if (error.code === 'auth/weak-password') {
-                errorDiv.innerText = "Password is too weak.";
-            } else {
-                errorDiv.innerText = "Error: " + error.message;
+            for (let i = 1; i <= 3; i++) {
+                const dot = document.getElementById(`dot-${i}`);
+                dot.classList.remove('active', 'done');
+                if (i < n) dot.classList.add('done');
+                else if (i === n) dot.classList.add('active');
             }
+            const line1 = document.getElementById('line-1');
+            const line2 = document.getElementById('line-2');
+            line1.classList.toggle('done', n > 1);
+            line2.classList.toggle('done', n > 2);
+
+            currentStep = n;
+            clearMessages();
         }
-    });
-</script>
+
+        // ---- OTP digit UX: auto-advance / backspace / paste ----
+        otpDigits.forEach((input, idx) => {
+            input.addEventListener('input', () => {
+                input.value = input.value.replace(/[^0-9]/g, '');
+                if (input.value && idx < otpDigits.length - 1) {
+                    otpDigits[idx + 1].focus();
+                }
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !input.value && idx > 0) {
+                    otpDigits[idx - 1].focus();
+                }
+            });
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const paste = (e.clipboardData.getData('text') || '').replace(/[^0-9]/g, '').slice(0, 6);
+                paste.split('').forEach((char, i) => {
+                    if (otpDigits[i]) otpDigits[i].value = char;
+                });
+                const last = Math.min(paste.length, otpDigits.length) - 1;
+                if (last >= 0) otpDigits[last].focus();
+            });
+        });
+
+        function getOtpValue() {
+            return otpDigits.map(i => i.value).join('');
+        }
+
+        // ---- Password visibility toggle ----
+        document.querySelectorAll('.toggle-password').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                if (!input) return;
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    btn.classList.add('shown');
+                } else {
+                    input.type = 'password';
+                    btn.classList.remove('shown');
+                }
+            });
+        });
+
+        // ---- STEP 1: send OTP ----
+        sendOtpBtn.addEventListener('click', async () => {
+            clearMessages();
+            const email = emailInput.value.trim();
+            if (!email || !email.includes('@')) {
+                showError('Please enter a valid email address.');
+                return;
+            }
+
+            sendOtpBtn.disabled = true;
+            sendOtpBtn.innerText = 'Sending...';
+
+            try {
+                const { error } = await _supabase.auth.signInWithOtp({
+                    email: email,
+                    options: { shouldCreateUser: true }
+                });
+                if (error) throw error;
+
+                verifiedEmail = email;
+                emailDisplay.innerText = email;
+                emailPhase.style.display = 'none';
+                otpPhase.style.display = 'block';
+                showSuccess('Code sent! Check your inbox.');
+                otpDigits[0].focus();
+            } catch (err) {
+                showError(err.message || 'Failed to send code.');
+            } finally {
+                sendOtpBtn.disabled = false;
+                sendOtpBtn.innerText = 'Send Code';
+            }
+        });
+
+        // ---- STEP 1: verify OTP ----
+        verifyOtpBtn.addEventListener('click', async () => {
+            clearMessages();
+            const token = getOtpValue();
+            if (token.length !== 6) {
+                showError('Please enter the full 6-digit code.');
+                return;
+            }
+
+            verifyOtpBtn.disabled = true;
+            verifyOtpBtn.innerText = 'Verifying...';
+
+            try {
+                const { data, error } = await _supabase.auth.verifyOtp({
+                    email: verifiedEmail,
+                    token: token,
+                    type: 'email'
+                });
+                if (error) throw error;
+
+                showSuccess('Email verified!');
+                setTimeout(() => goToStep(2), 600);
+            } catch (err) {
+                showError(err.message || 'Invalid or expired code.');
+            } finally {
+                verifyOtpBtn.disabled = false;
+                verifyOtpBtn.innerText = 'Verify Code';
+            }
+        });
+
+        // ---- Resend OTP (with cooldown) ----
+        let resendCooldown = 0;
+        let resendTimer = null;
+        resendBtn.addEventListener('click', async () => {
+            if (resendBtn.classList.contains('disabled')) return;
+            clearMessages();
+            try {
+                const { error } = await _supabase.auth.signInWithOtp({
+                    email: verifiedEmail,
+                    options: { shouldCreateUser: true }
+                });
+                if (error) throw error;
+                showSuccess('Code resent!');
+                startResendCooldown();
+            } catch (err) {
+                showError(err.message || 'Failed to resend code.');
+            }
+        });
+
+        function startResendCooldown() {
+            resendCooldown = 30;
+            resendBtn.classList.add('disabled');
+            resendBtn.innerText = `Resend in ${resendCooldown}s`;
+            resendTimer = setInterval(() => {
+                resendCooldown--;
+                if (resendCooldown <= 0) {
+                    clearInterval(resendTimer);
+                    resendBtn.classList.remove('disabled');
+                    resendBtn.innerText = 'Resend code';
+                } else {
+                    resendBtn.innerText = `Resend in ${resendCooldown}s`;
+                }
+            }, 1000);
+        }
+
+    
+        // ---- STEP 2 -> STEP 3 (with Mat ID existence check) ----
+        toStep3Btn.addEventListener('click', async () => {
+            clearMessages();
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const matID = document.getElementById('matID').value.trim();
+
+            if (!firstName || !lastName || !matID) {
+                showError('Please fill in all fields.');
+                return;
+            }
+
+            toStep3Btn.disabled = true;
+            toStep3Btn.innerText = 'Checking Mat ID...';
+
+            try {
+                // Query mat_management_settings to confirm the Mat ID exists
+                const { data: matData, error: matError } = await _supabase
+                    .from('mat_management_settings')
+                    .select('mat_id')
+                    .eq('mat_id', matID)
+                    .maybeSingle();
+
+                if (matError) throw matError;
+
+                if (!matData) {
+                    showError('Invalid Mat ID. Please enter a registered Mat ID.');
+                    return;
+                }
+
+                // Mat ID is valid, proceed to step 3
+                goToStep(3);
+            } catch (err) {
+                showError(err.message || 'Error validating Mat ID. Please try again.');
+            } finally {
+                toStep3Btn.disabled = false;
+                toStep3Btn.innerText = 'Continue';
+            }
+        });
+
+        backTo1.addEventListener('click', () => goToStep(1));
+        backTo2.addEventListener('click', () => goToStep(2));
+
+        // ---- STEP 3: finish registration ----
+        finishBtn.addEventListener('click', async () => {
+            clearMessages();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters.');
+                return;
+            }
+            if (password !== confirmPassword) {
+                showError('Passwords do not match!');
+                return;
+            }
+
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const matID = document.getElementById('matID').value.trim();
+
+            finishBtn.disabled = true;
+            finishBtn.innerText = 'Creating Account...';
+
+            try {
+                // At this point the user is already signed in via OTP verification,
+                // so we set their password and profile metadata on the existing session.
+                const { data: userData, error: updateError } = await _supabase.auth.updateUser({
+                    password: password,
+                    data: {
+                        first_name: firstName,
+                        last_name: lastName,
+                        mat_id: matID
+                    }
+                });
+                if (updateError) throw updateError;
+
+                const user = userData.user;
+
+                if (user) {
+                    const { error: profileError } = await _supabase
+                        .from('profiles')
+                        .upsert([
+                            {
+                                id: user.id,
+                                first_name: firstName,
+                                last_name: lastName,
+                                mat_id: matID,
+                                role: 'user'
+                            }
+                        ]);
+
+                    if (profileError) {
+                        console.warn('Profile upsert failed, check if trigger exists:', profileError.message);
+                    }
+
+                    // Insert/update the corresponding row in public.users
+                    const { error: usersError } = await _supabase
+                        .from('users')
+                        .upsert([
+                            {
+                                id: user.id,
+                                first_name: firstName,
+                                last_name: lastName,
+                                mat_id: matID,
+                                role: 'user',
+                                created_at: new Date().toISOString()
+                            }
+                        ]);
+
+                    if (usersError) {
+                        console.warn('Users table upsert failed:', usersError.message);
+                    }
+                }
+
+                showSuccess('Account created successfully! Redirecting...');
+                setTimeout(() => {
+                  window.location.href = 'login1.html';
+                }, 1200);
+
+            } catch (err) {
+                showError(err.message || 'Failed to complete registration.');
+            } finally {
+                finishBtn.disabled = false;
+                finishBtn.innerText = 'Create Account';
+            }
+        });
+    
+    
+    </script>
 </body>
 </html>
