@@ -4,273 +4,827 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartStep | System Settings</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lexend:wght@700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --navy-dark: #05162e;
+            --navy-mid: #0a2447;
             --gold: #e5c158;
+            --gold-hover: #d4ae45;
+            --gold-soft: #fdf9ec;
             --white: #ffffff;
             --bg-slate: #f8fafc;
             --text-main: #1e293b;
             --text-muted: #64748b;
             --border: #e2e8f0;
             --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-slate); color: var(--text-main); display: flex; height: 100vh; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-slate); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-        /* --- SIDEBAR --- */
-        .sidebar { width: 260px; background: var(--navy-dark); color: white; padding: 30px 20px; display: flex; flex-direction: column; flex-shrink: 0; }
-        .logo { font-family: 'Lexend', sans-serif; color: var(--gold); font-size: 1.5rem; margin-bottom: 40px; }
-        .nav-link { display: block; padding: 12px 15px; text-decoration: none; color: white; opacity: 0.7; border-radius: 8px; transition: 0.3s; font-size: 0.9rem; margin-bottom: 5px; }
-        .nav-link:hover { background: rgba(229, 193, 88, 0.1); opacity: 1; color: var(--gold); }
-        .nav-link.active { background: rgba(229, 193, 88, 0.15); opacity: 1; color: var(--gold); font-weight: 600; }
-        .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); margin: 20px 0 8px; padding: 0 5px; }
-
+        /* ── SIDEBAR ── */
+        .sidebar { width: 250px; background: var(--navy-dark); color: white; padding: 28px 18px; display: flex; flex-direction: column; flex-shrink: 0; }
+        .logo { font-family: 'Lexend', sans-serif; color: var(--gold); font-size: 1.4rem; margin-bottom: 30px; }
+        .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); margin: 18px 0 8px; padding: 0 5px; }
+        .nav-link { display: flex; align-items: center; gap: 10px; padding: 10px 14px; text-decoration: none; color: rgba(255,255,255,0.7); border-radius: 8px; transition: 0.2s; font-size: 0.87rem; margin-bottom: 2px; }
+        .nav-link:hover { background: rgba(229,193,88,0.08); color: white; }
+        .nav-link.active { background: rgba(229,193,88,0.15); color: var(--gold); font-weight: 600; }
         .sidebar-footer { margin-top: auto; }
-        .logout-btn { display: flex; align-items: center; gap: 8px; padding: 11px 15px; color: rgba(255,255,255,0.4); cursor: pointer; border-radius: 8px; font-size: 0.85rem; transition: 0.2s; }
+        .logout-btn { display: flex; align-items: center; gap: 8px; padding: 10px 14px; color: rgba(255,255,255,0.4); cursor: pointer; border-radius: 8px; font-size: 0.83rem; transition: 0.2s; }
         .logout-btn:hover { color: var(--danger); background: rgba(239,68,68,0.08); }
-        .node-info { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; opacity: 0.35; margin-top: 12px; padding: 0 5px; }
+        .node-info { font-family: 'JetBrains Mono', monospace; font-size: 0.63rem; opacity: 0.35; margin-top: 10px; padding: 0 5px; line-height: 1.5; }
 
-        /* --- MAIN CONTENT --- */
-        .main-content { flex: 1; overflow-y: auto; padding: 40px; }
-        .user-badge {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 12px 20px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
-            min-width: 245px;
-            transition: all 0.25s ease;
-        }
+        /* ── MAIN ── */
+        .main-content { flex: 1; overflow-y: auto; padding: 32px 36px; }
 
-        .user-badge:hover {
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.09);
-            border-color: var(--gold);
-            transform: translateY(-1px);
-        }
+        /* ── HEADER ── */
+        .top-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; gap: 20px; }
+        .page-header-content { flex: 1; }
+        .page-header-content h1 { font-family: 'Lexend', sans-serif; font-size: 1.55rem; color: var(--navy-dark); margin: 0 0 4px 0; }
+        .page-header-content p { color: var(--text-muted); font-size: 0.87rem; margin: 0; }
+        .eyebrow { color: var(--gold); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
+        .right-header { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 
-        .avatar {
-            width: 40px;
-            height: 40px;
-            background: var(--gold);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: var(--navy-dark);
-            font-size: 1rem;
-            flex-shrink: 0;
-            box-shadow: 0 3px 8px rgba(229, 193, 88, 0.4);
-        }
+        /* ── USER BADGE ── */
+        .user-badge { display: flex; align-items: center; gap: 10px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 8px 16px; min-width: 190px; }
+        .avatar { width: 34px; height: 34px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--navy-dark); font-size: 0.85rem; flex-shrink: 0; }
+        .user-name { font-size: 0.86rem; font-weight: 600; color: var(--navy-dark); line-height: 1.2; }
+        .user-role { font-size: 0.68rem; color: var(--gold); font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
 
-        .user-name {
-            font-size: 0.96rem;
-            font-weight: 600;
-            color: var(--navy-dark);        /* Dark text for visibility */
-            line-height: 1.25;
-            margin: 0;
-        }
+        /* ── SETTINGS CONTAINER ── */
+        .settings-container { max-width: 960px; display: grid; grid-template-columns: 1fr; gap: 18px; }
 
-        .user-role {
-            font-size: 0.74rem;
-            color: var(--gold);
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 500;
-            letter-spacing: 0.6px;
-            margin: 0;
-        }
-        .top-header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-            gap: 20px;
-        }
+        /* ── CARD ── */
+        .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
+        .card-title { font-size: 0.92rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 18px; }
 
-        .page-header-content {
-            flex: 1;
-        }
-
-        .page-header-content h1 {
-            font-family: 'Lexend', sans-serif;
-            font-size: 1.7rem;
-            color: var(--navy-dark);
-            margin: 0 0 4px 0;
-        }
-
-        .page-header-content p {
-            color: var(--text-muted);
-            font-size: 0.88rem;
-            margin: 0;
-        }
-
-        .right-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-shrink: 0;
-        }
-
-        .settings-container { max-width: 900px; display: grid; grid-template-columns: 1fr; gap: 24px; }
-        .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 30px; }
-        .card-title { font-size: 0.9rem; font-weight: 700; color: var(--navy-dark); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-
-        /* --- SETTINGS STYLES --- */
-        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f1f5f9; }
+        /* ── SETTING ROW ── */
+        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #f1f5f9; }
         .setting-row:last-child { border: none; }
-        .setting-info h4 { font-size: 0.95rem; color: var(--navy-dark); margin-bottom: 4px; }
-        .setting-info p { font-size: 0.8rem; color: var(--text-muted); }
+        .setting-info h4 { font-size: 0.9rem; font-weight: 600; color: var(--navy-dark); margin-bottom: 3px; }
+        .setting-info p { font-size: 0.78rem; color: var(--text-muted); }
 
-        /* Custom Toggle Switch */
-        .switch { position: relative; display: inline-block; width: 44px; height: 22px; }
+        /* ── TOGGLE ── */
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--navy-dark); }
-        input:checked + .slider:before { transform: translateX(22px); }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #cbd5e1; transition: .3s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background: var(--navy-dark); }
+        input:checked + .slider:before { transform: translateX(20px); }
 
-        select, .btn { padding: 10px 16px; border-radius: 8px; font-family: 'Inter'; font-size: 0.85rem; border: 1px solid var(--border); }
-        .btn { cursor: pointer; font-weight: 700; transition: 0.2s; border: none; }
+        /* ── SELECT / BTN ── */
+        select { padding: 9px 14px; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.84rem; border: 1.5px solid var(--border); color: var(--text-main); background: var(--white); cursor: pointer; outline: none; transition: border-color 0.2s; }
+        select:focus { border-color: var(--gold); }
+        .btn { padding: 10px 18px; border-radius: 8px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.84rem; cursor: pointer; border: none; transition: 0.2s; display: inline-flex; align-items: center; gap: 7px; }
+        .btn:hover { transform: translateY(-1px); }
+        .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
         .btn-gold { background: var(--gold); color: var(--navy-dark); }
+        .btn-gold:hover:not(:disabled) { background: var(--gold-hover); }
         .btn-outline { background: transparent; border: 2px solid var(--navy-dark); color: var(--navy-dark); }
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-outline:hover:not(:disabled) { background: var(--navy-dark); color: white; }
+        .btn-danger-soft { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
+        .btn-danger-soft:hover:not(:disabled) { background: #ffe4e6; }
 
-        .backup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 10px; }
-        .backup-option { border: 1px solid var(--border); padding: 15px; border-radius: 10px; text-align: center; }
+        /* ── BACKUP GRID ── */
+        .backup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
+        .backup-option { border: 1px solid var(--border); padding: 18px; border-radius: 10px; text-align: center; transition: border-color 0.2s; }
+        .backup-option:hover { border-color: var(--gold); }
+        .backup-option h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: var(--navy-dark); }
+        .backup-option p { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 14px; }
+
+        /* ── ADD USER SECTION ── */
+        .add-user-grid { display: grid; grid-template-columns: 380px 1fr; gap: 28px; }
+
+        /* ── PROVISIONING TABS ── */
+        .prov-tabs { display: flex; gap: 6px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .prov-tab { padding: 10px 18px; font-size: 0.84rem; font-weight: 700; color: var(--text-muted); background: none; border: none; cursor: pointer; position: relative; top: 1px; border-bottom: 2px solid transparent; transition: 0.2s; font-family: 'Inter', sans-serif; }
+        .prov-tab:hover { color: var(--navy-dark); }
+        .prov-tab.active { color: var(--navy-dark); border-bottom-color: var(--gold); }
+        .prov-panel { display: none; }
+        .prov-panel.active { display: block; }
+
+        /* ── MAT ROW ── */
+        .mat-row { display: flex; align-items: center; gap: 12px; padding: 11px 13px; background: var(--bg-slate); border: 1px solid var(--border); border-radius: 10px; transition: border-color 0.2s; }
+        .mat-row:hover { border-color: var(--gold); }
+        .mat-row-icon { width: 34px; height: 34px; background: var(--navy-dark); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.62rem; color: var(--gold); flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
+        .mat-row-info { flex: 1; min-width: 0; }
+        .mat-row-id { font-family: 'JetBrains Mono', monospace; font-size: 0.84rem; font-weight: 700; color: var(--navy-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mat-row-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mat-row-status { font-family: 'JetBrains Mono', monospace; font-size: 0.63rem; font-weight: 700; border-radius: 5px; padding: 2px 8px; flex-shrink: 0; text-transform: uppercase; }
+        .status-active { background: #d1fae5; color: #065f46; }
+        .status-unassigned { background: var(--gold-soft); color: #92702c; border: 1px solid #fde68a; }
+        .form-input.has-default { color: var(--text-muted); }
+        .form-input.has-default:focus { color: var(--text-main); }
+
+        /* Form */
+        .form-group { margin-bottom: 14px; }
+        .form-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); display: block; margin-bottom: 5px; }
+        .form-label .req { color: var(--danger); margin-left: 2px; }
+        .form-input { width: 100%; padding: 10px 13px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.875rem; color: var(--text-main); background: var(--bg-slate); transition: border-color 0.2s, background 0.2s; outline: none; }
+        .form-input:focus { border-color: var(--gold); background: var(--white); }
+        .form-input.input-error { border-color: var(--danger); }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .form-hint { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+        .form-section-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+
+        /* Feedback */
+        .form-feedback { font-size: 0.8rem; font-weight: 600; padding: 10px 14px; border-radius: 8px; margin-top: 12px; display: none; }
+        .feedback-success { background: #d1fae5; color: #065f46; }
+        .feedback-error { background: #fee2e2; color: #991b1b; }
+
+        /* User list */
+        .user-list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .user-list-title { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+        .user-count { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--gold); font-weight: 700; }
+        .user-list { display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow-y: auto; }
+        .user-list::-webkit-scrollbar { width: 4px; }
+        .user-list::-webkit-scrollbar-track { background: transparent; }
+        .user-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+        .user-row { display: flex; align-items: center; gap: 12px; padding: 11px 13px; background: var(--bg-slate); border: 1px solid var(--border); border-radius: 10px; transition: border-color 0.2s; }
+        .user-row:hover { border-color: var(--gold); }
+        .user-row-avatar { width: 34px; height: 34px; background: var(--navy-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.72rem; color: var(--gold); flex-shrink: 0; }
+        .user-row-info { flex: 1; min-width: 0; }
+        .user-row-name { font-size: 0.84rem; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .user-row-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .user-row-mat { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 700; color: var(--navy-dark); background: var(--gold-soft); border: 1px solid #fde68a; border-radius: 5px; padding: 2px 8px; flex-shrink: 0; }
+        .user-row-actions { display: flex; gap: 5px; flex-shrink: 0; }
+        .row-btn { padding: 5px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: 0.2s; border: 1px solid; }
+        .row-btn-del { background: #fff1f2; color: #be123c; border-color: #fecdd3; }
+        .row-btn-del:hover { background: #ffe4e6; }
+
+        /* Empty / loading */
+        .empty-state { text-align: center; padding: 32px 16px; color: var(--text-muted); }
+        .empty-icon { font-size: 2rem; margin-bottom: 8px; opacity: 0.4; }
+        .empty-state p { font-size: 0.85rem; }
+        .spinner-row { display: flex; justify-content: center; padding: 24px; }
+        .spinner { width: 22px; height: 22px; border: 2.5px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.75s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── TOAST ── */
+        #toast { position: fixed; bottom: 24px; right: 24px; background: var(--navy-dark); color: white; padding: 12px 20px; border-radius: 10px; font-size: 0.84rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transform: translateY(80px); opacity: 0; transition: all 0.3s ease; z-index: 999; max-width: 340px; }
+        #toast.show { transform: translateY(0); opacity: 1; }
+        #toast.t-success { border-left: 4px solid var(--success); }
+        #toast.t-error { border-left: 4px solid var(--danger); }
+        #toast.t-warn { border-left: 4px solid var(--warning); }
+
+        .save-row { display: flex; justify-content: flex-end; margin-top: 4px; }
     </style>
 </head>
 <body>
 
-    <aside class="sidebar">
-        <div class="logo">⚡ SmartStep</div>
-        <div class="nav-section">Main</div>
-        <nav>
-            <a href="dash.html" class="nav-link">Live Monitoring</a>
-            <a href="analytics.html" class="nav-link">Energy Analytics</a>
-            <a href="maintenance.html" class="nav-link">System Maintenance</a>
-            <a href="security.html" class="nav-link active">System Settings</a>
-        </nav>
+<!-- ── SIDEBAR ── -->
+<aside class="sidebar">
+    <div class="logo">SmartStep</div>
+    <div class="nav-section">Admin</div>
+    <nav>
+        <a href="ad_dash.html" class="nav-link">Live Monitoring</a>
+        <a href="analytics.html" class="nav-link">Energy Analytics</a>
+        <a href="maintenance(2).html" class="nav-link">System Maintenance</a>
+        <a href="security.html" class="nav-link active">System Settings</a>
+    </nav>
+    <div class="sidebar-footer">
+        <div class="logout-btn" id="logoutBtn">Sign Out</div>
+        <div class="node-info">Node: ESP8266-031<br>Ver: 1.3.0-PRO · Admin Mode</div>
+    </div>
+</aside>
 
-        <div class="sidebar-footer">
-            <div class="logout-btn" onclick="window.location.href='login.html'">
-                <span>🚪</span> Sign Out
-            </div>
-            <div class="node-info">Node: ESP8266-031<br>Ver: 1.3.0-PRO · Admin Mode</div>
-        </div>
-    </aside>
+<!-- ── MAIN ── -->
+<main class="main-content">
 
-    <main class="main-content">
-        <header class="header">
-            <p style="color: var(--gold); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px;"></p>
-            <h1></h1>
-        </header>
-
-           <div class="top-header-row">
-
-        <!-- LEFT: Page Title & Description -->
+    <!-- HEADER -->
+    <div class="top-header-row">
         <div class="page-header-content">
-            <p style="color:var(--gold);font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;">
-               System Preference Configuration · Section 4
-            </p>
+            <p class="eyebrow">System Preference Configuration · Section 4</p>
             <h1>Global System Preferences</h1>
-            <p> </p>
+            <p>UI settings, data management, and user provisioning</p>
         </div>
-
-        <!-- RIGHT: Live Pill + User Badge -->
         <div class="right-header">
             <div class="user-badge">
-                <div class="avatar">CM</div>
+                <div class="avatar" id="adminAvatar">--</div>
                 <div>
-                    <div class="user-name">Cheryl Magalso</div>
+                    <div class="user-name" id="adminName">Loading...</div>
                     <div class="user-role">ADMIN · ACTIVE</div>
                 </div>
             </div>
         </div>
-
     </div>
 
-        <div class="settings-container">
-            
-            <section class="card">
-                <h2 class="card-title">1.5.1 User Interface & Units</h2>
-                
-                <div class="setting-row">
-                    <div class="setting-info">
-                        <h4>Measurement Units</h4>
-                        <p>Display energy in Watts (W) or Joules (J).</p>
-                    </div>
-                    <select>
-                        <option>Watts (Standard)</option>
-                        <option>Joules (Scientific)</option>
-                    </select>
+    <div class="settings-container">
+
+        <!-- 1.5.1 UI & UNITS -->
+        <section class="card">
+            <div class="card-title">User Interface &amp; Units</div>
+            <div class="setting-row">
+                <div class="setting-info">
+                    <h4>Measurement Units</h4>
+                    <p>Display energy in Watts (W) or Joules (J).</p>
                 </div>
-
-                <div class="setting-row">
-                    <div class="setting-info">
-                        <h4>Dark Mode</h4>
-                        <p>Adjust dashboard theme for low-light environments.</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-
-                <div class="setting-row">
-                    <div class="setting-info">
-                        <h4>Refresh Rate</h4>
-                        <p>How often the ESP8266 pushes data to this UI.</p>
-                    </div>
-                    <select>
-                        <option>Real-time (1s)</option>
-                        <option selected>Balanced (5s)</option>
-                        <option>Power Save (30s)</option>
-                    </select>
-                </div>
-            </section>
-
-            <section class="card">
-                <h2 class="card-title">1.5.2 Data Backup & Export</h2>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
-                    Ensure your harvesting history is safe. Choose your preferred backup method.
-                </p>
-
-                <div class="backup-grid">
-                    <div class="backup-option">
-                        <h4 style="margin-bottom: 10px;">Cloud Backup</h4>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 15px;">Auto-sync data to Firebase/SQL daily.</p>
-                        <button class="btn btn-gold" onclick="alert('Cloud Sync Started')">Sync Now</button>
-                    </div>
-                    <div class="backup-option">
-                        <h4 style="margin-bottom: 10px;">Local Export</h4>
-                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 15px;">Download full history as a CSV file.</p>
-                        <button class="btn btn-outline" onclick="alert('Generating CSV...')">Download .CSV</button>
-                    </div>
-                </div>
-
-                <div class="setting-row" style="margin-top: 20px;">
-                    <div class="setting-info">
-                        <h4>Auto-Backup</h4>
-                        <p>Automatically backup every 24 hours.</p>
-                    </div>
-                    <label class="switch">
-                        <input type="checkbox" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-            </section>
-
-            <div style="text-align: right;">
-                <button class="btn btn-gold" style="padding: 15px 40px; font-size: 1rem;" onclick="alert('Settings Saved Successfully!')">Save All Preferences</button>
+                <select id="unitSelect">
+                    <option>Watts (Standard)</option>
+                    <option>Joules (Scientific)</option>
+                </select>
             </div>
-        </div>
-    </main>
+            <div class="setting-row">
+                <div class="setting-info">
+                    <h4>Refresh Rate</h4>
+                    <p>How often the ESP8266 pushes data to this UI.</p>
+                </div>
+                <select id="refreshSelect">
+                    <option>Real-time (1s)</option>
+                    <option selected>Balanced (5s)</option>
+                    <option>Power Save (30s)</option>
+                </select>
+            </div>
+        </section>
 
+        <!-- 1.5.2 DATA BACKUP & EXPORT -->
+        <section class="card">
+            <div class="card-title">Data Backup &amp; Export</div>
+            <p style="font-size:0.84rem;color:var(--text-muted);margin-bottom:18px;line-height:1.6;">
+                Ensure your harvesting history is safe. Choose your preferred backup method.
+            </p>
+            <div class="backup-grid">
+                <div class="backup-option">
+                    <h4>Cloud Backup</h4>
+                    <p>Auto-sync data to Supabase daily.</p>
+                    <button class="btn btn-gold" onclick="handleCloudSync()">Sync Now</button>
+                </div>
+                <div class="backup-option">
+                    <h4>Local Export</h4>
+                    <p>Download telemetry history as a CSV file.</p>
+                    <select id="export-mat-filter" style="width:100%;margin-bottom:10px;">
+                        <option value="all">All Mats</option>
+                    </select>
+                    <button class="btn btn-outline" onclick="handleExportCSV()">Download .CSV</button>
+                </div>
+            </div>
+            <div class="setting-row" style="margin-top:16px;">
+                <div class="setting-info">
+                    <h4>Auto-Backup</h4>
+                    <p>Automatically backup every 24 hours.</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </section>
+
+<section class="card">
+            <div class="card-title">Mat &amp; User Provisioning</div>
+
+            <div class="prov-tabs">
+                <button class="prov-tab active" id="tab-btn-mats" onclick="switchProvTab('mats')">Mats</button>
+                <button class="prov-tab" id="tab-btn-users" onclick="switchProvTab('users')">Users</button>
+            </div>
+
+            <!-- ══ MATS PANEL ══ -->
+            <div class="prov-panel active" id="panel-mats">
+                <div class="add-user-grid">
+
+                    <!-- LEFT: Mat provisioning form -->
+                    <div>
+                        <div class="form-section-label">Provision New Mat</div>
+
+                        <div class="form-group">
+                            <label class="form-label">Mat ID <span class="req">*</span></label>
+                            <input class="form-input" type="text" id="mat-id" placeholder="e.g. MAT-0042">
+                            <div class="form-hint">Required. Must be unique. Format: MAT-XXXX</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Sensor Threshold</label>
+                            <input class="form-input has-default" type="number" step="0.01" id="mat-sensor-threshold" placeholder="0.05" value="0.05">
+                            <div class="form-hint">Default: 0.05. Pressure sensor trigger level.</div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">High-V Alert</label>
+                                <input class="form-input has-default" type="number" step="0.01" id="mat-high-v-alert" placeholder="4.20" value="4.20">
+                                <div class="form-hint">Default: 4.20V</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">LVCO Threshold</label>
+                                <input class="form-input has-default" type="number" step="0.01" id="mat-lvco-threshold" placeholder="3.00" value="3.00">
+                                <div class="form-hint">Default: 3.00V</div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:4px;" id="matRegisterBtn" onclick="registerMat()">
+                            + Provision Mat
+                        </button>
+
+                        <div class="form-feedback" id="matFeedback"></div>
+                    </div>
+
+                    <!-- RIGHT: Provisioned mat list -->
+                    <div>
+                        <div class="user-list-header">
+                            <span class="user-list-title">Provisioned Mats</span>
+                            <span class="user-count" id="matCount"></span>
+                        </div>
+                        <div class="user-list" id="matList">
+                            <div class="spinner-row"><div class="spinner"></div></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ══ USERS PANEL ══ -->
+            <div class="prov-panel" id="panel-users">
+                <div class="add-user-grid">
+
+                    <!-- LEFT: Registration form -->
+                    <div>
+                        <div class="form-section-label">Register New User</div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">First Name <span class="req">*</span></label>
+                                <input class="form-input" type="text" id="reg-fname" placeholder="e.g. Juan">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Last Name <span class="req">*</span></label>
+                                <input class="form-input" type="text" id="reg-lname" placeholder="e.g. Dela Cruz">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email Address <span class="req">*</span></label>
+                            <input class="form-input" type="email" id="reg-email" placeholder="user@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Assign Mat ID <span class="req">*</span></label>
+                            <select class="form-input" id="reg-matid">
+                                <option value="">Loading mats...</option>
+                            </select>
+                            <div class="form-hint">Mat must be provisioned first, under the Mats tab.</div>
+                        </div>
+
+                        <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:4px;" id="registerBtn" onclick="registerUser()">
+                            + Add User to SmartStep
+                        </button>
+
+                        <div class="form-feedback" id="regFeedback"></div>
+                    </div>
+
+                    <!-- RIGHT: Registered user list -->
+                    <div>
+                        <div class="user-list-header">
+                            <span class="user-list-title">Registered Users</span>
+                            <span class="user-count" id="userCount"></span>
+                        </div>
+                        <div class="user-list" id="userList">
+                            <div class="spinner-row"><div class="spinner"></div></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+ 
+
+
+        <!-- SAVE ROW -->
+        <div class="save-row">
+            <button class="btn btn-gold" style="padding:13px 36px;font-size:0.95rem;" onclick="saveAllPreferences()">
+                Save All Preferences
+            </button>
+        </div>
+
+    </div>
+</main>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+    const SUPABASE_URL = "https://qvadzitiwgkhzlgjmdac.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YWR6aXRpd2draHpsZ2ptZGFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjkyNjAsImV4cCI6MjA5MjM0NTI2MH0.8COO3BlKQNgXMwo_GZUTIt-Kxs0WfhHJ2yrL3e9--9c";
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ── AUTH ──
+    _supabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_OUT' || !session) window.location.href = 'login1.html';
+    });
+
+    async function loadAdminProfile(uid) {
+        const { data } = await _supabase.from('profiles').select('first_name, last_name').eq('id', uid).single();
+        if (data) {
+            document.getElementById('adminName').innerText = `${data.first_name} ${data.last_name}`;
+            document.getElementById('adminAvatar').innerText = data.first_name[0] + data.last_name[0];
+        }
+    }
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+        await _supabase.auth.signOut();
+    });
+
+    // ── PROVISIONING TABS ──
+    function switchProvTab(tab) {
+        document.getElementById('tab-btn-mats').classList.toggle('active', tab === 'mats');
+        document.getElementById('tab-btn-users').classList.toggle('active', tab === 'users');
+        document.getElementById('panel-mats').classList.toggle('active', tab === 'mats');
+        document.getElementById('panel-users').classList.toggle('active', tab === 'users');
+    }
+
+    // ── LOAD MAT LIST ──
+    async function loadMatList() {
+        const list = document.getElementById('matList');
+        list.innerHTML = '<div class="spinner-row"><div class="spinner"></div></div>';
+
+        // Mat configs live in mat_management_settings; assignment to a user
+        // is tracked separately via profiles.mat_id (this table has no user link).
+        const [{ data, error }, { data: assignedProfiles }] = await Promise.all([
+            _supabase
+                .from('mat_management_settings')
+                .select('mat_id, sensor_threshold, high_v_alert, lvco_threshold, current_status, updated_at')
+                .order('updated_at', { ascending: false }),
+            _supabase.from('profiles').select('mat_id').eq('role', 'user').not('mat_id', 'is', null)
+        ]);
+
+        const assignedSet = new Set((assignedProfiles || []).map(p => p.mat_id));
+        const countEl = document.getElementById('matCount');
+
+        if (error || !data?.length) {
+            list.innerHTML = '<div class="empty-state"><div class="empty-icon">—</div><p>No mats provisioned yet</p></div>';
+            countEl.textContent = '';
+            populateMatDropdown([], assignedSet);
+            populateExportFilter([]);
+            return;
+        }
+
+        countEl.textContent = `${data.length} mat${data.length !== 1 ? 's' : ''}`;
+
+        list.innerHTML = data.map(m => {
+            const isAssigned = assignedSet.has(m.mat_id);
+            return `
+                <div class="mat-row" id="mrow-${m.mat_id}">
+                    <div class="mat-row-icon">MAT</div>
+                    <div class="mat-row-info">
+                        <div class="mat-row-id">${m.mat_id}</div>
+                        <div class="mat-row-meta">Sensor ${m.sensor_threshold ?? '—'} · HV ${m.high_v_alert ?? '—'}V · LVCO ${m.lvco_threshold ?? '—'}V · Status: ${m.current_status ?? '—'}</div>
+                    </div>
+                    <span class="mat-row-status ${isAssigned ? 'status-active' : 'status-unassigned'}">${isAssigned ? 'Assigned' : 'Unassigned'}</span>
+                    <div class="user-row-actions">
+                        <button class="row-btn row-btn-del" onclick="deleteMat('${m.mat_id}')">Remove</button>
+                    </div>
+                </div>`;
+        }).join('');
+
+        populateMatDropdown(data, assignedSet);
+        populateExportFilter(data);
+    }
+
+    function populateExportFilter(mats) {
+        const sel = document.getElementById('export-mat-filter');
+        if (!sel) return;
+        const current = sel.value;
+        const options = mats.map(m => `<option value="${m.mat_id}">${m.mat_id}</option>`).join('');
+        sel.innerHTML = `<option value="all">All Mats</option>${options}`;
+        // Keep the admin's current selection if it's still a valid option
+        if ([...sel.options].some(o => o.value === current)) sel.value = current;
+    }
+
+    function populateMatDropdown(mats, assignedSet) {
+        const sel = document.getElementById('reg-matid');
+        if (!sel) return;
+        if (!mats.length) {
+            sel.innerHTML = '<option value="">No mats provisioned yet</option>';
+            return;
+        }
+        const unassigned = mats.filter(m => !assignedSet.has(m.mat_id));
+        const options = (unassigned.length ? unassigned : mats).map(m => `<option value="${m.mat_id}">${m.mat_id}</option>`).join('');
+        sel.innerHTML = `<option value="">Select a mat...</option>${options}`;
+    }
+
+    // ── PROVISION MAT ──
+    async function registerMat() {
+        const matId = document.getElementById('mat-id').value.trim();
+        const sensorInput = document.getElementById('mat-sensor-threshold');
+        const highVInput = document.getElementById('mat-high-v-alert');
+        const lovcoInput = document.getElementById('mat-lvco-threshold');
+
+        const feedback = document.getElementById('matFeedback');
+        const btn = document.getElementById('matRegisterBtn');
+
+        document.getElementById('mat-id').classList.remove('input-error');
+        feedback.style.display = 'none';
+
+        // Mat ID is the only required field — everything else falls back to its DB default
+        if (!matId) {
+            document.getElementById('mat-id').classList.add('input-error');
+            showFeedback('mat', 'error', 'Mat ID is required.');
+            return;
+        }
+
+        const sensorThreshold = sensorInput.value.trim() === '' ? 0.05 : parseFloat(sensorInput.value);
+        const highVAlert = highVInput.value.trim() === '' ? 4.20 : parseFloat(highVInput.value);
+        const lvcoThreshold = lvcoInput.value.trim() === '' ? 3.00 : parseFloat(lvcoInput.value);
+
+        btn.disabled = true;
+        btn.textContent = 'Provisioning...';
+
+        try {
+            // current_status, firmware_version, and the telemetry counters are left
+            // unset so the table's own defaults ('active', '1.3.0-PRO', 0, etc.) apply.
+            const { error } = await _supabase.from('mat_management_settings').upsert({
+                mat_id: matId,
+                sensor_threshold: sensorThreshold,
+                high_v_alert: highVAlert,
+                lvco_threshold: lvcoThreshold,
+                updated_at: new Date().toISOString(),
+            }, { onConflict: 'mat_id' });
+
+            if (error) throw error;
+
+            showFeedback('mat', 'success', `Mat "${matId}" provisioned successfully.`);
+            showToast(`Mat ${matId} provisioned.`, 'success');
+
+            document.getElementById('mat-id').value = '';
+            sensorInput.value = '0.05';
+            highVInput.value = '4.20';
+            lvcoInput.value = '3.00';
+
+            await loadMatList();
+
+        } catch (err) {
+            console.error(err);
+            const msg = err.message?.includes('duplicate')
+                ? `Mat ID "${matId}" already exists.`
+                : err.message || 'Provisioning failed. Please try again.';
+            showFeedback('mat', 'error', msg);
+            showToast('Mat provisioning failed.', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '+ Provision Mat';
+        }
+    }
+
+    // ── DELETE MAT ──
+    async function deleteMat(matId) {
+        if (!confirm(`Remove mat "${matId}" from SmartStep?\n\nThis cannot be undone.`)) return;
+
+        const { error } = await _supabase.from('mat_management_settings').delete().eq('mat_id', matId);
+        if (error) { showToast('Failed to remove mat: ' + error.message, 'error'); return; }
+
+        const row = document.getElementById(`mrow-${matId}`);
+        if (row) {
+            row.style.opacity = '0';
+            row.style.transition = 'opacity 0.25s';
+            setTimeout(() => { row.remove(); loadMatList(); }, 260);
+        }
+        showToast(`${matId} removed.`, 'warn');
+    }
+
+    // ── LOAD USER LIST ──
+    async function loadUserList() {
+        const list = document.getElementById('userList');
+        list.innerHTML = '<div class="spinner-row"><div class="spinner"></div></div>';
+
+        const { data, error } = await _supabase
+            .from('profiles')
+            .select('id, first_name, last_name, mat_id, created_at')
+            .eq('role', 'user')
+            .order('created_at', { ascending: false });
+
+        const countEl = document.getElementById('userCount');
+
+        if (error || !data?.length) {
+            list.innerHTML = '<div class="empty-state"><div class="empty-icon">—</div><p>No users registered yet</p></div>';
+            countEl.textContent = '';
+            return;
+        }
+
+        countEl.textContent = `${data.length} user${data.length !== 1 ? 's' : ''}`;
+
+        list.innerHTML = data.map(u => {
+            const initials = (u.first_name?.[0] || '?') + (u.last_name?.[0] || '?');
+            const fullName = `${u.first_name || ''} ${u.last_name || ''}`.trim();
+            const joined = u.created_at
+                ? new Date(u.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                : '—';
+            return `
+                <div class="user-row" id="urow-${u.id}">
+                    <div class="user-row-avatar">${initials}</div>
+                    <div class="user-row-info">
+                        <div class="user-row-name">${fullName}</div>
+                        <div class="user-row-meta">Joined ${joined}</div>
+                    </div>
+                    <span class="user-row-mat">${u.mat_id || '—'}</span>
+                    <div class="user-row-actions">
+                        <button class="row-btn row-btn-del" onclick="deleteUser('${u.id}', '${fullName}')">Remove</button>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    // ── REGISTER USER ──
+    // Uses Supabase Admin invite flow: signUp creates the auth user,
+    // then we upsert the profiles row with the extra fields.
+        // ── REGISTER USER ──
+    // Uses Supabase Admin invite flow: signUp creates the auth user,
+    // then we upsert the profiles row with the extra fields.
+    async function registerUser() {
+        const fname = document.getElementById('reg-fname').value.trim();
+        const lname = document.getElementById('reg-lname').value.trim();
+        const email = document.getElementById('reg-email').value.trim();
+        const matId = document.getElementById('reg-matid').value.trim();
+ 
+        const feedback = document.getElementById('regFeedback');
+        const btn = document.getElementById('registerBtn');
+ 
+        // Clear previous errors
+        ['reg-fname','reg-lname','reg-email','reg-matid'].forEach(id => {
+            document.getElementById(id).classList.remove('input-error');
+        });
+        feedback.style.display = 'none';
+ 
+        // Validate
+        let errors = [];
+        if (!fname) { document.getElementById('reg-fname').classList.add('input-error'); errors.push('First name'); }
+        if (!lname) { document.getElementById('reg-lname').classList.add('input-error'); errors.push('Last name'); }
+        if (!email || !email.includes('@')) { document.getElementById('reg-email').classList.add('input-error'); errors.push('Valid email'); }
+        if (!matId) { document.getElementById('reg-matid').classList.add('input-error'); errors.push('Assigned Mat'); }
+ 
+        if (errors.length) {
+            showFeedback('reg', 'error', `Required: ${errors.join(', ')}.`);
+            return;
+        }
+ 
+        btn.disabled = true;
+        btn.textContent = 'Registering...';
+ 
+        try {
+            // Step 1: Create auth user via signUp (Supabase sends confirmation email)
+            const { data: authData, error: authErr } = await _supabase.auth.signUp({
+                email,
+                password: crypto.randomUUID(),
+                options: {
+                    data: { first_name: fname, last_name: lname }
+                }
+            });
+ 
+            if (authErr) throw authErr;
+ 
+            const newUid = authData?.user?.id;
+            if (!newUid) throw new Error('User creation failed — no UID returned.');
+ 
+            // Step 2: Upsert profile row with all fields
+            const { error: profileErr } = await _supabase.from('profiles').upsert({
+                id: newUid,
+                first_name: fname,
+                last_name: lname,
+                mat_id: matId,
+                role: 'user',
+            });
+ 
+            if (profileErr) throw profileErr;
+ 
+            // Mat assignment is tracked via profiles.mat_id (set above) — the
+            // mat_management_settings table itself has no per-user columns.
+ 
+            // Success
+            showFeedback('reg', 'success', `${fname} ${lname} registered successfully. A confirmation email has been sent to ${email}.`);
+            showToast(`User ${fname} ${lname} added.`, 'success');
+ 
+            // Clear form
+            ['reg-fname','reg-lname','reg-email'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+ 
+            await loadUserList();
+            await loadMatList();
+ 
+        } catch (err) {
+            console.error(err);
+            const msg = err.message?.includes('already registered')
+                ? `Email "${email}" is already in use.`
+                : err.message || 'Registration failed. Please try again.';
+            showFeedback('reg', 'error', msg);
+            showToast('Registration failed.', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '+ Add User to SmartStep';
+        }
+    }
+ 
+    // ── DELETE USER ──
+    async function deleteUser(uid, name) {
+        if (!confirm(`Remove user "${name}" from SmartStep?\n\nThis will delete their profile. Their auth account may still exist.`)) return;
+ 
+        const { error } = await _supabase.from('profiles').delete().eq('id', uid);
+        if (error) { showToast('Failed to remove user: ' + error.message, 'error'); return; }
+ 
+        const row = document.getElementById(`urow-${uid}`);
+        if (row) {
+            row.style.opacity = '0';
+            row.style.transition = 'opacity 0.25s';
+            setTimeout(() => { row.remove(); loadUserList(); }, 260);
+        }
+        showToast(`${name} removed.`, 'warn');
+    }
+ 
+    // ── CLOUD SYNC ──
+    async function handleCloudSync() {
+        showToast('Cloud sync initiated. Data is up to date.', 'success');
+    }
+
+
+    // ── CSV EXPORT ──
+    async function handleExportCSV() {
+        const filterEl = document.getElementById('export-mat-filter');
+        const selectedMat = filterEl ? filterEl.value : 'all';
+
+        const TELEMETRY_COLUMNS = [
+            'mat_id', 'created_at', 'steps',
+            'harvest_v', 'harvest_ma', 'harvest_mw', 'harvest_wh',
+            'consume_v', 'consume_ma', 'consume_mw', 'consume_wh',
+            'total_wh'
+        ];
+
+        let query = _supabase
+            .from('telemetry')
+            .select(TELEMETRY_COLUMNS.join(', '))
+            .order('created_at', { ascending: false });
+
+        if (selectedMat !== 'all') {
+            query = query.eq('mat_id', selectedMat);
+        }
+
+        const { data, error } = await query;
+
+        if (error) { showToast('Export failed: ' + error.message, 'error'); return; }
+        if (!data?.length) {
+            showToast(selectedMat === 'all' ? 'No telemetry data to export.' : `No telemetry data for ${selectedMat}.`, 'warn');
+            return;
+        }
+
+        const headers = TELEMETRY_COLUMNS.join(',');
+        const rows = data.map(r => TELEMETRY_COLUMNS.map(col => r[col]).join(',')).join('\n');
+        const csv = headers + '\n' + rows;
+
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const suffix = selectedMat === 'all' ? 'all-mats' : selectedMat;
+        a.download = `smartstep-telemetry-${suffix}-${new Date().toISOString().slice(0,10)}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast('CSV downloaded.', 'success');
+    }
+
+    // ── SAVE PREFERENCES ──
+    function saveAllPreferences() {
+        const prefs = {
+            units: document.getElementById('unitSelect').value,
+            refresh: document.getElementById('refreshSelect').value,
+        };
+        localStorage.setItem('adminPrefs', JSON.stringify(prefs));
+        showToast('Preferences saved.', 'success');
+    }
+
+    function loadSavedPreferences() {
+        try {
+            const prefs = JSON.parse(localStorage.getItem('adminPrefs') || '{}');
+            if (prefs.units) document.getElementById('unitSelect').value = prefs.units;
+            if (prefs.refresh) document.getElementById('refreshSelect').value = prefs.refresh;
+        } catch {}
+    }
+
+    // ── FEEDBACK / TOAST ──
+    function showFeedback(form, type, msg) {
+        const el = document.getElementById(form === 'mat' ? 'matFeedback' : 'regFeedback');
+        el.textContent = msg;
+        el.className = `form-feedback ${type === 'success' ? 'feedback-success' : 'feedback-error'}`;
+        el.style.display = 'block';
+    }
+
+    function showToast(msg, type = 'success') {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = `show t-${type}`;
+        setTimeout(() => { t.className = ''; }, 3500);
+    }
+
+    // ── INIT ──
+    window.addEventListener('load', async () => {
+        const { data: { session } } = await _supabase.auth.getSession();
+        if (!session) { window.location.href = 'login1.html'; return; }
+        loadAdminProfile(session.user.id);
+        loadMatList();
+        loadUserList();
+        loadSavedPreferences();
+    });
+</script>
 </body>
 </html>

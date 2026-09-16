@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartStep | Forgot Password</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lexend:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-dark: #05162e;
+            --navy-mid: #0a2447;
+            --gold: #e5c158;
+            --white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --text-muted: #94a3b8;
+            --danger: #ef4444;
+            --new: #f8fafc;
+            --border: #e2e8f0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body { height: 100%; font-family: 'Inter', sans-serif; }
+
+        body {
+            display: flex;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* LEFT SIDE — 60% white */
+        .side-white {
+            flex: 0 0 60%;
+            max-width: 60%;
+            background: #ffffff;
+            background-image: radial-gradient(circle at 80% 20%, rgba(229, 193, 88, 0.07) 0%, transparent 45%),
+                               radial-gradient(circle at 20% 80%, rgba(5, 22, 46, 0.04) 0%, transparent 50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 80px 90px;
+            position: relative;
+        }
+
+        .side-white .brand-mark {
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.4rem;
+            color: var(--navy-dark);
+            letter-spacing: 1px;
+            margin-bottom: 60px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .side-white .brand-mark::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--gold);
+            display: inline-block;
+        }
+
+        .side-white h1 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 3.2rem;
+            line-height: 1.15;
+            color: var(--navy-dark);
+            margin-bottom: 22px;
+            max-width: 520px;
+        }
+
+        .side-white h1 span { color: var(--gold); }
+
+        .side-white p.subtext {
+            font-size: 1.05rem;
+            color: #64748b;
+            max-width: 460px;
+            line-height: 1.6;
+        }
+
+        .stat-row {
+            display: flex;
+            gap: 50px;
+            margin-top: 60px;
+        }
+
+        .stat-row .stat-item h3 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.8rem;
+            color: var(--navy-dark);
+        }
+
+        .stat-row .stat-item p {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        /* RIGHT SIDE — 40% navy blue */
+        .side-navy {
+            flex: 0 0 40%;
+            max-width: 40%;
+            background: var(--navy-dark);
+            background-image: radial-gradient(circle at 85% 15%, rgba(229, 193, 88, 0.08) 0%, transparent 45%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 30px;
+            overflow-y: auto;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            padding: 4px;
+            transition: color 0.2s;
+        }
+        .toggle-password:hover { color: var(--gold); }
+        .toggle-password svg { width: 20px; height: 20px; }
+        .toggle-password .icon-eye-off { display: none; }
+        .auth-card {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            color: var(--white);
+        }
+
+        .logo-area { text-align: center; margin-bottom: 28px; }
+        .logo-area h1 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 2.3rem;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+        .logo-area p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 400;
+        }
+
+        h2 {
+            font-size: 1.05rem;
+            color: var(--gold);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .step-sub {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+
+        .form-step { display: none; }
+        .form-step.active { display: block; }
+
+        .input-group { margin-bottom: 22px; }
+        .input-group label {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .input-group input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(229, 193, 88, 0.15);
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+        .input-group input::placeholder { color: rgba(255,255,255,0.35); }
+        .input-group input:focus {
+            border-color: var(--gold);
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 15px rgba(229, 193, 88, 0.1);
+        }
+
+        .otp-inputs {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        .otp-inputs input {
+            width: 46px;
+            height: 54px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(229, 193, 88, 0.15);
+            border-radius: 10px;
+            color: white;
+        }
+        .otp-inputs input:focus {
+            border-color: var(--gold);
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .btn-main {
+            width: 100%;
+            padding: 16px;
+            background: var(--gold);
+            color: var(--navy-dark);
+            border: none;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 1.02rem;
+            cursor: pointer;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.2s;
+        }
+        .btn-main:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(229, 193, 88, 0.3);
+        }
+        .btn-main:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-back {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-weight: 700;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+        .btn-back:hover { border-color: var(--gold); color: var(--gold); }
+
+        .resend-row {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+        .resend-row span {
+            color: var(--gold);
+            cursor: pointer;
+            font-weight: 700;
+        }
+        .resend-row span.disabled {
+            color: var(--text-muted);
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+
+        .error-msg {
+            display: none;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ff8080;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .success-msg {
+            display: none;
+            background: rgba(34, 197, 94, 0.1);
+            color: #86efac;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .footer-link {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        .footer-link span {
+            color: var(--gold);
+            cursor: pointer;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .footer-link span:hover { text-decoration: underline; }
+
+        .icon-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(229, 193, 88, 0.12);
+            border: 1px solid rgba(229, 193, 88, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 22px;
+        }
+        .icon-circle svg { width: 26px; height: 26px; }
+
+        /* Responsive: stack on small screens */
+        @media (max-width: 900px) {
+            body { flex-direction: column; overflow-y: auto; height: auto; }
+            .side-white, .side-navy {
+                flex: 1 1 auto;
+                max-width: 100%;
+                width: 100%;
+            }
+            .side-white {
+                padding: 50px 30px;
+                text-align: center;
+                align-items: center;
+            }
+            .side-white h1 { font-size: 2.2rem; }
+            .stat-row { justify-content: center; }
+            .side-navy { padding: 50px 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LEFT: 60% white informational side -->
+    <section class="side-white">
+        <h1>Forgot your password? <span>No problem.</span></h1>
+        <p class="subtext">It happens to the best of us. Enter your email and we'll send you a code to reset it and get you right back on track.</p>
+        
+    </section>
+
+    <!-- RIGHT: 40% navy reset side -->
+    <section class="side-navy">
+        <div class="auth-card">
+            <header class="logo-area">
+                <h1>SmartStep</h1>
+            </header>
+
+            <div id="globalError" class="error-msg"></div>
+            <div id="globalSuccess" class="success-msg"></div>
+
+            <!-- STEP 1: Enter email -->
+            <section class="form-step active" id="step-1">
+                <div class="icon-circle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#e5c158" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </div>
+                <h2>Reset Password</h2>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" placeholder="name@email.com" required>
+                </div>
+                <button type="button" id="sendCodeBtn" class="btn-main">Send Reset Code</button>
+            </section>
+
+            <!-- STEP 2: Enter OTP -->
+            <section class="form-step" id="step-2">
+                <h2>Enter Code</h2>
+                <p class="step-sub">We sent a 6-digit code to <span id="emailDisplay" style="color:var(--gold); font-weight:700;"></span></p>
+
+                <div class="otp-inputs">
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit">
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit">
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit">
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit">
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit">
+                    <input type="text" maxlength="1" inputmode="numeric" class="otp-digit">
+                </div>
+                <button type="button" id="verifyOtpBtn" class="btn-main">Verify Code</button>
+                <div class="resend-row">
+                    Didn't get it? <span id="resendBtn">Resend code</span>
+                </div>
+                <button type="button" class="btn-back" id="backTo1">Back</button>
+            </section>
+
+            <!-- STEP 3: New password -->
+            <section class="form-step" id="step-3">
+                <h2>New Password</h2>
+                <p class="step-sub">Choose a new password for your account.</p>
+
+                <div class="input-group">
+                    <label>New Password</label>
+                    <input type="password" id="newPassword" placeholder="••••••••" required> 
+                    <span class="toggle-password" id="togglePassword">
+                            <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.3 20.3 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a20.3 20.3 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                        </span>
+                </div>
+                <div class="input-group">
+                    <label>Confirm New Password</label>
+                    <input type="password" id="confirmNewPassword" placeholder="••••••••" required>
+                    <span class="toggle-password" id="togglePassword">
+                            <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.3 20.3 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a20.3 20.3 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                        </span>
+                </div>
+
+                <button type="button" id="resetBtn" class="btn-main">Reset Password</button>
+            </section>
+
+            <!-- STEP 4: Done -->
+            <section class="form-step" id="step-4">
+                <div class="icon-circle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#e5c158" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <h2>Password Updated</h2>
+                <p class="step-sub">Your password has been reset successfully. You can now sign in with your new password.</p>
+                <button type="button" class="btn-main" onclick="window.location.href='login1.html'">Back to Sign In</button>
+            </section>
+
+            <p class="footer-link" id="footerRemember">Remember your password? <span onclick="window.location.href='login1.html'">Sign In</span></p>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module">
+        const SUPABASE_URL = "https://qvadzitiwgkhzlgjmdac.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YWR6aXRpd2draHpsZ2ptZGFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjkyNjAsImV4cCI6MjA5MjM0NTI2MH0.8COO3BlKQNgXMwo_GZUTIt-Kxs0WfhHJ2yrL3e9--9c";
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ---- State ----
+        let verifiedEmail = "";
+
+        // ---- Elements ----
+        const globalError = document.getElementById('globalError');
+        const globalSuccess = document.getElementById('globalSuccess');
+
+        const emailInput = document.getElementById('email');
+        const sendCodeBtn = document.getElementById('sendCodeBtn');
+        const emailDisplay = document.getElementById('emailDisplay');
+        const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+        const resendBtn = document.getElementById('resendBtn');
+        const backTo1 = document.getElementById('backTo1');
+        const otpDigits = Array.from(document.querySelectorAll('.otp-digit'));
+
+        const resetBtn = document.getElementById('resetBtn');
+        const footerRemember = document.getElementById('footerRemember');
+
+        // ---- Helpers ----
+        function showError(msg) {
+            globalSuccess.style.display = 'none';
+            globalError.innerText = msg;
+            globalError.style.display = 'block';
+        }
+        function showSuccess(msg) {
+            globalError.style.display = 'none';
+            globalSuccess.innerText = msg;
+            globalSuccess.style.display = 'block';
+        }
+        function clearMessages() {
+            globalError.style.display = 'none';
+            globalSuccess.style.display = 'none';
+        }
+
+        function goToStep(n) {
+            document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+            document.getElementById(`step-${n}`).classList.add('active');
+            footerRemember.style.display = (n === 4) ? 'none' : 'block';
+            clearMessages();
+        }
+
+        // ---- OTP digit UX: auto-advance / backspace / paste ----
+        otpDigits.forEach((input, idx) => {
+            input.addEventListener('input', () => {
+                input.value = input.value.replace(/[^0-9]/g, '');
+                if (input.value && idx < otpDigits.length - 1) {
+                    otpDigits[idx + 1].focus();
+                }
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !input.value && idx > 0) {
+                    otpDigits[idx - 1].focus();
+                }
+            });
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const paste = (e.clipboardData.getData('text') || '').replace(/[^0-9]/g, '').slice(0, 6);
+                paste.split('').forEach((char, i) => {
+                    if (otpDigits[i]) otpDigits[i].value = char;
+                });
+                const last = Math.min(paste.length, otpDigits.length) - 1;
+                if (last >= 0) otpDigits[last].focus();
+            });
+        });
+
+        function getOtpValue() {
+            return otpDigits.map(i => i.value).join('');
+        }
+
+                const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        togglePassword.addEventListener('click', () => {
+            const isHidden = passwordInput.type === 'password';
+            passwordInput.type = isHidden ? 'text' : 'password';
+            togglePassword.querySelector('.icon-eye').style.display = isHidden ? 'none' : 'block';
+            togglePassword.querySelector('.icon-eye-off').style.display = isHidden ? 'block' : 'none';
+        });
+
+        // ---- STEP 1: send reset code ----
+        sendCodeBtn.addEventListener('click', async () => {
+            clearMessages();
+            const email = emailInput.value.trim();
+            if (!email || !email.includes('@')) {
+                showError('Please enter a valid email address.');
+                return;
+            }
+
+            sendCodeBtn.disabled = true;
+            sendCodeBtn.innerText = 'Sending...';
+
+            try {
+                // shouldCreateUser: false — we're resetting an existing account, not signing up
+                const { error } = await _supabase.auth.signInWithOtp({
+                    email: email,
+                    options: { shouldCreateUser: false }
+                });
+                if (error) throw error;
+
+                verifiedEmail = email;
+                emailDisplay.innerText = email;
+                showSuccess('Code sent! Check your inbox.');
+                goToStep(2);
+                otpDigits[0].focus();
+            } catch (err) {
+                showError(err.message || 'Failed to send reset code.');
+            } finally {
+                sendCodeBtn.disabled = false;
+                sendCodeBtn.innerText = 'Send Reset Code';
+            }
+        });
+
+        // ---- STEP 2: verify OTP ----
+        verifyOtpBtn.addEventListener('click', async () => {
+            clearMessages();
+            const token = getOtpValue();
+            if (token.length !== 6) {
+                showError('Please enter the full 6-digit code.');
+                return;
+            }
+
+            verifyOtpBtn.disabled = true;
+            verifyOtpBtn.innerText = 'Verifying...';
+
+            try {
+                // Verifying the OTP signs the user in, giving us a session
+                // we can then use to update their password.
+                const { error } = await _supabase.auth.verifyOtp({
+                    email: verifiedEmail,
+                    token: token,
+                    type: 'email'
+                });
+                if (error) throw error;
+
+                showSuccess('Code verified!');
+                setTimeout(() => goToStep(3), 500);
+            } catch (err) {
+                showError(err.message || 'Invalid or expired code.');
+            } finally {
+                verifyOtpBtn.disabled = false;
+                verifyOtpBtn.innerText = 'Verify Code';
+            }
+        });
+
+        backTo1.addEventListener('click', () => goToStep(1));
+
+        // ---- Resend OTP (with cooldown) ----
+        let resendCooldown = 0;
+        let resendTimer = null;
+        resendBtn.addEventListener('click', async () => {
+            if (resendBtn.classList.contains('disabled')) return;
+            clearMessages();
+            try {
+                const { error } = await _supabase.auth.signInWithOtp({
+                    email: verifiedEmail,
+                    options: { shouldCreateUser: false }
+                });
+                if (error) throw error;
+                showSuccess('Code resent!');
+                startResendCooldown();
+            } catch (err) {
+                showError(err.message || 'Failed to resend code.');
+            }
+        });
+
+        function startResendCooldown() {
+            resendCooldown = 30;
+            resendBtn.classList.add('disabled');
+            resendBtn.innerText = `Resend in ${resendCooldown}s`;
+            resendTimer = setInterval(() => {
+                resendCooldown--;
+                if (resendCooldown <= 0) {
+                    clearInterval(resendTimer);
+                    resendBtn.classList.remove('disabled');
+                    resendBtn.innerText = 'Resend code';
+                } else {
+                    resendBtn.innerText = `Resend in ${resendCooldown}s`;
+                }
+            }, 1000);
+        }
+
+        // ---- STEP 3: set new password ----
+        resetBtn.addEventListener('click', async () => {
+            clearMessages();
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+            if (newPassword.length < 6) {
+                showError('Password must be at least 6 characters.');
+                return;
+            }
+            if (newPassword !== confirmNewPassword) {
+                showError('Passwords do not match!');
+                return;
+            }
+
+            resetBtn.disabled = true;
+            resetBtn.innerText = 'Updating...';
+
+            try {
+                const { error } = await _supabase.auth.updateUser({
+                    password: newPassword
+                });
+                if (error) throw error;
+
+                goToStep(4);
+            } catch (err) {
+                showError(err.message || 'Failed to reset password.');
+            } finally {
+                resetBtn.disabled = false;
+                resetBtn.innerText = 'Reset Password';
+            }
+        });
+    </script>
+</body>
+</html>

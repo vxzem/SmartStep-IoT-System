@@ -159,7 +159,7 @@
 
   <!-- SELECTOR BAR -->
   <div class="selector-bar">
-    <span class="selector-label">Monitor User:</span>
+    <span class="selector-label">Monitoring:</span>
     <select class="mat-select" id="matSelector" onchange="onMatChange()">
       <option value="">— Select a User —</option>
     </select>
@@ -172,13 +172,13 @@
   <!-- STAT CARDS -->
   <div class="stats-row">
     <div class="stat-card">
-      <div class="stat-label">Battery Voltage</div>
+      <div class="stat-label">Load Voltage</div>
       <div class="stat-val" id="statVoltage">—</div>
       <div class="stat-sub" id="statVoltageSub">Awaiting selection</div>
       <div class="stat-bar"><div class="stat-bar-fill" id="voltageBar" style="width:0%"></div></div>
     </div>
     <div class="stat-card">
-      <div class="stat-label">State of Charge</div>
+      <div class="stat-label">Harvest Power</div>
       <div class="stat-val" id="statSoc">—</div>
       <div class="stat-sub" id="statSocSub">Awaiting selection</div>
       <div class="stat-bar"><div class="stat-bar-fill" id="socBar" style="width:0%"></div></div>
@@ -217,7 +217,7 @@
   <!-- SOC TREND -->
   <div class="main-grid full">
     <div class="card" style="position:relative;">
-      <div class="card-title">Battery SoC Trend (Last 6 Readings)</div>
+      <div class="card-title">Harvest Power Trend (Last 6 Readings)</div>
       <div class="chart-wrap">
         <canvas id="socChart"></canvas>
       </div>
@@ -235,6 +235,7 @@
   const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   let currentUserId = null;
+  let currentMatId  = null;
   let refreshTimer  = null;
   let energyChart   = null;
   let socChart      = null;
@@ -246,10 +247,14 @@
   });
 
   async function loadAdminProfile(uid) {
-    const { data } = await _supabase.from('profiles').select('first_name, last_name').eq('id', uid).single();
+    const { data, error } = await _supabase.from('profiles').select('first_name, last_name').eq('id', uid).single();
+    if (error) { console.error('loadAdminProfile error:', error.message); return; }
     if (data) {
-      document.getElementById('adminName').innerText   = `${data.first_name} ${data.last_name}`;
-      document.getElementById('adminAvatar').innerText = data.first_name[0] + data.last_name[0];
+      const first = (data.first_name || '').trim();
+      const last  = (data.last_name  || '').trim();
+      const fullName = `${first} ${last}`.trim();
+      document.getElementById('adminName').innerText   = fullName || 'Admin';
+      document.getElementById('adminAvatar').innerText = ((first[0] || '') + (last[0] || '')).toUpperCase() || 'A';
     }
   }
 
@@ -266,6 +271,7 @@
       const opt = document.createElement('option');
       opt.value = u.id;
       opt.textContent = `${u.first_name} ${u.last_name}`;
+      opt.dataset.matId = u.mat_id || '';
       sel.appendChild(opt);
     });
   }
@@ -273,10 +279,17 @@
   async function onMatChange() {
     const sel = document.getElementById('matSelector');
     const uid = sel.value;
-    if (!uid) { currentUserId = null; clearInterval(refreshTimer); resetDashboard(); return; }
+    if (!uid) { currentUserId = null; currentMatId = null; clearInterval(refreshTimer); resetDashboard(); return; }
     currentUserId = uid;
+    currentMatId  = sel.options[sel.selectedIndex].dataset.matId || null;
     document.getElementById('selectedUid').textContent = `UID: ${uid.slice(0,8)}...`;
     document.getElementById('selectorStatus').classList.add('visible');
+
+    if (!currentMatId) {
+      showLoading(false);
+      renderNoData('This user has no mat assigned');
+      return;
+    }
 
     // Fetch this user's pref_refresh from their profile
     const { data: profile } = await _supabase
@@ -288,9 +301,9 @@
     const refreshSec = parseInt(profile?.pref_refresh) || 10;
     updateLivePill(refreshSec);
 
-    fetchAllData(uid);
+    fetchAllData(currentMatId);
     clearInterval(refreshTimer);
-    refreshTimer = setInterval(() => fetchAllData(currentUserId), refreshSec * 1000);
+    refreshTimer = setInterval(() => fetchAllData(currentMatId), refreshSec * 1000);
   }
 
   function updateLivePill(seconds) {
@@ -326,19 +339,17 @@
     );
   }
 
-  async function fetchAllData(uid) {
+  async function fetchAllData(matId) {
     try {
-      const { data: latest, error: e1 } = await _supabase.from('telemetry').select('*').eq('user_id', uid).order('created_at', { ascending: false }).limit(1).maybeSingle();
-      const { data: history }            = await _supabase.from('telemetry').select('*').eq('user_id', uid).order('created_at', { ascending: false }).limit(6);
-      const { data: energyLatest }       = await _supabase.from('energy_logs').select('*').eq('user_id', uid).order('created_at', { ascending: false }).limit(1).maybeSingle();
-      const { data: energyHistory }      = await _supabase.from('energy_logs').select('*').eq('user_id', uid).order('created_at', { ascending: false }).limit(6);
+      const { data: latest, error: e1 } = await _supabase.from('telemetry').select('*').eq('mat_id', matId).order('created_at', { ascending: false }).limit(1).maybeSingle();
+      const { data: history }            = await _supabase.from('telemetry').select('*').eq('mat_id', matId).order('created_at', { ascending: false }).limit(6);
 
       showLoading(false);
       if (e1 || !latest) { renderNoData(); return; }
 
       updateStatCards(latest);
-      renderHealthList(latest, energyLatest);
-      renderEnergyChart(energyHistory || [], history || []);
+      renderHealthList(latest);
+      renderEnergyChart(history || []);
       renderSocChart(history || []);
 
       const now = new Date();
@@ -351,26 +362,28 @@
     }
   }
 
-  function updateStatCards(d) {
-    const voltage = d.voltage ?? d.battery_voltage ?? null;
-    const soc     = d.battery_pct ?? null;
-    const steps   = d.steps ?? null;
+  const MAX_HARVEST_MW = 3000; // reference ceiling for the harvest-power bar fill
 
-    if (voltage !== null) {
+  function updateStatCards(d) {
+    const consumeV  = d.consume_v  ?? null;
+    const harvestMw = d.harvest_mw ?? null;
+    const steps     = d.steps ?? null;
+
+    if (consumeV !== null) {
       const el = document.getElementById('statVoltage');
-      el.textContent = voltage.toFixed(2) + 'V';
-      el.className   = 'stat-val' + (voltage >= 12 ? '' : voltage >= 10 ? ' warn' : ' danger');
+      el.textContent = consumeV.toFixed(2) + 'V';
+      el.className   = 'stat-val' + (consumeV >= 12 ? '' : consumeV >= 10 ? ' warn' : ' danger');
       document.getElementById('statVoltageSub').textContent =
-        voltage >= 12 ? 'Nominal range' : voltage >= 10 ? 'Below nominal' : 'Critical — check battery';
-      document.getElementById('voltageBar').style.width = Math.min((voltage / 14.4) * 100, 100) + '%';
+        consumeV >= 12 ? 'Nominal load voltage' : consumeV >= 10 ? 'Below nominal' : 'Critical — check load';
+      document.getElementById('voltageBar').style.width = Math.min((consumeV / 14.4) * 100, 100) + '%';
     }
-    if (soc !== null) {
+    if (harvestMw !== null) {
       const el = document.getElementById('statSoc');
-      el.textContent = soc.toFixed(1) + '%';
-      el.className   = 'stat-val' + (soc >= 60 ? '' : soc >= 30 ? ' warn' : ' danger');
+      el.textContent = harvestMw.toFixed(1) + ' mW';
+      el.className   = 'stat-val' + (harvestMw >= 800 ? '' : harvestMw >= 300 ? ' warn' : ' danger');
       document.getElementById('statSocSub').textContent =
-        soc >= 60 ? 'Harvesting active' : soc >= 30 ? 'Moderate charge' : 'Low — needs attention';
-      document.getElementById('socBar').style.width = soc + '%';
+        harvestMw >= 800 ? 'Strong harvest' : harvestMw >= 300 ? 'Moderate harvest' : 'Low — light foot traffic';
+      document.getElementById('socBar').style.width = Math.min((harvestMw / MAX_HARVEST_MW) * 100, 100) + '%';
     }
     if (steps !== null) {
       document.getElementById('statSteps').textContent    = steps.toLocaleString();
@@ -378,12 +391,13 @@
     }
   }
 
-  function renderHealthList(d, energy) {
-    const battHealth = d.battery_health ?? null;
-    const chargeRate = d.charge_rate ?? null;
-    const voltage    = d.voltage ?? d.battery_voltage ?? null;
-    const totalWh    = d.total_wh ?? null;
-    const harvested  = energy?.energy_harvested ?? energy?.harvested_mw ?? null;
+  function renderHealthList(d) {
+    const harvestWh  = d.harvest_wh  ?? 0;
+    const consumeWh  = d.consume_wh  ?? 0;
+    const consumeV   = d.consume_v   ?? null;
+    const harvestMw  = d.harvest_mw  ?? null;
+    const consumeMw  = d.consume_mw  ?? null;
+    const totalWh    = d.total_wh    ?? null;
 
     function badgeCls(raw) {
       if (raw === null || raw === undefined) return 'badge-offline';
@@ -399,12 +413,29 @@
       return 'badge-offline';
     }
 
+    // "Battery Health" — interpreted from the harvest/consume (charge/discharge) ratio
+    let healthVal = 'N/A', healthRaw = null;
+    if (harvestWh > 0 || consumeWh > 0) {
+      if (consumeWh > 0) {
+        const ratioPct = (harvestWh / consumeWh) * 100;
+        if (ratioPct >= 120)      { healthVal = `Optimal (${ratioPct.toFixed(0)}%)`;  healthRaw = 'optimal'; }
+        else if (ratioPct >= 80)  { healthVal = `Monitor (${ratioPct.toFixed(0)}%)`;  healthRaw = 'monitor'; }
+        else                      { healthVal = `Critical (${ratioPct.toFixed(0)}%)`; healthRaw = 'critical'; }
+      } else {
+        healthVal = 'Optimal (surplus)'; healthRaw = 'optimal'; // harvesting with no draw at all
+      }
+    }
+
+    // "Charge Rate" — harvest_mw is already a power (rate) reading, used directly
+    const chargeRateVal = harvestMw !== null ? harvestMw.toFixed(1) + ' mW' : 'N/A';
+    const chargeRateRaw = harvestMw !== null ? (harvestMw >= 800 ? 'good' : harvestMw >= 300 ? 'warn' : 'low') : null;
+
     const items = [
-      { name: 'Battery Health',  val: battHealth !== null ? battHealth.toFixed(1) + '%'           : 'N/A',        raw: battHealth !== null ? battHealth.toFixed(1) + '%' : null },
-      { name: 'Charge Rate',     val: chargeRate !== null ? chargeRate + ' A'                     : 'N/A',        raw: chargeRate !== null ? 'active' : null },
-      { name: 'Voltage',         val: voltage    !== null ? voltage.toFixed(2) + ' V'             : 'N/A',        raw: voltage    !== null ? voltage.toFixed(2) + 'v' : null },
-      { name: 'Total Harvested', val: totalWh    !== null ? (totalWh * 1000).toFixed(2) + ' mWh' : '0.00 mWh',   raw: totalWh    !== null ? 'good' : null },
-      { name: 'Last Energy Log', val: harvested  !== null ? harvested + ' mW'                     : 'N/A',        raw: harvested  !== null ? 'active' : null },
+      { name: 'Battery Health',  val: healthVal,                                                          raw: healthRaw },
+      { name: 'Charge Rate',     val: chargeRateVal,                                                       raw: chargeRateRaw },
+      { name: 'Load Voltage',    val: consumeV   !== null ? consumeV.toFixed(2) + ' V'             : 'N/A', raw: consumeV   !== null ? consumeV.toFixed(2) + 'v' : null },
+      { name: 'Total Harvested', val: totalWh    !== null ? (totalWh * 1000).toFixed(2) + ' mWh'   : '0.00 mWh', raw: totalWh !== null ? 'good' : null },
+      { name: 'Consume Power',   val: consumeMw  !== null ? consumeMw.toFixed(1) + ' mW'           : 'N/A', raw: consumeMw !== null ? (harvestMw !== null && harvestMw >= consumeMw ? 'good' : 'critical') : null },
     ];
 
     document.getElementById('healthList').innerHTML = items.map(i => `
@@ -414,13 +445,12 @@
       </div>`).join('');
   }
 
-  function renderEnergyChart(energyRows, telemetryRows) {
+  function renderEnergyChart(telemetryRows) {
     if (energyChart) { energyChart.destroy(); energyChart = null; }
-    const useEnergy = energyRows.length > 0;
-    const rows      = useEnergy ? [...energyRows].reverse() : [...telemetryRows].reverse();
+    const rows      = [...telemetryRows].reverse();
     const labels    = rows.map(r => { const d = new Date(r.created_at); return d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0'); });
-    const harvested = rows.map(r => useEnergy ? (r.energy_harvested ?? r.harvested_mw ?? 0) : ((r.total_wh ?? 0) * 1000));
-    const parasitic = rows.map(r => r.parasitic_draw ?? r.parasitic_mw ?? 0);
+    const harvested = rows.map(r => r.harvest_mw ?? 0);
+    const parasitic = rows.map(r => r.consume_mw ?? 0);
 
     energyChart = new Chart(document.getElementById('energyChart'), {
       type: 'line',
@@ -441,27 +471,27 @@
 
   function renderSocChart(rows) {
     if (socChart) { socChart.destroy(); socChart = null; }
-    const sorted  = [...rows].reverse();
-    const labels  = sorted.map(r => { const d = new Date(r.created_at); return d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0'); });
-    const socData = sorted.map(r => r.battery_pct ?? null);
+    const sorted    = [...rows].reverse();
+    const labels    = sorted.map(r => { const d = new Date(r.created_at); return d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0'); });
+    const harvestData = sorted.map(r => r.harvest_mw ?? null);
 
     socChart = new Chart(document.getElementById('socChart'), {
       type: 'line',
-      data: { labels, datasets: [{ label: 'Battery SoC (%)', data: socData, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.08)', fill: true, tension: 0.4, pointRadius: 4, borderWidth: 2, pointBackgroundColor: '#10b981' }] },
+      data: { labels, datasets: [{ label: 'Harvest Power (mW)', data: harvestData, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.08)', fill: true, tension: 0.4, pointRadius: 4, borderWidth: 2, pointBackgroundColor: '#10b981' }] },
       options: {
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { position: 'bottom', labels: { color: '#64748b', font: { family: 'Inter', size: 11 }, boxWidth: 14 } } },
         scales: {
-          y: { min: 0, max: 100, grid: { color: '#f1f5f9' }, ticks: { callback: v => v + '%', color: '#94a3b8', font: { family: 'JetBrains Mono', size: 10 } } },
+          y: { beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { callback: v => v + ' mW', color: '#94a3b8', font: { family: 'JetBrains Mono', size: 10 } } },
           x: { grid: { display: false }, ticks: { color: '#94a3b8', font: { family: 'JetBrains Mono', size: 10 } } }
         }
       }
     });
   }
 
-  function renderNoData() {
+  function renderNoData(message) {
     document.getElementById('healthList').innerHTML =
-      '<div class="no-data"><div class="no-data-icon">—</div>No telemetry data found for this user</div>';
+      `<div class="no-data"><div class="no-data-icon">—</div>${message || 'No telemetry data found for this user'}</div>`;
   }
 
   window.addEventListener('load', async () => {
