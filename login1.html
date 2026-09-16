@@ -167,6 +167,29 @@
             box-shadow: 0 0 15px rgba(229, 193, 88, 0.1);
         }
 
+        .password-wrapper {
+            position: relative;
+        }
+        .password-wrapper input {
+            padding-right: 46px;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            padding: 4px;
+            transition: color 0.2s;
+        }
+        .toggle-password:hover { color: var(--gold); }
+        .toggle-password svg { width: 20px; height: 20px; }
+        .toggle-password .icon-eye-off { display: none; }
+
         .error-msg {
             display: none;
             background: rgba(239, 68, 68, 0.1);
@@ -235,9 +258,8 @@
 
     <!-- LEFT: 60% white informational side -->
     <section class="side-white">
-        <h1>Welcome back to <span>SmartStep</span></h1>
-        <p class="subtext">Where Harvesting Motion, Powering Tomorrow</p>
-        
+        <h1>Welcome back to <span>SmartStep.</span></h1>
+        <p class="subtext">Where Harvesting motion, Powering Tomorrow.</p>
     </section>
 
     <!-- RIGHT: 40% navy login side -->
@@ -258,8 +280,24 @@
                 </div>
                 <div class="input-group">
                     <label>Password</label>
-                    <input type="password" id="password" placeholder="••••••••" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" placeholder="••••••••" required>
+                        <span class="toggle-password" id="togglePassword">
+                            <svg class="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <svg class="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17.94 17.94A10.94 10.94 0 0 1 12 20c-7 0-11-8-11-8a20.3 20.3 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 8 11 8a20.3 20.3 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                        </span>
+                    </div>
                 </div>
+
+                <p style="text-align:right; margin-top:-12px; margin-bottom:20px;">
+                    <span onclick="window.location.href='forget.html'" style="color:var(--gold); font-size:0.85rem; cursor:pointer; font-weight:600;">Forgot password?</span>
+                </p>
 
                 <button type="submit" class="btn-main" id="signInBtn">Sign In</button>
             </form>
@@ -277,6 +315,16 @@
         const loginForm = document.getElementById('loginForm');
         const errorMsg = document.getElementById('errorMsg');
         const signInBtn = document.getElementById('signInBtn');
+
+        // ---- Show/Hide password toggle ----
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        togglePassword.addEventListener('click', () => {
+            const isHidden = passwordInput.type === 'password';
+            passwordInput.type = isHidden ? 'text' : 'password';
+            togglePassword.querySelector('.icon-eye').style.display = isHidden ? 'none' : 'block';
+            togglePassword.querySelector('.icon-eye-off').style.display = isHidden ? 'block' : 'none';
+        });
 
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -310,8 +358,8 @@
                     window.location.href = "user-dash.html";
                 } else {
                     // STEP 3: Redirect based on role
-                    if (userData.role === "ADMIN") {
-                        window.location.href = "dash.html";
+                    if (userData.role === "admin") {
+                        window.location.href = "ad_dash.html";
                     } else {
                         window.location.href = "user-dash.html";
                     }

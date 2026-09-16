@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartStep | System Settings</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
@@ -23,46 +23,44 @@
             --warning: #f59e0b;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background: var(--bg-slate); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
         /* ── SIDEBAR ── */
-        .sidebar { width: 260px; background: var(--navy-dark); color: white; padding: 30px 20px; display: flex; flex-direction: column; flex-shrink: 0; }
-        .logo { font-family: 'Lexend', sans-serif; color: var(--gold); font-size: 1.5rem; margin-bottom: 8px; }
-        .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); margin: 20px 0 8px; padding: 0 5px; }
-        .nav-link { display: flex; align-items: center; gap: 10px; padding: 11px 15px; text-decoration: none; color: rgba(255,255,255,0.7); border-radius: 8px; transition: 0.2s; font-size: 0.88rem; margin-bottom: 3px; }
+        .sidebar { width: 250px; background: var(--navy-dark); color: white; padding: 28px 18px; display: flex; flex-direction: column; flex-shrink: 0; }
+        .logo { font-family: 'Lexend', sans-serif; color: var(--gold); font-size: 1.4rem; margin-bottom: 30px; }
+        .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); margin: 18px 0 8px; padding: 0 5px; }
+        .nav-link { display: flex; align-items: center; gap: 10px; padding: 10px 14px; text-decoration: none; color: rgba(255,255,255,0.7); border-radius: 8px; transition: 0.2s; font-size: 0.87rem; margin-bottom: 2px; }
         .nav-link:hover { background: rgba(229,193,88,0.08); color: white; }
         .nav-link.active { background: rgba(229,193,88,0.15); color: var(--gold); font-weight: 600; }
-        .nav-icon { font-size: 1rem; width: 18px; text-align: center; }
         .sidebar-footer { margin-top: auto; }
-        .logout-btn { display: flex; align-items: center; gap: 8px; padding: 11px 15px; color: rgba(255,255,255,0.4); cursor: pointer; border-radius: 8px; font-size: 0.85rem; transition: 0.2s; }
+        .logout-btn { display: flex; align-items: center; gap: 8px; padding: 10px 14px; color: rgba(255,255,255,0.4); cursor: pointer; border-radius: 8px; font-size: 0.83rem; transition: 0.2s; }
         .logout-btn:hover { color: var(--danger); background: rgba(239,68,68,0.08); }
-        .node-info { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; opacity: 0.35; margin-top: 12px; padding: 0 5px; }
+        .node-info { font-family: 'JetBrains Mono', monospace; font-size: 0.63rem; opacity: 0.35; margin-top: 10px; padding: 0 5px; line-height: 1.5; }
 
         /* ── MAIN ── */
-        .main-content { flex: 1; overflow-y: auto; padding: 32px 35px; }
+        .main-content { flex: 1; overflow-y: auto; padding: 32px 36px; }
 
         /* ── HEADER ── */
-        .top-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; gap: 20px; }
+        .top-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; gap: 20px; }
         .page-header-content { flex: 1; }
-        .page-header-content h1 { font-family: 'Lexend', sans-serif; font-size: 1.7rem; color: var(--navy-dark); margin: 0 0 4px 0; }
-        .page-header-content p { color: var(--text-muted); font-size: 0.88rem; margin: 0; }
+        .page-header-content h1 { font-family: 'Lexend', sans-serif; font-size: 1.55rem; color: var(--navy-dark); margin: 0 0 4px 0; }
+        .page-header-content p { color: var(--text-muted); font-size: 0.87rem; margin: 0; }
+        .eyebrow { color: var(--gold); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
         .right-header { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 
         /* ── USER BADGE ── */
-        .user-badge { display: flex; align-items: center; gap: 12px; background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 12px 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); transition: all 0.25s ease; }
-        .user-badge:hover { box-shadow: 0 8px 25px rgba(0,0,0,0.09); border-color: var(--gold); transform: translateY(-1px); }
-        .avatar { width: 40px; height: 40px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--navy-dark); font-size: 1rem; flex-shrink: 0; box-shadow: 0 3px 8px rgba(229,193,88,0.4); }
-        .user-name { font-size: 0.96rem; font-weight: 600; color: var(--navy-dark); line-height: 1.25; margin: 0; }
-        .user-role { font-size: 0.74rem; color: var(--gold); font-family: 'JetBrains Mono', monospace; font-weight: 500; letter-spacing: 0.6px; margin: 0; }
+        .user-badge { display: flex; align-items: center; gap: 10px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 8px 16px; min-width: 190px; }
+        .avatar { width: 34px; height: 34px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--navy-dark); font-size: 0.85rem; flex-shrink: 0; }
+        .user-name { font-size: 0.86rem; font-weight: 600; color: var(--navy-dark); line-height: 1.2; }
+        .user-role { font-size: 0.68rem; color: var(--gold); font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
 
         /* ── SETTINGS CONTAINER ── */
-        .settings-container { max-width: 960px; display: grid; grid-template-columns: 1fr; gap: 20px; }
+        .settings-container { max-width: 960px; display: grid; grid-template-columns: 1fr; gap: 18px; }
 
         /* ── CARD ── */
-        .card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 26px 28px; }
-        .card-title { font-size: 0.72rem; font-weight: 700; color: var(--navy-dark); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-        .ct-icon { color: var(--gold); }
+        .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
+        .card-title { font-size: 0.92rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 18px; }
 
         /* ── SETTING ROW ── */
         .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #f1f5f9; }
@@ -101,6 +99,27 @@
         /* ── ADD USER SECTION ── */
         .add-user-grid { display: grid; grid-template-columns: 380px 1fr; gap: 28px; }
 
+        /* ── PROVISIONING TABS ── */
+        .prov-tabs { display: flex; gap: 6px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .prov-tab { padding: 10px 18px; font-size: 0.84rem; font-weight: 700; color: var(--text-muted); background: none; border: none; cursor: pointer; position: relative; top: 1px; border-bottom: 2px solid transparent; transition: 0.2s; font-family: 'Inter', sans-serif; }
+        .prov-tab:hover { color: var(--navy-dark); }
+        .prov-tab.active { color: var(--navy-dark); border-bottom-color: var(--gold); }
+        .prov-panel { display: none; }
+        .prov-panel.active { display: block; }
+
+        /* ── MAT ROW ── */
+        .mat-row { display: flex; align-items: center; gap: 12px; padding: 11px 13px; background: var(--bg-slate); border: 1px solid var(--border); border-radius: 10px; transition: border-color 0.2s; }
+        .mat-row:hover { border-color: var(--gold); }
+        .mat-row-icon { width: 34px; height: 34px; background: var(--navy-dark); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.62rem; color: var(--gold); flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
+        .mat-row-info { flex: 1; min-width: 0; }
+        .mat-row-id { font-family: 'JetBrains Mono', monospace; font-size: 0.84rem; font-weight: 700; color: var(--navy-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mat-row-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mat-row-status { font-family: 'JetBrains Mono', monospace; font-size: 0.63rem; font-weight: 700; border-radius: 5px; padding: 2px 8px; flex-shrink: 0; text-transform: uppercase; }
+        .status-active { background: #d1fae5; color: #065f46; }
+        .status-unassigned { background: var(--gold-soft); color: #92702c; border: 1px solid #fde68a; }
+        .form-input.has-default { color: var(--text-muted); }
+        .form-input.has-default:focus { color: var(--text-main); }
+
         /* Form */
         .form-group { margin-bottom: 14px; }
         .form-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); display: block; margin-bottom: 5px; }
@@ -111,10 +130,6 @@
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .form-hint { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
         .form-section-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
-        .password-wrap { position: relative; }
-        .password-wrap .form-input { padding-right: 42px; }
-        .pw-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 0.75rem; color: var(--text-muted); font-family: 'Inter', sans-serif; padding: 2px 4px; }
-        .pw-toggle:hover { color: var(--text-main); }
 
         /* Feedback */
         .form-feedback { font-size: 0.8rem; font-weight: 600; padding: 10px 14px; border-radius: 8px; margin-top: 12px; display: none; }
@@ -144,8 +159,8 @@
 
         /* Empty / loading */
         .empty-state { text-align: center; padding: 32px 16px; color: var(--text-muted); }
-        .empty-icon { font-size: 1.8rem; margin-bottom: 8px; opacity: 0.35; }
-        .empty-state p { font-size: 0.83rem; }
+        .empty-icon { font-size: 2rem; margin-bottom: 8px; opacity: 0.4; }
+        .empty-state p { font-size: 0.85rem; }
         .spinner-row { display: flex; justify-content: center; padding: 24px; }
         .spinner { width: 22px; height: 22px; border: 2.5px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.75s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
@@ -164,16 +179,16 @@
 
 <!-- ── SIDEBAR ── -->
 <aside class="sidebar">
-    <div class="logo">⚡ SmartStep</div>
+    <div class="logo">SmartStep</div>
     <div class="nav-section">Admin</div>
-       <nav>
-        <a href="dash.html" class="nav-link"> Live Monitoring</a>
-        <a href="analytics.html" class="nav-link"> Energy Analytics</a>
-        <a href="maintenance(2).html" class="nav-link"> System Maintenance</a>
-        <a href="security.html" class="nav-link active"> System Settings</a>
+    <nav>
+        <a href="ad_dash.html" class="nav-link">Live Monitoring</a>
+        <a href="analytics.html" class="nav-link">Energy Analytics</a>
+        <a href="maintenance(2).html" class="nav-link">System Maintenance</a>
+        <a href="security.html" class="nav-link active">System Settings</a>
     </nav>
     <div class="sidebar-footer">
-        <div class="logout-btn" id="logoutBtn">🚪 Sign Out</div>
+        <div class="logout-btn" id="logoutBtn">Sign Out</div>
         <div class="node-info">Node: ESP8266-031<br>Ver: 1.3.0-PRO · Admin Mode</div>
     </div>
 </aside>
@@ -184,9 +199,7 @@
     <!-- HEADER -->
     <div class="top-header-row">
         <div class="page-header-content">
-            <p style="color:var(--gold);font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;">
-                System Preference Configuration · Section 4
-            </p>
+            <p class="eyebrow">System Preference Configuration · Section 4</p>
             <h1>Global System Preferences</h1>
             <p>UI settings, data management, and user provisioning</p>
         </div>
@@ -218,16 +231,6 @@
             </div>
             <div class="setting-row">
                 <div class="setting-info">
-                    <h4>Dark Mode</h4>
-                    <p>Adjust dashboard theme for low-light environments.</p>
-                </div>
-                <label class="switch">
-                    <input type="checkbox" id="darkModeToggle">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="setting-row">
-                <div class="setting-info">
                     <h4>Refresh Rate</h4>
                     <p>How often the ESP8266 pushes data to this UI.</p>
                 </div>
@@ -249,12 +252,15 @@
                 <div class="backup-option">
                     <h4>Cloud Backup</h4>
                     <p>Auto-sync data to Supabase daily.</p>
-                    <button class="btn btn-gold" onclick="handleCloudSync()">☁ Sync Now</button>
+                    <button class="btn btn-gold" onclick="handleCloudSync()">Sync Now</button>
                 </div>
                 <div class="backup-option">
                     <h4>Local Export</h4>
-                    <p>Download full history as a CSV file.</p>
-                    <button class="btn btn-outline" onclick="handleExportCSV()">⬇ Download .CSV</button>
+                    <p>Download telemetry history as a CSV file.</p>
+                    <select id="export-mat-filter" style="width:100%;margin-bottom:10px;">
+                        <option value="all">All Mats</option>
+                    </select>
+                    <button class="btn btn-outline" onclick="handleExportCSV()">Download .CSV</button>
                 </div>
             </div>
             <div class="setting-row" style="margin-top:16px;">
@@ -270,54 +276,118 @@
         </section>
 
 <section class="card">
-            <div class="card-title">User Provisioning</div>
- 
-            <div class="add-user-grid">
- 
-                <!-- LEFT: Registration form -->
-                <div>
-                    <div class="form-section-label">Register New User</div>
- 
-                    <div class="form-row">
+            <div class="card-title">Mat &amp; User Provisioning</div>
+
+            <div class="prov-tabs">
+                <button class="prov-tab active" id="tab-btn-mats" onclick="switchProvTab('mats')">Mats</button>
+                <button class="prov-tab" id="tab-btn-users" onclick="switchProvTab('users')">Users</button>
+            </div>
+
+            <!-- ══ MATS PANEL ══ -->
+            <div class="prov-panel active" id="panel-mats">
+                <div class="add-user-grid">
+
+                    <!-- LEFT: Mat provisioning form -->
+                    <div>
+                        <div class="form-section-label">Provision New Mat</div>
+
                         <div class="form-group">
-                            <label class="form-label">First Name <span class="req">*</span></label>
-                            <input class="form-input" type="text" id="reg-fname" placeholder="e.g. Juan">
+                            <label class="form-label">Mat ID <span class="req">*</span></label>
+                            <input class="form-input" type="text" id="mat-id" placeholder="e.g. MAT-0042">
+                            <div class="form-hint">Required. Must be unique. Format: MAT-XXXX</div>
                         </div>
+
                         <div class="form-group">
-                            <label class="form-label">Last Name <span class="req">*</span></label>
-                            <input class="form-input" type="text" id="reg-lname" placeholder="e.g. Dela Cruz">
+                            <label class="form-label">Sensor Threshold</label>
+                            <input class="form-input has-default" type="number" step="0.01" id="mat-sensor-threshold" placeholder="0.05" value="0.05">
+                            <div class="form-hint">Default: 0.05. Pressure sensor trigger level.</div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">High-V Alert</label>
+                                <input class="form-input has-default" type="number" step="0.01" id="mat-high-v-alert" placeholder="4.20" value="4.20">
+                                <div class="form-hint">Default: 4.20V</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">LVCO Threshold</label>
+                                <input class="form-input has-default" type="number" step="0.01" id="mat-lvco-threshold" placeholder="3.00" value="3.00">
+                                <div class="form-hint">Default: 3.00V</div>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:4px;" id="matRegisterBtn" onclick="registerMat()">
+                            + Provision Mat
+                        </button>
+
+                        <div class="form-feedback" id="matFeedback"></div>
+                    </div>
+
+                    <!-- RIGHT: Provisioned mat list -->
+                    <div>
+                        <div class="user-list-header">
+                            <span class="user-list-title">Provisioned Mats</span>
+                            <span class="user-count" id="matCount"></span>
+                        </div>
+                        <div class="user-list" id="matList">
+                            <div class="spinner-row"><div class="spinner"></div></div>
                         </div>
                     </div>
- 
-                    <div class="form-group">
-                        <label class="form-label">Email Address <span class="req">*</span></label>
-                        <input class="form-input" type="email" id="reg-email" placeholder="user@email.com">
-                    </div>
- 
-                    <div class="form-group">
-                        <label class="form-label">Mat ID <span class="req">*</span></label>
-                        <input class="form-input" type="text" id="reg-matid" placeholder="e.g. MAT-0042">
-                        <div class="form-hint">Must be unique. Format: MAT-XXXX</div>
-                    </div>
- 
-                    <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:4px;" id="registerBtn" onclick="registerUser()">
-                        + Add User to SmartStep
-                    </button>
- 
-                    <div class="form-feedback" id="regFeedback"></div>
+
                 </div>
- 
-                <!-- RIGHT: Registered user list -->
-                <div>
-                    <div class="user-list-header">
-                        <span class="user-list-title">Registered Users</span>
-                        <span class="user-count" id="userCount"></span>
+            </div>
+
+            <!-- ══ USERS PANEL ══ -->
+            <div class="prov-panel" id="panel-users">
+                <div class="add-user-grid">
+
+                    <!-- LEFT: Registration form -->
+                    <div>
+                        <div class="form-section-label">Register New User</div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">First Name <span class="req">*</span></label>
+                                <input class="form-input" type="text" id="reg-fname" placeholder="e.g. Juan">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Last Name <span class="req">*</span></label>
+                                <input class="form-input" type="text" id="reg-lname" placeholder="e.g. Dela Cruz">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email Address <span class="req">*</span></label>
+                            <input class="form-input" type="email" id="reg-email" placeholder="user@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Assign Mat ID <span class="req">*</span></label>
+                            <select class="form-input" id="reg-matid">
+                                <option value="">Loading mats...</option>
+                            </select>
+                            <div class="form-hint">Mat must be provisioned first, under the Mats tab.</div>
+                        </div>
+
+                        <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:4px;" id="registerBtn" onclick="registerUser()">
+                            + Add User to SmartStep
+                        </button>
+
+                        <div class="form-feedback" id="regFeedback"></div>
                     </div>
-                    <div class="user-list" id="userList">
-                        <div class="spinner-row"><div class="spinner"></div></div>
+
+                    <!-- RIGHT: Registered user list -->
+                    <div>
+                        <div class="user-list-header">
+                            <span class="user-list-title">Registered Users</span>
+                            <span class="user-count" id="userCount"></span>
+                        </div>
+                        <div class="user-list" id="userList">
+                            <div class="spinner-row"><div class="spinner"></div></div>
+                        </div>
                     </div>
+
                 </div>
- 
             </div>
         </section>
  
@@ -358,6 +428,163 @@
         await _supabase.auth.signOut();
     });
 
+    // ── PROVISIONING TABS ──
+    function switchProvTab(tab) {
+        document.getElementById('tab-btn-mats').classList.toggle('active', tab === 'mats');
+        document.getElementById('tab-btn-users').classList.toggle('active', tab === 'users');
+        document.getElementById('panel-mats').classList.toggle('active', tab === 'mats');
+        document.getElementById('panel-users').classList.toggle('active', tab === 'users');
+    }
+
+    // ── LOAD MAT LIST ──
+    async function loadMatList() {
+        const list = document.getElementById('matList');
+        list.innerHTML = '<div class="spinner-row"><div class="spinner"></div></div>';
+
+        // Mat configs live in mat_management_settings; assignment to a user
+        // is tracked separately via profiles.mat_id (this table has no user link).
+        const [{ data, error }, { data: assignedProfiles }] = await Promise.all([
+            _supabase
+                .from('mat_management_settings')
+                .select('mat_id, sensor_threshold, high_v_alert, lvco_threshold, current_status, updated_at')
+                .order('updated_at', { ascending: false }),
+            _supabase.from('profiles').select('mat_id').eq('role', 'user').not('mat_id', 'is', null)
+        ]);
+
+        const assignedSet = new Set((assignedProfiles || []).map(p => p.mat_id));
+        const countEl = document.getElementById('matCount');
+
+        if (error || !data?.length) {
+            list.innerHTML = '<div class="empty-state"><div class="empty-icon">—</div><p>No mats provisioned yet</p></div>';
+            countEl.textContent = '';
+            populateMatDropdown([], assignedSet);
+            populateExportFilter([]);
+            return;
+        }
+
+        countEl.textContent = `${data.length} mat${data.length !== 1 ? 's' : ''}`;
+
+        list.innerHTML = data.map(m => {
+            const isAssigned = assignedSet.has(m.mat_id);
+            return `
+                <div class="mat-row" id="mrow-${m.mat_id}">
+                    <div class="mat-row-icon">MAT</div>
+                    <div class="mat-row-info">
+                        <div class="mat-row-id">${m.mat_id}</div>
+                        <div class="mat-row-meta">Sensor ${m.sensor_threshold ?? '—'} · HV ${m.high_v_alert ?? '—'}V · LVCO ${m.lvco_threshold ?? '—'}V · Status: ${m.current_status ?? '—'}</div>
+                    </div>
+                    <span class="mat-row-status ${isAssigned ? 'status-active' : 'status-unassigned'}">${isAssigned ? 'Assigned' : 'Unassigned'}</span>
+                    <div class="user-row-actions">
+                        <button class="row-btn row-btn-del" onclick="deleteMat('${m.mat_id}')">Remove</button>
+                    </div>
+                </div>`;
+        }).join('');
+
+        populateMatDropdown(data, assignedSet);
+        populateExportFilter(data);
+    }
+
+    function populateExportFilter(mats) {
+        const sel = document.getElementById('export-mat-filter');
+        if (!sel) return;
+        const current = sel.value;
+        const options = mats.map(m => `<option value="${m.mat_id}">${m.mat_id}</option>`).join('');
+        sel.innerHTML = `<option value="all">All Mats</option>${options}`;
+        // Keep the admin's current selection if it's still a valid option
+        if ([...sel.options].some(o => o.value === current)) sel.value = current;
+    }
+
+    function populateMatDropdown(mats, assignedSet) {
+        const sel = document.getElementById('reg-matid');
+        if (!sel) return;
+        if (!mats.length) {
+            sel.innerHTML = '<option value="">No mats provisioned yet</option>';
+            return;
+        }
+        const unassigned = mats.filter(m => !assignedSet.has(m.mat_id));
+        const options = (unassigned.length ? unassigned : mats).map(m => `<option value="${m.mat_id}">${m.mat_id}</option>`).join('');
+        sel.innerHTML = `<option value="">Select a mat...</option>${options}`;
+    }
+
+    // ── PROVISION MAT ──
+    async function registerMat() {
+        const matId = document.getElementById('mat-id').value.trim();
+        const sensorInput = document.getElementById('mat-sensor-threshold');
+        const highVInput = document.getElementById('mat-high-v-alert');
+        const lovcoInput = document.getElementById('mat-lvco-threshold');
+
+        const feedback = document.getElementById('matFeedback');
+        const btn = document.getElementById('matRegisterBtn');
+
+        document.getElementById('mat-id').classList.remove('input-error');
+        feedback.style.display = 'none';
+
+        // Mat ID is the only required field — everything else falls back to its DB default
+        if (!matId) {
+            document.getElementById('mat-id').classList.add('input-error');
+            showFeedback('mat', 'error', 'Mat ID is required.');
+            return;
+        }
+
+        const sensorThreshold = sensorInput.value.trim() === '' ? 0.05 : parseFloat(sensorInput.value);
+        const highVAlert = highVInput.value.trim() === '' ? 4.20 : parseFloat(highVInput.value);
+        const lvcoThreshold = lvcoInput.value.trim() === '' ? 3.00 : parseFloat(lvcoInput.value);
+
+        btn.disabled = true;
+        btn.textContent = 'Provisioning...';
+
+        try {
+            // current_status, firmware_version, and the telemetry counters are left
+            // unset so the table's own defaults ('active', '1.3.0-PRO', 0, etc.) apply.
+            const { error } = await _supabase.from('mat_management_settings').upsert({
+                mat_id: matId,
+                sensor_threshold: sensorThreshold,
+                high_v_alert: highVAlert,
+                lvco_threshold: lvcoThreshold,
+                updated_at: new Date().toISOString(),
+            }, { onConflict: 'mat_id' });
+
+            if (error) throw error;
+
+            showFeedback('mat', 'success', `Mat "${matId}" provisioned successfully.`);
+            showToast(`Mat ${matId} provisioned.`, 'success');
+
+            document.getElementById('mat-id').value = '';
+            sensorInput.value = '0.05';
+            highVInput.value = '4.20';
+            lvcoInput.value = '3.00';
+
+            await loadMatList();
+
+        } catch (err) {
+            console.error(err);
+            const msg = err.message?.includes('duplicate')
+                ? `Mat ID "${matId}" already exists.`
+                : err.message || 'Provisioning failed. Please try again.';
+            showFeedback('mat', 'error', msg);
+            showToast('Mat provisioning failed.', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.textContent = '+ Provision Mat';
+        }
+    }
+
+    // ── DELETE MAT ──
+    async function deleteMat(matId) {
+        if (!confirm(`Remove mat "${matId}" from SmartStep?\n\nThis cannot be undone.`)) return;
+
+        const { error } = await _supabase.from('mat_management_settings').delete().eq('mat_id', matId);
+        if (error) { showToast('Failed to remove mat: ' + error.message, 'error'); return; }
+
+        const row = document.getElementById(`mrow-${matId}`);
+        if (row) {
+            row.style.opacity = '0';
+            row.style.transition = 'opacity 0.25s';
+            setTimeout(() => { row.remove(); loadMatList(); }, 260);
+        }
+        showToast(`${matId} removed.`, 'warn');
+    }
+
     // ── LOAD USER LIST ──
     async function loadUserList() {
         const list = document.getElementById('userList');
@@ -372,7 +599,7 @@
         const countEl = document.getElementById('userCount');
 
         if (error || !data?.length) {
-            list.innerHTML = '<div class="empty-state"><div class="empty-icon">👤</div><p>No users registered yet</p></div>';
+            list.innerHTML = '<div class="empty-state"><div class="empty-icon">—</div><p>No users registered yet</p></div>';
             countEl.textContent = '';
             return;
         }
@@ -394,7 +621,7 @@
                     </div>
                     <span class="user-row-mat">${u.mat_id || '—'}</span>
                     <div class="user-row-actions">
-                        <button class="row-btn row-btn-del" onclick="deleteUser('${u.id}', '${fullName}')">🗑 Remove</button>
+                        <button class="row-btn row-btn-del" onclick="deleteUser('${u.id}', '${fullName}')">Remove</button>
                     </div>
                 </div>`;
         }).join('');
@@ -426,10 +653,10 @@
         if (!fname) { document.getElementById('reg-fname').classList.add('input-error'); errors.push('First name'); }
         if (!lname) { document.getElementById('reg-lname').classList.add('input-error'); errors.push('Last name'); }
         if (!email || !email.includes('@')) { document.getElementById('reg-email').classList.add('input-error'); errors.push('Valid email'); }
-        if (!matId) { document.getElementById('reg-matid').classList.add('input-error'); errors.push('Mat ID'); }
+        if (!matId) { document.getElementById('reg-matid').classList.add('input-error'); errors.push('Assigned Mat'); }
  
         if (errors.length) {
-            showFeedback('error', `Required: ${errors.join(', ')}.`);
+            showFeedback('reg', 'error', `Required: ${errors.join(', ')}.`);
             return;
         }
  
@@ -462,32 +689,27 @@
  
             if (profileErr) throw profileErr;
  
-            // Step 3: Also register in mat_management_settings
-            await _supabase.from('mat_management_settings').upsert({
-                mat_id: matId,
-                user_id: newUid,
-                user_email: email,
-                current_status: 'active',
-                updated_at: new Date().toISOString(),
-            }, { onConflict: 'mat_id' });
+            // Mat assignment is tracked via profiles.mat_id (set above) — the
+            // mat_management_settings table itself has no per-user columns.
  
             // Success
-            showFeedback('success', `${fname} ${lname} registered successfully. A confirmation email has been sent to ${email}.`);
+            showFeedback('reg', 'success', `${fname} ${lname} registered successfully. A confirmation email has been sent to ${email}.`);
             showToast(`User ${fname} ${lname} added.`, 'success');
  
             // Clear form
-            ['reg-fname','reg-lname','reg-email','reg-matid'].forEach(id => {
+            ['reg-fname','reg-lname','reg-email'].forEach(id => {
                 document.getElementById(id).value = '';
             });
  
             await loadUserList();
+            await loadMatList();
  
         } catch (err) {
             console.error(err);
             const msg = err.message?.includes('already registered')
                 ? `Email "${email}" is already in use.`
                 : err.message || 'Registration failed. Please try again.';
-            showFeedback('error', msg);
+            showFeedback('reg', 'error', msg);
             showToast('Registration failed.', 'error');
         } finally {
             btn.disabled = false;
@@ -519,50 +741,69 @@
 
     // ── CSV EXPORT ──
     async function handleExportCSV() {
-        const { data, error } = await _supabase
+        const filterEl = document.getElementById('export-mat-filter');
+        const selectedMat = filterEl ? filterEl.value : 'all';
+
+        const TELEMETRY_COLUMNS = [
+            'mat_id', 'created_at', 'steps',
+            'harvest_v', 'harvest_ma', 'harvest_mw', 'harvest_wh',
+            'consume_v', 'consume_ma', 'consume_mw', 'consume_wh',
+            'total_wh'
+        ];
+
+        let query = _supabase
             .from('telemetry')
-            .select('user_id, steps, total_wh, created_at')
+            .select(TELEMETRY_COLUMNS.join(', '))
             .order('created_at', { ascending: false });
 
-        if (error || !data?.length) { showToast('No telemetry data to export.', 'warn'); return; }
+        if (selectedMat !== 'all') {
+            query = query.eq('mat_id', selectedMat);
+        }
 
-        const headers = 'user_id,steps,total_wh,created_at';
-        const rows = data.map(r => `${r.user_id},${r.steps},${r.total_wh},${r.created_at}`).join('\n');
+        const { data, error } = await query;
+
+        if (error) { showToast('Export failed: ' + error.message, 'error'); return; }
+        if (!data?.length) {
+            showToast(selectedMat === 'all' ? 'No telemetry data to export.' : `No telemetry data for ${selectedMat}.`, 'warn');
+            return;
+        }
+
+        const headers = TELEMETRY_COLUMNS.join(',');
+        const rows = data.map(r => TELEMETRY_COLUMNS.map(col => r[col]).join(',')).join('\n');
         const csv = headers + '\n' + rows;
 
         const blob = new Blob([csv], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `smartstep-telemetry-${new Date().toISOString().slice(0,10)}.csv`;
+        const suffix = selectedMat === 'all' ? 'all-mats' : selectedMat;
+        a.download = `smartstep-telemetry-${suffix}-${new Date().toISOString().slice(0,10)}.csv`;
         a.click();
         URL.revokeObjectURL(url);
-        showToast('⬇ CSV downloaded.', 'success');
+        showToast('CSV downloaded.', 'success');
     }
 
     // ── SAVE PREFERENCES ──
     function saveAllPreferences() {
         const prefs = {
             units: document.getElementById('unitSelect').value,
-            darkMode: document.getElementById('darkModeToggle').checked,
             refresh: document.getElementById('refreshSelect').value,
         };
         localStorage.setItem('adminPrefs', JSON.stringify(prefs));
-        showToast('✅ Preferences saved.', 'success');
+        showToast('Preferences saved.', 'success');
     }
 
     function loadSavedPreferences() {
         try {
             const prefs = JSON.parse(localStorage.getItem('adminPrefs') || '{}');
             if (prefs.units) document.getElementById('unitSelect').value = prefs.units;
-            if (prefs.darkMode !== undefined) document.getElementById('darkModeToggle').checked = prefs.darkMode;
             if (prefs.refresh) document.getElementById('refreshSelect').value = prefs.refresh;
         } catch {}
     }
 
     // ── FEEDBACK / TOAST ──
-    function showFeedback(type, msg) {
-        const el = document.getElementById('regFeedback');
+    function showFeedback(form, type, msg) {
+        const el = document.getElementById(form === 'mat' ? 'matFeedback' : 'regFeedback');
         el.textContent = msg;
         el.className = `form-feedback ${type === 'success' ? 'feedback-success' : 'feedback-error'}`;
         el.style.display = 'block';
@@ -580,6 +821,7 @@
         const { data: { session } } = await _supabase.auth.getSession();
         if (!session) { window.location.href = 'login1.html'; return; }
         loadAdminProfile(session.user.id);
+        loadMatList();
         loadUserList();
         loadSavedPreferences();
     });
