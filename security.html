@@ -850,19 +850,41 @@
     }
  
     // ── DELETE USER ──
+    // NOTE: like the email-approval flow, actually removing someone from
+    // auth.users requires the Supabase Admin API (auth.admin.deleteUser),
+    // which needs the service_role key — never exposed to the browser. This
+    // calls a 'delete-user' Edge Function that holds that key server-side.
     async function deleteUser(uid, name) {
-        if (!confirm(`Remove user "${name}" from SmartStep?\n\nThis will delete their profile. Their auth account may still exist.`)) return;
- 
-        const { error } = await _supabase.from('profiles').delete().eq('id', uid);
-        if (error) { showToast('Failed to remove user: ' + error.message, 'error'); return; }
- 
+        if (!confirm(`Remove user "${name}" from SmartStep?\n\nThis permanently deletes their profile AND their login (auth) account. This cannot be undone.`)) return;
+
         const row = document.getElementById(`urow-${uid}`);
-        if (row) {
-            row.style.opacity = '0';
-            row.style.transition = 'opacity 0.25s';
-            setTimeout(() => { row.remove(); loadUserList(); }, 260);
+        const btn = row?.querySelector('.row-btn-del');
+        if (btn) { btn.disabled = true; btn.textContent = 'Removing...'; }
+
+        try {
+            const { data: { session } } = await _supabase.auth.getSession();
+            const res = await fetch(`${SUPABASE_URL}/functions/v1/delete-user`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({ user_id: uid }),
+            });
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.error || 'Removal failed.');
+
+            if (row) {
+                row.style.opacity = '0';
+                row.style.transition = 'opacity 0.25s';
+                setTimeout(() => { row.remove(); loadUserList(); }, 260);
+            }
+            showToast(`${name} removed.`, 'warn');
+        } catch (err) {
+            console.error(err);
+            showToast('Failed to remove user: ' + err.message, 'error');
+            if (btn) { btn.disabled = false; btn.textContent = 'Remove'; }
         }
-        showToast(`${name} removed.`, 'warn');
     }
  
     // ── CLOUD SYNC ──

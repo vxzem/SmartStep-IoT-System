@@ -1,985 +1,900 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartStep | System Settings</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        :root {
-            --navy-dark: #05162e;
-            --navy-mid: #0a2447;
-            --gold: #e5c158;
-            --gold-hover: #d4ae45;
-            --gold-soft: #fdf9ec;
-            --white: #ffffff;
-            --bg-slate: #f8fafc;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
-            --border: #e2e8f0;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartStep | My Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<style>
+    :root {
+        --navy-dark: #05162e;
+        --navy-mid: #0a2447;
+        --gold: #e5c158;
+        --gold-soft: #fdf9ec;
+        --white: #ffffff;
+        --bg-slate: #f8fafc;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg-slate); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-slate); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+    /* SIDEBAR */
+    .sidebar { width: 250px; background: var(--navy-dark); color: white; padding: 28px 18px; display: flex; flex-direction: column; flex-shrink: 0; }
+    .logo { font-family: 'Lexend', sans-serif; color: var(--gold); font-size: 1.4rem; margin-bottom: 30px; }
+    .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); margin: 18px 0 8px; padding: 0 5px; }
+    .nav-link { display: flex; align-items: center; gap: 10px; padding: 10px 14px; text-decoration: none; color: rgba(255,255,255,0.7); border-radius: 8px; transition: 0.2s; font-size: 0.87rem; margin-bottom: 2px; }
+    .nav-link:hover { background: rgba(229,193,88,0.08); color: white; }
+    .nav-link.active { background: rgba(229,193,88,0.15); color: var(--gold); font-weight: 600; }
+    .sidebar-footer { margin-top: auto; }
+    .logout-btn { display: flex; align-items: center; gap: 8px; padding: 10px 14px; color: rgba(255,255,255,0.4); cursor: pointer; border-radius: 8px; font-size: 0.83rem; transition: 0.2s; }
+    .logout-btn:hover { color: var(--danger); background: rgba(239,68,68,0.08); }
+    .node-info { font-family: 'JetBrains Mono', monospace; font-size: 0.63rem; opacity: 0.35; margin-top: 10px; padding: 0 5px; line-height: 1.5; }
 
-        /* ── SIDEBAR ── */
-        .sidebar { width: 250px; background: var(--navy-dark); color: white; padding: 28px 18px; display: flex; flex-direction: column; flex-shrink: 0; }
-        .logo { font-family: 'Lexend', sans-serif; color: var(--gold); font-size: 1.4rem; margin-bottom: 30px; }
-        .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); margin: 18px 0 8px; padding: 0 5px; }
-        .nav-link { display: flex; align-items: center; gap: 10px; padding: 10px 14px; text-decoration: none; color: rgba(255,255,255,0.7); border-radius: 8px; transition: 0.2s; font-size: 0.87rem; margin-bottom: 2px; }
-        .nav-link:hover { background: rgba(229,193,88,0.08); color: white; }
-        .nav-link.active { background: rgba(229,193,88,0.15); color: var(--gold); font-weight: 600; }
-        .sidebar-footer { margin-top: auto; }
-        .logout-btn { display: flex; align-items: center; gap: 8px; padding: 10px 14px; color: rgba(255,255,255,0.4); cursor: pointer; border-radius: 8px; font-size: 0.83rem; transition: 0.2s; }
-        .logout-btn:hover { color: var(--danger); background: rgba(239,68,68,0.08); }
-        .node-info { font-family: 'JetBrains Mono', monospace; font-size: 0.63rem; opacity: 0.35; margin-top: 10px; padding: 0 5px; line-height: 1.5; }
+    /* MAIN */
+    .main-content { flex: 1; overflow-y: auto; padding: 32px 36px; }
 
-        /* ── MAIN ── */
-        .main-content { flex: 1; overflow-y: auto; padding: 32px 36px; }
+    .top-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; gap: 20px; }
+    .page-header-content h1 { font-family: 'Lexend', sans-serif; font-size: 1.55rem; color: var(--navy-dark); margin-bottom: 4px; }
+    .page-header-content p { color: var(--text-muted); font-size: 0.87rem; }
+    .right-header { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 
-        /* ── HEADER ── */
-        .top-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; gap: 20px; }
-        .page-header-content { flex: 1; }
-        .page-header-content h1 { font-family: 'Lexend', sans-serif; font-size: 1.55rem; color: var(--navy-dark); margin: 0 0 4px 0; }
-        .page-header-content p { color: var(--text-muted); font-size: 0.87rem; margin: 0; }
-        .eyebrow { color: var(--gold); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
-        .right-header { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+    .user-badge { display: flex; align-items: center; gap: 10px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 8px 16px; min-width: 190px; }
+    .avatar { width: 34px; height: 34px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--navy-dark); font-size: 0.85rem; flex-shrink: 0; }
+    .user-name { font-size: 0.86rem; font-weight: 600; color: var(--navy-dark); line-height: 1.2; }
+    .user-role { font-size: 0.68rem; color: var(--gold); font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
 
-        /* ── USER BADGE ── */
-        .user-badge { display: flex; align-items: center; gap: 10px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 8px 16px; min-width: 190px; }
-        .avatar { width: 34px; height: 34px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--navy-dark); font-size: 0.85rem; flex-shrink: 0; }
-        .user-name { font-size: 0.86rem; font-weight: 600; color: var(--navy-dark); line-height: 1.2; }
-        .user-role { font-size: 0.68rem; color: var(--gold); font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
+    /* TAB NAV */
+    .tab-nav { display: flex; gap: 4px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 5px; margin-bottom: 24px; }
+    .tab-btn { flex: 1; padding: 10px 12px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 0.82rem; font-weight: 600; color: var(--text-muted); background: transparent; transition: 0.2s; white-space: nowrap; }
+    .tab-btn.active { background: var(--navy-dark); color: var(--white); }
 
-        /* ── SETTINGS CONTAINER ── */
-        .settings-container { max-width: 960px; display: grid; grid-template-columns: 1fr; gap: 18px; }
+    /* TAB PANELS */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
 
-        /* ── CARD ── */
-        .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
-        .card-title { font-size: 0.92rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 18px; }
+    .settings-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
+    .card.full { grid-column: span 2; }
+    .card-title { font-size: 0.92rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 18px; }
 
-        /* ── SETTING ROW ── */
-        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #f1f5f9; }
-        .setting-row:last-child { border: none; }
-        .setting-info h4 { font-size: 0.9rem; font-weight: 600; color: var(--navy-dark); margin-bottom: 3px; }
-        .setting-info p { font-size: 0.78rem; color: var(--text-muted); }
+    /* PROFILE */
+    .profile-hero { display: flex; align-items: center; gap: 18px; margin-bottom: 22px; }
+    .profile-avatar { width: 64px; height: 64px; background: var(--navy-dark); border-radius: 14px; display: flex; align-items: center; justify-content: center; font-family: 'Lexend', sans-serif; font-size: 1.4rem; color: var(--gold); flex-shrink: 0; }
+    .profile-name { font-family: 'Lexend', sans-serif; font-size: 1.1rem; color: var(--navy-dark); }
+    .profile-email { font-size: 0.8rem; color: var(--text-muted); margin-top: 3px; }
+    .profile-id { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; background: var(--bg-slate); padding: 4px 10px; border-radius: 6px; display: inline-block; margin-top: 6px; color: var(--text-muted); }
 
-        /* ── TOGGLE ── */
-        .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #cbd5e1; transition: .3s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background: white; transition: .3s; border-radius: 50%; }
-        input:checked + .slider { background: var(--navy-dark); }
-        input:checked + .slider:before { transform: translateX(20px); }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+    input[type="text"], input[type="email"], input[type="password"], select.form-select {
+        width: 100%; padding: 11px 14px; border-radius: 8px; border: 1.5px solid var(--border);
+        font-family: 'Inter', sans-serif; font-size: 0.88rem; transition: 0.2s; color: var(--text-main); background: var(--bg-slate);
+    }
+    input:focus, select.form-select:focus { border-color: var(--navy-dark); background: var(--white); outline: none; }
+    .field-note { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; display: block; }
 
-        /* ── SELECT / BTN ── */
-        select { padding: 9px 14px; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.84rem; border: 1.5px solid var(--border); color: var(--text-main); background: var(--white); cursor: pointer; outline: none; transition: border-color 0.2s; }
-        select:focus { border-color: var(--gold); }
-        .btn { padding: 10px 18px; border-radius: 8px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.84rem; cursor: pointer; border: none; transition: 0.2s; display: inline-flex; align-items: center; gap: 7px; }
-        .btn:hover { transform: translateY(-1px); }
-        .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
-        .btn-gold { background: var(--gold); color: var(--navy-dark); }
-        .btn-gold:hover:not(:disabled) { background: var(--gold-hover); }
-        .btn-outline { background: transparent; border: 2px solid var(--navy-dark); color: var(--navy-dark); }
-        .btn-outline:hover:not(:disabled) { background: var(--navy-dark); color: white; }
-        .btn-danger-soft { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
-        .btn-danger-soft:hover:not(:disabled) { background: #ffe4e6; }
+    /* NOTIFICATIONS */
+    .notif-list { display: flex; flex-direction: column; gap: 0; }
+    .notif-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--bg-slate); }
+    .notif-row:last-child { border: none; }
+    .notif-info h4 { font-size: 0.86rem; font-weight: 600; color: var(--text-main); margin-bottom: 3px; }
+    .notif-info p { font-size: 0.74rem; color: var(--text-muted); }
+    .switch { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider-sw { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
+    .slider-sw:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+    input:checked + .slider-sw { background-color: var(--gold); }
+    input:checked + .slider-sw:before { transform: translateX(18px); }
 
-        /* ── BACKUP GRID ── */
-        .backup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
-        .backup-option { border: 1px solid var(--border); padding: 18px; border-radius: 10px; text-align: center; transition: border-color 0.2s; }
-        .backup-option:hover { border-color: var(--gold); }
-        .backup-option h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: var(--navy-dark); }
-        .backup-option p { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 14px; }
+    /* SYSTEM STATUS */
+    .status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 18px; }
+    .status-card { background: var(--bg-slate); border-radius: 12px; padding: 14px; }
+    .sc-label { font-size: 0.68rem; color: var(--text-muted); margin-bottom: 8px; }
+    .sc-val { font-family: 'JetBrains Mono', monospace; font-size: 1.05rem; font-weight: 700; color: var(--navy-dark); }
+    .sc-status { font-size: 0.7rem; margin-top: 6px; display: flex; align-items: center; gap: 5px; }
+    .dot-good { width: 7px; height: 7px; background: var(--success); border-radius: 50%; display: inline-block; }
+    .dot-warn { width: 7px; height: 7px; background: var(--warning); border-radius: 50%; display: inline-block; }
+    .prog-bar { height: 6px; background: #e2e8f0; border-radius: 3px; margin-top: 10px; overflow: hidden; }
+    .prog-fill-good { height: 100%; border-radius: 3px; background: var(--success); }
+    .prog-fill-warn { height: 100%; border-radius: 3px; background: var(--warning); }
+    .health-list { display: flex; flex-direction: column; gap: 10px; }
+    .health-row { display: flex; align-items: center; justify-content: space-between; padding: 11px 14px; background: var(--bg-slate); border-radius: 10px; }
+    .health-key { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .health-val { font-size: 0.82rem; font-weight: 600; color: var(--navy-dark); font-family: 'JetBrains Mono', monospace; }
+    .tile-warning-row { background: var(--gold-soft); border-radius: 10px; padding: 14px; }
+    .tile-warning-row p:first-child { font-size: 0.82rem; font-weight: 600; color: var(--navy-dark); margin-bottom: 3px; }
+    .tile-warning-row p:last-child { font-size: 0.74rem; color: var(--text-muted); }
 
-        /* ── ADD USER SECTION ── */
-        .add-user-grid { display: grid; grid-template-columns: 380px 1fr; gap: 28px; }
+    /* FIRMWARE */
+    .fw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .fw-btn { padding: 15px; border-radius: 10px; border: none; cursor: pointer; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.86rem; transition: 0.2s; }
+    .fw-btn:hover { transform: translateY(-1px); }
+    .fw-restart { background: var(--navy-dark); color: white; }
+    .fw-recal { background: var(--gold); color: var(--navy-dark); }
+    .fw-info { font-size: 0.78rem; color: var(--text-muted); margin-top: 14px; background: var(--bg-slate); padding: 12px; border-radius: 8px; line-height: 1.6; }
+    .fw-info strong { color: var(--text-main); }
+    .fw-meta-row { margin-top: 16px; padding: 12px 16px; background: var(--bg-slate); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .fw-meta-row div { font-size: 0.75rem; color: var(--text-muted); }
+    .fw-meta-row strong { color: var(--text-main); }
+    .ver-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; background: var(--white); border: 1px solid var(--border); padding: 5px 10px; border-radius: 6px; color: var(--text-muted); }
 
-        /* ── PROVISIONING TABS ── */
-        .prov-tabs { display: flex; gap: 6px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
-        .prov-tab { padding: 10px 18px; font-size: 0.84rem; font-weight: 700; color: var(--text-muted); background: none; border: none; cursor: pointer; position: relative; top: 1px; border-bottom: 2px solid transparent; transition: 0.2s; font-family: 'Inter', sans-serif; }
-        .prov-tab:hover { color: var(--navy-dark); }
-        .prov-tab.active { color: var(--navy-dark); border-bottom-color: var(--gold); }
-        .prov-panel { display: none; }
-        .prov-panel.active { display: block; }
+    /* BUTTONS */
+    .btn { padding: 11px 20px; border-radius: 8px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.86rem; cursor: pointer; border: none; transition: 0.2s; }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-gold { background: var(--gold); color: var(--navy-dark); }
+    .btn-outline { background: transparent; border: 1.5px solid var(--navy-dark); color: var(--navy-dark); }
+    .save-row { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
 
-        /* ── MAT ROW ── */
-        .mat-row { display: flex; align-items: center; gap: 12px; padding: 11px 13px; background: var(--bg-slate); border: 1px solid var(--border); border-radius: 10px; transition: border-color 0.2s; }
-        .mat-row:hover { border-color: var(--gold); }
-        .mat-row-icon { width: 34px; height: 34px; background: var(--navy-dark); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.62rem; color: var(--gold); flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
-        .mat-row-info { flex: 1; min-width: 0; }
-        .mat-row-id { font-family: 'JetBrains Mono', monospace; font-size: 0.84rem; font-weight: 700; color: var(--navy-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .mat-row-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .mat-row-status { font-family: 'JetBrains Mono', monospace; font-size: 0.63rem; font-weight: 700; border-radius: 5px; padding: 2px 8px; flex-shrink: 0; text-transform: uppercase; }
-        .status-active { background: #d1fae5; color: #065f46; }
-        .status-unassigned { background: var(--gold-soft); color: #92702c; border: 1px solid #fde68a; }
-        .form-input.has-default { color: var(--text-muted); }
-        .form-input.has-default:focus { color: var(--text-main); }
+    /* PASSWORD STRENGTH */
+    .pw-strength { background: #e2e8f0; }
+    .pw-hint { font-size: 0.7rem; margin-top: 4px; }
 
-        /* Form */
-        .form-group { margin-bottom: 14px; }
-        .form-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); display: block; margin-bottom: 5px; }
-        .form-label .req { color: var(--danger); margin-left: 2px; }
-        .form-input { width: 100%; padding: 10px 13px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.875rem; color: var(--text-main); background: var(--bg-slate); transition: border-color 0.2s, background 0.2s; outline: none; }
-        .form-input:focus { border-color: var(--gold); background: var(--white); }
-        .form-input.input-error { border-color: var(--danger); }
-        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .form-hint { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
-        .form-section-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    /* ACTION LOG */
+    .log-entry { padding: 12px; background: var(--bg-slate); border-radius: 10px; border-left: 3px solid var(--navy-dark); }
+    .log-entry .log-title { font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
+    .log-entry .log-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); margin-top: 3px; }
 
-        /* Feedback */
-        .form-feedback { font-size: 0.8rem; font-weight: 600; padding: 10px 14px; border-radius: 8px; margin-top: 12px; display: none; }
-        .feedback-success { background: #d1fae5; color: #065f46; }
-        .feedback-error { background: #fee2e2; color: #991b1b; }
+    /* EMAIL REQUEST ROW */
+    .input-row { display: flex; align-items: stretch; gap: 8px; }
+    .input-row input { flex: 1; min-width: 0; }
+    .btn-sm { padding: 0 16px; font-size: 0.78rem; white-space: nowrap; flex-shrink: 0; }
 
-        /* User list */
-        .user-list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-        .user-list-title { font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
-        .user-count { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--gold); font-weight: 700; }
-        .user-list { display: flex; flex-direction: column; gap: 8px; max-height: 380px; overflow-y: auto; }
-        .user-list::-webkit-scrollbar { width: 4px; }
-        .user-list::-webkit-scrollbar-track { background: transparent; }
-        .user-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(5,22,46,0.55); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+    .modal-overlay.show { opacity: 1; pointer-events: auto; }
+    .modal-box { background: var(--white); border-radius: 16px; padding: 26px; width: 380px; max-width: 90vw; box-shadow: 0 20px 50px rgba(5,22,46,0.35); transform: translateY(-10px) scale(0.97); transition: transform 0.2s ease; }
+    .modal-overlay.show .modal-box { transform: translateY(0) scale(1); }
+    .modal-title { font-family: 'Lexend', sans-serif; font-size: 1.05rem; color: var(--navy-dark); margin-bottom: 10px; }
+    .modal-body { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
+    #toast { position: fixed; bottom: 24px; right: 24px; background: var(--navy-dark); color: white; padding: 12px 20px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transform: translateY(80px); opacity: 0; transition: all 0.3s ease; z-index: 999; }
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.toast-success { border-left: 4px solid var(--success); }
+    #toast.toast-error { border-left: 4px solid var(--danger); }
+    #toast.toast-info { border-left: 4px solid var(--gold); }
 
-        .user-row { display: flex; align-items: center; gap: 12px; padding: 11px 13px; background: var(--bg-slate); border: 1px solid var(--border); border-radius: 10px; transition: border-color 0.2s; }
-        .user-row:hover { border-color: var(--gold); }
-        .user-row-avatar { width: 34px; height: 34px; background: var(--navy-dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.72rem; color: var(--gold); flex-shrink: 0; }
-        .user-row-info { flex: 1; min-width: 0; }
-        .user-row-name { font-size: 0.84rem; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .user-row-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .user-row-mat { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 700; color: var(--navy-dark); background: var(--gold-soft); border: 1px solid #fde68a; border-radius: 5px; padding: 2px 8px; flex-shrink: 0; }
-        .user-row-actions { display: flex; gap: 5px; flex-shrink: 0; }
-        .row-btn { padding: 5px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: 0.2s; border: 1px solid; }
-        .row-btn-del { background: #fff1f2; color: #be123c; border-color: #fecdd3; }
-        .row-btn-del:hover { background: #ffe4e6; }
-        .row-btn-accept { background: #d1fae5; color: #065f46; border-color: #a7f3d0; }
-        .row-btn-accept:hover { background: #bbf7d0; }
-        .row-btn-reject { background: #fff1f2; color: #be123c; border-color: #fecdd3; }
-        .row-btn-reject:hover { background: #ffe4e6; }
 
-        /* ── REQUEST ROW ── */
-        .request-row { display: flex; align-items: center; gap: 12px; padding: 12px 13px; background: var(--bg-slate); border: 1px solid var(--border); border-radius: 10px; }
-        .request-row-info { flex: 1; min-width: 0; }
-        .request-row-name { font-size: 0.84rem; font-weight: 600; color: var(--text-main); }
-        .request-row-emails { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-muted); margin-top: 3px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-        .request-row-emails .arrow { color: var(--gold); font-weight: 700; }
-        .request-row-time { font-size: 0.65rem; color: var(--text-muted); margin-top: 3px; }
-        .tab-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 17px; height: 17px; padding: 0 4px; background: var(--gold); color: var(--navy-dark); border-radius: 9px; font-size: 0.63rem; font-weight: 800; margin-left: 6px; font-family: 'JetBrains Mono', monospace; }
-
-        /* Empty / loading */
-        .empty-state { text-align: center; padding: 32px 16px; color: var(--text-muted); }
-        .empty-icon { font-size: 2rem; margin-bottom: 8px; opacity: 0.4; }
-        .empty-state p { font-size: 0.85rem; }
-        .spinner-row { display: flex; justify-content: center; padding: 24px; }
-        .spinner { width: 22px; height: 22px; border: 2.5px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.75s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* ── TOAST ── */
-        #toast { position: fixed; bottom: 24px; right: 24px; background: var(--navy-dark); color: white; padding: 12px 20px; border-radius: 10px; font-size: 0.84rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transform: translateY(80px); opacity: 0; transition: all 0.3s ease; z-index: 999; max-width: 340px; }
-        #toast.show { transform: translateY(0); opacity: 1; }
-        #toast.t-success { border-left: 4px solid var(--success); }
-        #toast.t-error { border-left: 4px solid var(--danger); }
-        #toast.t-warn { border-left: 4px solid var(--warning); }
-
-        .save-row { display: flex; justify-content: flex-end; margin-top: 4px; }
-    </style>
+</style>
 </head>
 <body>
 
-<!-- ── SIDEBAR ── -->
-<aside class="sidebar">
-    <div class="logo">SmartStep</div>
-    <div class="nav-section">Admin</div>
-    <nav>
-        <a href="ad_dash.html" class="nav-link">Live Monitoring</a>
-        <a href="analytics.html" class="nav-link">Energy Analytics</a>
-        <a href="maintenance(2).html" class="nav-link">System Maintenance</a>
-        <a href="security.html" class="nav-link active">System Settings</a>
-    </nav>
-    <div class="sidebar-footer">
-        <div class="logout-btn" id="logoutBtn">Sign Out</div>
-        <div class="node-info">Node: ESP8266-031<br>Ver: 1.3.0-PRO · Admin Mode</div>
-    </div>
-</aside>
+    <div id="toast"></div>
 
-<!-- ── MAIN ── -->
-<main class="main-content">
-
-    <!-- HEADER -->
-    <div class="top-header-row">
-        <div class="page-header-content">
-            <p class="eyebrow">System Preference Configuration · Section 4</p>
-            <h1>Global System Preferences</h1>
-            <p>UI settings, data management, and user provisioning</p>
-        </div>
-        <div class="right-header">
-            <div class="user-badge">
-                <div class="avatar" id="adminAvatar">--</div>
-                <div>
-                    <div class="user-name" id="adminName">Loading...</div>
-                    <div class="user-role">ADMIN · ACTIVE</div>
-                </div>
+    <div class="modal-overlay" id="emailChangeModal">
+        <div class="modal-box">
+            <div class="modal-title">Request Email Change</div>
+            <div class="modal-body">Your current email is <strong id="modalCurrentEmail">—</strong>. Enter the new address below — an admin will review and confirm the change.</div>
+            <div class="form-group" style="margin-bottom:0;">
+                <label>New Email Address</label>
+                <input type="email" id="inputNewEmail" placeholder="new@example.com">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="closeEmailChangeModal()">Cancel</button>
+                <button class="btn btn-gold" id="submitEmailChangeBtn" onclick="submitEmailChangeRequest()">Submit Request</button>
             </div>
         </div>
     </div>
 
-    <div class="settings-container">
+    <aside class="sidebar">
+        <div class="logo">SmartStep</div>
+        <div class="nav-section">Main</div>
+        <a href="user-dash.html" class="nav-link">My Dashboard</a>
+        <a href="user-analytics.html" class="nav-link">General Analytics</a>
+        <a href="user-settings.html" class="nav-link active">My Settings</a>
+        <a href="user-notif.html" class="nav-link">Notifications</a>
+        <div class="sidebar-footer">
+            <div class="logout-btn" id="logoutBtn">Sign Out</div>
+            <div class="node-info" id="nodeInfo">Node: —<br>Ver: 1.3.0-PRO · User Mode</div>
+        </div>
+    </aside>
 
-        <!-- 1.5.1 UI & UNITS -->
-        <section class="card">
-            <div class="card-title">User Interface &amp; Units</div>
-            <div class="setting-row">
-                <div class="setting-info">
-                    <h4>Measurement Units</h4>
-                    <p>Display energy in Watts (W) or Joules (J).</p>
-                </div>
-                <select id="unitSelect">
-                    <option>Watts (Standard)</option>
-                    <option>Joules (Scientific)</option>
-                </select>
+
+    <main class="main-content">
+        <div class="top-header-row">
+            <div class="page-header-content">
+                <h1>My Settings</h1>
+                <p>Profile, notifications, and device preferences</p>
             </div>
-            <div class="setting-row">
-                <div class="setting-info">
-                    <h4>Refresh Rate</h4>
-                    <p>How often the ESP8266 pushes data to this UI.</p>
-                </div>
-                <select id="refreshSelect">
-                    <option>Real-time (1s)</option>
-                    <option selected>Balanced (5s)</option>
-                    <option>Power Save (30s)</option>
-                </select>
-            </div>
-        </section>
-
-        <!-- 1.5.2 DATA BACKUP & EXPORT -->
-        <section class="card">
-            <div class="card-title">Data Backup &amp; Export</div>
-            <p style="font-size:0.84rem;color:var(--text-muted);margin-bottom:18px;line-height:1.6;">
-                Ensure your harvesting history is safe. Choose your preferred backup method.
-            </p>
-            <div class="backup-grid">
-                <div class="backup-option">
-                    <h4>Cloud Backup</h4>
-                    <p>Auto-sync data to Supabase daily.</p>
-                    <button class="btn btn-gold" onclick="handleCloudSync()">Sync Now</button>
-                </div>
-                <div class="backup-option">
-                    <h4>Local Export</h4>
-                    <p>Download telemetry history as a CSV file.</p>
-                    <select id="export-mat-filter" style="width:100%;margin-bottom:10px;">
-                        <option value="all">All Mats</option>
-                    </select>
-                    <button class="btn btn-outline" onclick="handleExportCSV()">Download .CSV</button>
-                </div>
-            </div>
-            <div class="setting-row" style="margin-top:16px;">
-                <div class="setting-info">
-                    <h4>Auto-Backup</h4>
-                    <p>Automatically backup every 24 hours.</p>
-                </div>
-                <label class="switch">
-                    <input type="checkbox" checked>
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </section>
-
-<section class="card">
-            <div class="card-title">Mat &amp; User Provisioning</div>
-
-            <div class="prov-tabs">
-                <button class="prov-tab active" id="tab-btn-mats" onclick="switchProvTab('mats')">Mats</button>
-                <button class="prov-tab" id="tab-btn-users" onclick="switchProvTab('users')">Users</button>
-                <button class="prov-tab" id="tab-btn-requests" onclick="switchProvTab('requests')">User Requests<span class="tab-badge" id="reqBadge" style="display:none;"></span></button>
-            </div>
-
-            <!-- ══ MATS PANEL ══ -->
-            <div class="prov-panel active" id="panel-mats">
-                <div class="add-user-grid">
-
-                    <!-- LEFT: Mat provisioning form -->
+            <div class="right-header">
+                <div class="user-badge">
+                    <div class="avatar" id="headerAvatar">…</div>
                     <div>
-                        <div class="form-section-label">Provision New Mat</div>
-
-                        <div class="form-group">
-                            <label class="form-label">Mat ID <span class="req">*</span></label>
-                            <input class="form-input" type="text" id="mat-id" placeholder="e.g. MAT-0042">
-                            <div class="form-hint">Required. Must be unique. Format: MAT-XXXX</div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Sensor Threshold</label>
-                            <input class="form-input has-default" type="number" step="0.01" id="mat-sensor-threshold" placeholder="0.05" value="0.05">
-                            <div class="form-hint">Default: 0.05. Pressure sensor trigger level.</div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">High-V Alert</label>
-                                <input class="form-input has-default" type="number" step="0.01" id="mat-high-v-alert" placeholder="4.20" value="4.20">
-                                <div class="form-hint">Default: 4.20V</div>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">LVCO Threshold</label>
-                                <input class="form-input has-default" type="number" step="0.01" id="mat-lvco-threshold" placeholder="3.00" value="3.00">
-                                <div class="form-hint">Default: 3.00V</div>
-                            </div>
-                        </div>
-
-                        <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:4px;" id="matRegisterBtn" onclick="registerMat()">
-                            + Provision Mat
-                        </button>
-
-                        <div class="form-feedback" id="matFeedback"></div>
+                        <div class="user-name" id="headerName">Loading...</div>
+                        <div class="user-role">USER · ACTIVE</div>
                     </div>
+                </div>
+            </div>
+        </div>
 
-                    <!-- RIGHT: Provisioned mat list -->
-                    <div>
-                        <div class="user-list-header">
-                            <span class="user-list-title">Provisioned Mats</span>
-                            <span class="user-count" id="matCount"></span>
-                        </div>
-                        <div class="user-list" id="matList">
-                            <div class="spinner-row"><div class="spinner"></div></div>
+        <div class="tab-nav">
+            <button class="tab-btn active" data-tab="profile">Profile</button>
+            <button class="tab-btn" data-tab="notifications">Notifications</button>
+            <button class="tab-btn" data-tab="system">System Status</button>
+            <button class="tab-btn" data-tab="firmware">Firmware Control</button>
+        </div>
+
+        <!-- TAB: PROFILE -->
+        <div class="tab-panel active" id="tab-profile">
+            <div class="settings-layout">
+                <div class="card">
+                    <div class="card-title">Account & Profile</div>
+                    <div class="profile-hero">
+                        <div class="profile-avatar" id="profileAvatar">…</div>
+                        <div>
+                            <div class="profile-name" id="profileFullName">Loading...</div>
+                            <div class="profile-email" id="profileEmail">—</div>
+                            <span class="profile-id" id="profileMatId">Mat ID: —</span>
                         </div>
                     </div>
-
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" id="inputFirstName" placeholder="First name">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" id="inputLastName" placeholder="Last name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <div class="input-row">
+                            <input type="email" id="inputEmail" placeholder="you@example.com" disabled>
+                            <button type="button" class="btn btn-outline btn-sm" id="requestEmailChangeBtn" onclick="openEmailChangeModal()">Request Change</button>
+                        </div>
+                        <span class="field-note">Email cannot be changed here. Submit a request for admin approval.</span>
+                    </div>
+                    <div class="save-row">
+                        <button class="btn btn-outline" onclick="resetProfileForm()">Cancel</button>
+                        <button class="btn btn-gold" id="saveProfileBtn" onclick="saveProfile()">Save Changes</button>
+                    </div>
                 </div>
-            </div>
 
-            <!-- ══ USERS PANEL ══ -->
-            <div class="prov-panel" id="panel-users">
-                <div class="add-user-grid">
+                <div class="card">
+                    <div class="card-title">Password & Security</div>
+                    <div class="form-group">
+                        <label>Current Password</label>
+                        <input type="password" id="inputCurrentPw" placeholder="••••••••">
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" id="inputNewPw" placeholder="Min. 8 characters" oninput="checkPwStrength(this.value)">
+                        <div class="pw-strength" id="pwStrength"></div>
+                        <div class="pw-hint" id="pwHint"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" id="inputConfirmPw" placeholder="Repeat new password">
+                    </div>
+                    <div class="save-row">
+                        <button class="btn btn-gold" id="updatePwBtn" onclick="updatePassword()">Update Password</button>
+                    </div>
 
-                    <!-- LEFT: Registration form -->
-                    <div>
-                        <div class="form-section-label">Register New User</div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">First Name <span class="req">*</span></label>
-                                <input class="form-input" type="text" id="reg-fname" placeholder="e.g. Juan">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Last Name <span class="req">*</span></label>
-                                <input class="form-input" type="text" id="reg-lname" placeholder="e.g. Dela Cruz">
-                            </div>
-                        </div>
-
+                    <div style="margin-top:22px;border-top:1px solid var(--border);padding-top:18px;">
+                        <div class="card-title" style="margin-bottom:14px;">Preferences</div>
                         <div class="form-group">
-                            <label class="form-label">Email Address <span class="req">*</span></label>
-                            <input class="form-input" type="email" id="reg-email" placeholder="user@email.com">
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Assign Mat ID <span class="req">*</span></label>
-                            <select class="form-input" id="reg-matid">
-                                <option value="">Loading mats...</option>
+                            <label>Measurement Unit</label>
+                            <select class="form-select" id="prefUnit">
+                                <option value="watts">Watts (Standard)</option>
+                                <option value="joules">Joules (Scientific)</option>
                             </select>
-                            <div class="form-hint">Mat must be provisioned first, under the Mats tab.</div>
                         </div>
-
-                        <button class="btn btn-gold" style="width:100%;justify-content:center;margin-top:4px;" id="registerBtn" onclick="registerUser()">
-                            + Add User to SmartStep
-                        </button>
-
-                        <div class="form-feedback" id="regFeedback"></div>
-                    </div>
-
-                    <!-- RIGHT: Registered user list -->
-                    <div>
-                        <div class="user-list-header">
-                            <span class="user-list-title">Registered Users</span>
-                            <span class="user-count" id="userCount"></span>
+                        <div class="form-group">
+                            <label>Dashboard Refresh Rate</label>
+                            <select class="form-select" id="prefRefresh">
+                                <option value="1">Real-time (1s)</option>
+                                <option value="5">Balanced (5s)</option>
+                                <option value="30">Power Save (30s)</option>
+                            </select>
                         </div>
-                        <div class="user-list" id="userList">
-                            <div class="spinner-row"><div class="spinner"></div></div>
+                        <div class="save-row">
+                            <button class="btn btn-gold" onclick="savePreferences()">Save Preferences</button>
                         </div>
                     </div>
-
                 </div>
             </div>
-
-            <!-- ══ REQUESTS PANEL ══ -->
-            <div class="prov-panel" id="panel-requests">
-                <div class="user-list-header">
-                    <span class="user-list-title">Pending Email Change Requests</span>
-                    <span class="user-count" id="requestCount"></span>
-                </div>
-                <div class="user-list" id="requestList" style="max-height:460px;">
-                    <div class="spinner-row"><div class="spinner"></div></div>
-                </div>
-            </div>
-        </section>
- 
-
-
-        <!-- SAVE ROW -->
-        <div class="save-row">
-            <button class="btn btn-gold" style="padding:13px 36px;font-size:0.95rem;" onclick="saveAllPreferences()">
-                Save All Preferences
-            </button>
         </div>
 
-    </div>
-</main>
+        <!-- TAB: NOTIFICATIONS -->
+        <div class="tab-panel" id="tab-notifications">
+            <div class="settings-layout">
+                <div class="card">
+                    <div class="card-title">Notification Preferences</div>
+                    <div class="notif-list">
+                        <div class="notif-row">
+                            <div class="notif-info"><h4>Charging Port Available</h4><p>Alert when a USB port becomes free</p></div>
+                            <label class="switch"><input type="checkbox" id="notif-charging"><span class="slider-sw"></span></label>
+                        </div>
+                        <div class="notif-row">
+                            <div class="notif-info"><h4>Mat Condition Warning</h4><p>Alert if tile performance degrades</p></div>
+                            <label class="switch"><input type="checkbox" id="notif-mat"><span class="slider-sw"></span></label>
+                        </div>
+                        <div class="notif-row">
+                            <div class="notif-info"><h4>System Restart Notice</h4><p>Notify when ESP8266 restarts</p></div>
+                            <label class="switch"><input type="checkbox" id="notif-restart"><span class="slider-sw"></span></label>
+                        </div>
+                        <div class="notif-row">
+                            <div class="notif-info"><h4>Weekly Energy Report</h4><p>Summary of harvested energy every Monday</p></div>
+                            <label class="switch"><input type="checkbox" id="notif-weekly"><span class="slider-sw"></span></label>
+                        </div>
+                        <div class="notif-row">
+                            <div class="notif-info"><h4>Peak Hour Alerts</h4><p>Notify during highest generation periods</p></div>
+                            <label class="switch"><input type="checkbox" id="notif-peak"><span class="slider-sw"></span></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Alert Preferences</div>
+                    <div class="notif-list">
+                        <div class="notif-row">
+                            <div class="notif-info"><h4>Battery Low Alert</h4><p>Notify when battery drops below 20%</p></div>
+                            <label class="switch"><input type="checkbox" id="notif-battery"><span class="slider-sw"></span></label>
+                        </div>
+                        <div class="notif-row">
+                            <div class="notif-info"><h4>Push Notifications</h4><p>Real-time pop-up alerts within this dashboard</p></div>
+                            <label class="switch"><input type="checkbox" id="notif-push"><span class="slider-sw"></span></label>
+                        </div>
+                        <div class="notif-row">
+                            <div class="notif-info"><h4>Email & SMS Notifications</h4><p>Critical alerts sent to your email or mobile device</p></div>
+                            <label class="switch"><input type="checkbox" id="notif-email"><span class="slider-sw"></span></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="save-row">
+                <button class="btn btn-gold" onclick="saveNotifications()">Save Preferences</button>
+            </div>
+        </div>
 
-<!-- TOAST -->
-<div id="toast"></div>
+        <!-- TAB: SYSTEM STATUS -->
+        <div class="tab-panel" id="tab-system">
+            <div class="settings-layout">
+                <div class="card">
+                    <div class="card-title">Mat Conditions</div>
+                    <div class="status-grid" id="tileGrid"></div>
+                    <div id="tileWarning" class="tile-warning-row" style="display:none;">
+                        <p id="tileWarningTitle">Tile Warning</p>
+                        <p id="tileWarningText">—</p>
+                    </div>
+                    <div class="health-row" style="margin-top:6px;">
+                        <span class="health-key">Overall Mat Health</span>
+                        <div style="display:flex;align-items:center;gap:12px;flex:1;margin-left:16px;">
+                            <div style="flex:1;height:8px;background:#e2e8f0;border-radius:5px;overflow:hidden;">
+                                <div id="matHealthBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--success),var(--gold));border-radius:5px;transition:width 0.6s;"></div>
+                            </div>
+                            <span id="matHealthPct" class="health-val">—</span>
+                        </div>
+                    </div>
+                </div>
 
-<script>
-    const SUPABASE_URL = "https://qvadzitiwgkhzlgjmdac.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YWR6aXRpd2draHpsZ2ptZGFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjkyNjAsImV4cCI6MjA5MjM0NTI2MH0.8COO3BlKQNgXMwo_GZUTIt-Kxs0WfhHJ2yrL3e9--9c";
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                <div class="card">
+                    <div class="card-title">Battery</div>
+                    <div style="text-align:center;margin-bottom:18px;">
+                        <div style="position:relative;display:inline-block;width:112px;height:112px;">
+                            <svg viewBox="0 0 120 120" width="112" height="112">
+                                <circle cx="60" cy="60" r="50" fill="none" stroke="#f1f5f9" stroke-width="10"/>
+                                <circle id="batteryRing" cx="60" cy="60" r="50" fill="none" stroke="#05162e" stroke-width="10"
+                                    stroke-dasharray="314" stroke-dashoffset="314"
+                                    stroke-linecap="round" transform="rotate(-90 60 60)" style="transition:stroke-dashoffset 0.8s;"/>
+                            </svg>
+                            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+                                <div id="batteryPct" style="font-family:'Lexend',sans-serif;font-size:1.3rem;color:var(--navy-dark);font-weight:700;">—</div>
+                                <div style="font-size:0.63rem;color:var(--text-muted);">State of Charge</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+                        <div class="status-card">
+                            <div class="sc-label">Voltage</div>
+                            <div class="sc-val" id="battVoltage">—</div>
+                            <div class="sc-status"><span class="dot-good"></span><span style="color:var(--success);font-size:0.7rem;font-weight:600;">Nominal</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="sc-label">Charge Rate</div>
+                            <div class="sc-val" id="battChargeRate">—</div>
+                            <div class="sc-status"><span class="dot-good"></span><span style="color:var(--success);font-size:0.7rem;font-weight:600;">Charging</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="sc-label">Health Index</div>
+                            <div class="sc-val" id="battHealth">—</div>
+                            <div class="sc-status"><span class="dot-good"></span><span style="color:var(--success);font-size:0.7rem;font-weight:600;">Excellent</span></div>
+                        </div>
+                        <div class="status-card">
+                            <div class="sc-label">Cycle Count</div>
+                            <div class="sc-val" id="battCycles">—</div>
+                            <div class="sc-status" style="font-size:0.68rem;color:var(--text-muted);" id="battEOL">EOL: —</div>
+                        </div>
+                    </div>
+                    <div id="batteryStatus" class="health-row" style="justify-content:center;">
+                        <span style="font-size:0.8rem;font-weight:600;color:var(--text-muted);">Loading battery data...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    // ── AUTH ──
-    _supabase.auth.onAuthStateChange((event, session) => {
-        if (event === 'SIGNED_OUT' || !session) window.location.href = 'login1.html';
+        <!-- TAB: FIRMWARE CONTROL -->
+        <div class="tab-panel" id="tab-firmware">
+            <div class="settings-layout">
+                <div class="card">
+                    <div class="card-title">Firmware Control</div>
+                    <p style="font-size:0.83rem;color:var(--text-muted);margin-bottom:18px;line-height:1.6;">
+                        Sends direct commands to the ESP8266 controller. May briefly interrupt live data.
+                    </p>
+                    <div class="fw-grid">
+                        <button class="fw-btn fw-restart" onclick="triggerAction('restart')">System Restart</button>
+                        <button class="fw-btn fw-recal" onclick="triggerAction('recalibrate')">Recalibrate Sensors</button>
+                    </div>
+                    <div class="fw-info">
+                        <strong>When to use:</strong> Restart if readings appear stuck. Recalibrate if generation output has drifted. Both actions are logged.
+                    </div>
+                    <div class="fw-meta-row">
+                        <div id="lastActionInfo">
+                            <strong>Last Restart:</strong> <span id="lastRestart">—</span><br>
+                            <strong>Last Recalibration:</strong> <span id="lastRecal">—</span>
+                        </div>
+                        <span class="ver-tag">Ver: 1.3.0-PRO</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Action Log</div>
+                    <div id="actionLog" style="display:flex;flex-direction:column;gap:8px;">
+                        <div style="font-size:0.82rem;color:var(--text-muted);text-align:center;padding:20px;">Loading logs...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+const SUPABASE_URL = 'https://qvadzitiwgkhzlgjmdac.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YWR6aXRpd2draHpsZ2ptZGFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjkyNjAsImV4cCI6MjA5MjM0NTI2MH0.8COO3BlKQNgXMwo_GZUTIt-Kxs0WfhHJ2yrL3e9--9c';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentUser = null;
+let currentProfile = null;
+
+function toast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `show toast-${type}`;
+    setTimeout(() => { t.className = ''; }, 3200);
+}
+function loading(show) {
+    // Loading overlay removed — kept as a no-op so existing calls don't break.
+}
+
+function openEmailChangeModal() {
+    document.getElementById('modalCurrentEmail').textContent = currentUser?.email || '—';
+    document.getElementById('inputNewEmail').value = '';
+    document.getElementById('emailChangeModal').classList.add('show');
+}
+
+function closeEmailChangeModal() {
+    document.getElementById('emailChangeModal').classList.remove('show');
+}
+
+async function submitEmailChangeRequest() {
+    const newEmail = document.getElementById('inputNewEmail').value.trim();
+
+    if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+        toast('Enter a valid email address', 'error');
+        return;
+    }
+    if (newEmail.toLowerCase() === (currentUser?.email || '').toLowerCase()) {
+        toast('That is already your current email', 'error');
+        return;
+    }
+
+    const btn = document.getElementById('submitEmailChangeBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    // Logged for admin review, rather than applied directly — email changes
+    // on this account require manual approval.
+    const { error } = await db.from('email_change_requests').insert({
+        user_id:        currentUser.id,
+        current_email:  currentUser.email,
+        requested_email: newEmail,
+        status:         'pending',
     });
 
-    async function loadAdminProfile(uid) {
-        const { data } = await _supabase.from('profiles').select('first_name, last_name').eq('id', uid).single();
-        if (data) {
-            document.getElementById('adminName').innerText = `${data.first_name} ${data.last_name}`;
-            document.getElementById('adminAvatar').innerText = data.first_name[0] + data.last_name[0];
-        }
+    btn.disabled = false;
+    btn.textContent = 'Submit Request';
+
+    if (error) {
+        toast('Failed to submit request: ' + error.message, 'error');
+        return;
     }
 
-    document.getElementById('logoutBtn').addEventListener('click', async () => {
-        await _supabase.auth.signOut();
+    closeEmailChangeModal();
+    toast('Email change request submitted for review.');
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + tab).classList.add('active');
     });
+});
 
-    // ── PROVISIONING TABS ──
-    function switchProvTab(tab) {
-        document.getElementById('tab-btn-mats').classList.toggle('active', tab === 'mats');
-        document.getElementById('tab-btn-users').classList.toggle('active', tab === 'users');
-        document.getElementById('tab-btn-requests').classList.toggle('active', tab === 'requests');
-        document.getElementById('panel-mats').classList.toggle('active', tab === 'mats');
-        document.getElementById('panel-users').classList.toggle('active', tab === 'users');
-        document.getElementById('panel-requests').classList.toggle('active', tab === 'requests');
+if (window.location.hash === '#notifications') {
+    setTimeout(() => {
+        document.querySelector('[data-tab="notifications"]').click();
+    }, 100);
+}
+
+async function init() {
+    loading(true);
+    try {
+        const { data: { user }, error } = await db.auth.getUser();
+        if (error || !user) { window.location.href = 'login1.html'; return; }
+        currentUser = user;
+        await loadProfile(user);
+        await loadTelemetry(user.id);
+        await loadNotificationPrefs(user.id);
+        await loadActionLog(user.id);
+    } catch (err) {
+        console.error('Init error:', err);
+        toast('Failed to load user data', 'error');
+    } finally {
+        loading(false);
+    }
+}
+
+async function loadProfile(user) {
+    const { data: profile, error } = await db
+        .from('profiles')
+        .select('first_name, last_name, mat_id, pref_unit, pref_refresh')
+        .eq('id', user.id)
+        .maybeSingle();
+
+    if (error || !profile) {
+        console.error('Profile error:', error);
+        toast('Could not load profile', 'error');
+        return;
     }
 
-    // ── LOAD MAT LIST ──
-    async function loadMatList() {
-        const list = document.getElementById('matList');
-        list.innerHTML = '<div class="spinner-row"><div class="spinner"></div></div>';
+    currentProfile = profile;
+    const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'User';
+    const initials = ((profile.first_name?.[0] || '') + (profile.last_name?.[0] || '')).toUpperCase() || '?';
+    const email = user.email || '—';
 
-        // Mat configs live in mat_management_settings; assignment to a user
-        // is tracked separately via profiles.mat_id (this table has no user link).
-        const [{ data, error }, { data: assignedProfiles }] = await Promise.all([
-            _supabase
-                .from('mat_management_settings')
-                .select('mat_id, sensor_threshold, high_v_alert, lvco_threshold, current_status, updated_at')
-                .order('updated_at', { ascending: false }),
-            _supabase.from('profiles').select('mat_id').eq('role', 'user').not('mat_id', 'is', null)
-        ]);
+    document.getElementById('headerAvatar').textContent = initials;
+    document.getElementById('headerName').textContent = fullName;
+    document.getElementById('profileAvatar').textContent = initials;
+    document.getElementById('profileFullName').textContent = fullName;
+    document.getElementById('profileEmail').textContent = email;
+    document.getElementById('profileMatId').textContent = `Mat ID: ${profile.mat_id || 'N/A'}`;
+    document.getElementById('nodeInfo').innerHTML = `Node: ${profile.mat_id || 'N/A'}<br>Ver: 1.3.0-PRO · User Mode`;
+    document.getElementById('inputFirstName').value = profile.first_name || '';
+    document.getElementById('inputLastName').value = profile.last_name || '';
+    document.getElementById('inputEmail').value = email;
 
-        const assignedSet = new Set((assignedProfiles || []).map(p => p.mat_id));
-        const countEl = document.getElementById('matCount');
+    if (profile.pref_unit) document.getElementById('prefUnit').value = profile.pref_unit;
+    if (profile.pref_refresh) document.getElementById('prefRefresh').value = profile.pref_refresh;
+}
 
-        if (error || !data?.length) {
-            list.innerHTML = '<div class="empty-state"><div class="empty-icon">—</div><p>No mats provisioned yet</p></div>';
-            countEl.textContent = '';
-            populateMatDropdown([], assignedSet);
-            populateExportFilter([]);
-            return;
-        }
+function resetProfileForm() {
+    if (!currentProfile) return;
+    document.getElementById('inputFirstName').value = currentProfile.first_name || '';
+    document.getElementById('inputLastName').value = currentProfile.last_name || '';
+    toast('Changes discarded', 'info');
+}
 
-        countEl.textContent = `${data.length} mat${data.length !== 1 ? 's' : ''}`;
+async function saveProfile() {
+    const btn = document.getElementById('saveProfileBtn');
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
 
-        list.innerHTML = data.map(m => {
-            const isAssigned = assignedSet.has(m.mat_id);
-            return `
-                <div class="mat-row" id="mrow-${m.mat_id}">
-                    <div class="mat-row-icon">MAT</div>
-                    <div class="mat-row-info">
-                        <div class="mat-row-id">${m.mat_id}</div>
-                        <div class="mat-row-meta">Sensor ${m.sensor_threshold ?? '—'} · HV ${m.high_v_alert ?? '—'}V · LVCO ${m.lvco_threshold ?? '—'}V · Status: ${m.current_status ?? '—'}</div>
-                    </div>
-                    <span class="mat-row-status ${isAssigned ? 'status-active' : 'status-unassigned'}">${isAssigned ? 'Assigned' : 'Unassigned'}</span>
-                    <div class="user-row-actions">
-                        <button class="row-btn row-btn-del" onclick="deleteMat('${m.mat_id}')">Remove</button>
-                    </div>
-                </div>`;
-        }).join('');
+    const firstName = document.getElementById('inputFirstName').value.trim();
+    const lastName  = document.getElementById('inputLastName').value.trim();
+    const unit      = document.getElementById('prefUnit').value;
+    const refresh   = document.getElementById('prefRefresh').value;
 
-        populateMatDropdown(data, assignedSet);
-        populateExportFilter(data);
+    if (!firstName || !lastName) {
+        toast('First and last name are required', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Save Changes';
+        return;
     }
 
-    function populateExportFilter(mats) {
-        const sel = document.getElementById('export-mat-filter');
-        if (!sel) return;
-        const current = sel.value;
-        const options = mats.map(m => `<option value="${m.mat_id}">${m.mat_id}</option>`).join('');
-        sel.innerHTML = `<option value="all">All Mats</option>${options}`;
-        // Keep the admin's current selection if it's still a valid option
-        if ([...sel.options].some(o => o.value === current)) sel.value = current;
+    const { error } = await db
+        .from('profiles')
+        .update({
+            first_name: firstName,
+            last_name:  lastName,
+            pref_unit:  unit,
+            pref_refresh: refresh
+        })
+        .eq('id', currentUser.id);
+
+    if (error) {
+        toast('Failed to update profile: ' + error.message, 'error');
+    } else {
+        currentProfile = { ...currentProfile, first_name: firstName, last_name: lastName };
+        const fullName = `${firstName} ${lastName}`;
+        const initials = (firstName[0] + lastName[0]).toUpperCase();
+
+        document.getElementById('headerAvatar').textContent = initials;
+        document.getElementById('headerName').textContent = fullName;
+        document.getElementById('profileAvatar').textContent = initials;
+        document.getElementById('profileFullName').textContent = fullName;
+
+        toast('Profile updated successfully!');
     }
 
-    function populateMatDropdown(mats, assignedSet) {
-        const sel = document.getElementById('reg-matid');
-        if (!sel) return;
-        if (!mats.length) {
-            sel.innerHTML = '<option value="">No mats provisioned yet</option>';
-            return;
-        }
-        const unassigned = mats.filter(m => !assignedSet.has(m.mat_id));
-        const options = (unassigned.length ? unassigned : mats).map(m => `<option value="${m.mat_id}">${m.mat_id}</option>`).join('');
-        sel.innerHTML = `<option value="">Select a mat...</option>${options}`;
+    btn.disabled = false;
+    btn.textContent = 'Save Changes';
+}
+
+function checkPwStrength(pw) {
+    const bar = document.getElementById('pwStrength');
+    const hint = document.getElementById('pwHint');
+    if (!pw) { bar.style.width = '0'; hint.textContent = ''; return; }
+    let score = 0;
+    if (pw.length >= 8) score++;
+    if (/[A-Z]/.test(pw)) score++;
+    if (/[0-9]/.test(pw)) score++;
+    if (/[^A-Za-z0-9]/.test(pw)) score++;
+    const colors = ['#ef4444', '#f59e0b', '#10b981', '#10b981'];
+    const labels = ['Too weak', 'Fair', 'Good', 'Strong'];
+    bar.style.background = colors[score - 1] || '#e2e8f0';
+    bar.style.width = `${score * 25}%`;
+    bar.style.height = '4px';
+    bar.style.borderRadius = '2px';
+    bar.style.marginTop = '6px';
+    hint.textContent = labels[score - 1] || '';
+    hint.style.color = colors[score - 1] || 'var(--text-muted)';
+}
+
+async function updatePassword() {
+    const btn = document.getElementById('updatePwBtn');
+    const newPw = document.getElementById('inputNewPw').value;
+    const confirmPw = document.getElementById('inputConfirmPw').value;
+
+    if (!newPw || newPw.length < 8) {
+        toast('Password must be at least 8 characters', 'error');
+        return;
+    }
+    if (newPw !== confirmPw) {
+        toast('Passwords do not match', 'error');
+        return;
     }
 
-    // ── PROVISION MAT ──
-    async function registerMat() {
-        const matId = document.getElementById('mat-id').value.trim();
-        const sensorInput = document.getElementById('mat-sensor-threshold');
-        const highVInput = document.getElementById('mat-high-v-alert');
-        const lovcoInput = document.getElementById('mat-lvco-threshold');
+    btn.disabled = true;
+    btn.textContent = 'Updating...';
 
-        const feedback = document.getElementById('matFeedback');
-        const btn = document.getElementById('matRegisterBtn');
+    const { error } = await db.auth.updateUser({ password: newPw });
 
-        document.getElementById('mat-id').classList.remove('input-error');
-        feedback.style.display = 'none';
-
-        // Mat ID is the only required field — everything else falls back to its DB default
-        if (!matId) {
-            document.getElementById('mat-id').classList.add('input-error');
-            showFeedback('mat', 'error', 'Mat ID is required.');
-            return;
-        }
-
-        const sensorThreshold = sensorInput.value.trim() === '' ? 0.05 : parseFloat(sensorInput.value);
-        const highVAlert = highVInput.value.trim() === '' ? 4.20 : parseFloat(highVInput.value);
-        const lvcoThreshold = lvcoInput.value.trim() === '' ? 3.00 : parseFloat(lvcoInput.value);
-
-        btn.disabled = true;
-        btn.textContent = 'Provisioning...';
-
-        try {
-            // current_status, firmware_version, and the telemetry counters are left
-            // unset so the table's own defaults ('active', '1.3.0-PRO', 0, etc.) apply.
-            const { error } = await _supabase.from('mat_management_settings').upsert({
-                mat_id: matId,
-                sensor_threshold: sensorThreshold,
-                high_v_alert: highVAlert,
-                lvco_threshold: lvcoThreshold,
-                updated_at: new Date().toISOString(),
-            }, { onConflict: 'mat_id' });
-
-            if (error) throw error;
-
-            showFeedback('mat', 'success', `Mat "${matId}" provisioned successfully.`);
-            showToast(`Mat ${matId} provisioned.`, 'success');
-
-            document.getElementById('mat-id').value = '';
-            sensorInput.value = '0.05';
-            highVInput.value = '4.20';
-            lvcoInput.value = '3.00';
-
-            await loadMatList();
-
-        } catch (err) {
-            console.error(err);
-            const msg = err.message?.includes('duplicate')
-                ? `Mat ID "${matId}" already exists.`
-                : err.message || 'Provisioning failed. Please try again.';
-            showFeedback('mat', 'error', msg);
-            showToast('Mat provisioning failed.', 'error');
-        } finally {
-            btn.disabled = false;
-            btn.textContent = '+ Provision Mat';
-        }
+    if (error) {
+        toast('Failed to update password: ' + error.message, 'error');
+    } else {
+        toast('Password updated successfully!');
+        document.getElementById('inputCurrentPw').value = '';
+        document.getElementById('inputNewPw').value = '';
+        document.getElementById('inputConfirmPw').value = '';
+        document.getElementById('pwStrength').style.width = '0';
+        document.getElementById('pwHint').textContent = '';
     }
 
-    // ── DELETE MAT ──
-    async function deleteMat(matId) {
-        if (!confirm(`Remove mat "${matId}" from SmartStep?\n\nThis cannot be undone.`)) return;
+    btn.disabled = false;
+    btn.textContent = 'Update Password';
+}
 
-        const { error } = await _supabase.from('mat_management_settings').delete().eq('mat_id', matId);
-        if (error) { showToast('Failed to remove mat: ' + error.message, 'error'); return; }
+async function savePreferences() {
+    const unit    = document.getElementById('prefUnit').value;
+    const refresh = document.getElementById('prefRefresh').value;
 
-        const row = document.getElementById(`mrow-${matId}`);
-        if (row) {
-            row.style.opacity = '0';
-            row.style.transition = 'opacity 0.25s';
-            setTimeout(() => { row.remove(); loadMatList(); }, 260);
-        }
-        showToast(`${matId} removed.`, 'warn');
+    const { error } = await db
+        .from('profiles')
+        .update({ pref_unit: unit, pref_refresh: refresh })
+        .eq('id', currentUser.id);
+
+    if (error) {
+        console.error('Preferences error:', error);
+        toast('Failed to save preferences: ' + error.message, 'error');
+    } else {
+        toast('Preferences saved!');
+    }
+}
+
+const NOTIF_KEYS = ['charging', 'mat', 'restart', 'weekly', 'peak', 'battery', 'push', 'email'];
+
+async function loadNotificationPrefs(userId) {
+    const { data, error } = await db
+        .from('notification_preferences')
+        .select('charging, mat, restart, weekly, peak, battery, push, email')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+    if (error) {
+        console.error('Notification prefs error:', error.message);
+        return;
     }
 
-    // ── LOAD USER LIST ──
-    async function loadUserList() {
-        const list = document.getElementById('userList');
-        list.innerHTML = '<div class="spinner-row"><div class="spinner"></div></div>';
-
-        const { data, error } = await _supabase
-            .from('profiles')
-            .select('id, first_name, last_name, mat_id, created_at')
-            .eq('role', 'user')
-            .order('created_at', { ascending: false });
-
-        const countEl = document.getElementById('userCount');
-
-        if (error || !data?.length) {
-            list.innerHTML = '<div class="empty-state"><div class="empty-icon">—</div><p>No users registered yet</p></div>';
-            countEl.textContent = '';
-            return;
-        }
-
-        countEl.textContent = `${data.length} user${data.length !== 1 ? 's' : ''}`;
-
-        list.innerHTML = data.map(u => {
-            const initials = (u.first_name?.[0] || '?') + (u.last_name?.[0] || '?');
-            const fullName = `${u.first_name || ''} ${u.last_name || ''}`.trim();
-            const joined = u.created_at
-                ? new Date(u.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                : '—';
-            return `
-                <div class="user-row" id="urow-${u.id}">
-                    <div class="user-row-avatar">${initials}</div>
-                    <div class="user-row-info">
-                        <div class="user-row-name">${fullName}</div>
-                        <div class="user-row-meta">Joined ${joined}</div>
-                    </div>
-                    <span class="user-row-mat">${u.mat_id || '—'}</span>
-                    <div class="user-row-actions">
-                        <button class="row-btn row-btn-del" onclick="deleteUser('${u.id}', '${fullName}')">Remove</button>
-                    </div>
-                </div>`;
-        }).join('');
-    }
-
-    // ── LOAD EMAIL CHANGE REQUESTS ──
-    async function loadEmailRequests() {
-        const list = document.getElementById('requestList');
-        list.innerHTML = '<div class="spinner-row"><div class="spinner"></div></div>';
-
-        const { data, error } = await _supabase
-            .from('email_change_requests')
-            .select('id, user_id, current_email, requested_email, status, created_at')
-            .eq('status', 'pending')
-            .order('created_at', { ascending: false });
-
-        const countEl = document.getElementById('requestCount');
-        const badge = document.getElementById('reqBadge');
-
-        if (error || !data?.length) {
-            list.innerHTML = '<div class="empty-state"><div class="empty-icon">—</div><p>No pending requests</p></div>';
-            countEl.textContent = '';
-            badge.style.display = 'none';
-            return;
-        }
-
-        countEl.textContent = `${data.length} pending`;
-        badge.textContent = data.length;
-        badge.style.display = 'inline-flex';
-
-        // Requests only store user_id — pull names from profiles in one extra query
-        const uids = [...new Set(data.map(r => r.user_id))];
-        const { data: profs } = await _supabase
-            .from('profiles')
-            .select('id, first_name, last_name')
-            .in('id', uids);
-        const nameById = new Map((profs || []).map(p => [p.id, `${p.first_name || ''} ${p.last_name || ''}`.trim() || 'Unknown user']));
-
-        list.innerHTML = data.map(r => {
-            const name = nameById.get(r.user_id) || 'Unknown user';
-            const when = r.created_at
-                ? new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })
-                : '—';
-            return `
-                <div class="request-row" id="reqrow-${r.id}">
-                    <div class="request-row-info">
-                        <div class="request-row-name">${name}</div>
-                        <div class="request-row-emails">${r.current_email} <span class="arrow">→</span> ${r.requested_email}</div>
-                        <div class="request-row-time">Requested ${when}</div>
-                    </div>
-                    <div class="user-row-actions">
-                        <button class="row-btn row-btn-accept" onclick="approveEmailChange('${r.id}', '${r.user_id}', '${r.requested_email}', '${name.replace(/'/g, "\\'")}')">Accept</button>
-                        <button class="row-btn row-btn-reject" onclick="rejectEmailChange('${r.id}', '${name.replace(/'/g, "\\'")}')">Reject</button>
-                    </div>
-                </div>`;
-        }).join('');
-    }
-
-    // ── APPROVE EMAIL CHANGE ──
-    // NOTE: actually changing a user's email in auth.users requires the Supabase
-    // Admin API (auth.admin.updateUserById), which needs the service_role key.
-    // That key must never be shipped to the browser, so this calls a Supabase
-    // Edge Function ('approve-email-change') that holds the service_role key
-    // server-side and performs the update. See the accompanying edge function
-    // file — it must be deployed for Accept to work.
-    async function approveEmailChange(requestId, uid, newEmail, name) {
-        if (!confirm(`Approve email change for ${name}?\n\n${newEmail} will become their new sign-in email.`)) return;
-
-        const row = document.getElementById(`reqrow-${requestId}`);
-        const btns = row?.querySelectorAll('button');
-        btns?.forEach(b => b.disabled = true);
-
-        try {
-            const { data: { session } } = await _supabase.auth.getSession();
-            const res = await fetch(`${SUPABASE_URL}/functions/v1/approve-email-change`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session.access_token}`,
-                },
-                body: JSON.stringify({ request_id: requestId, user_id: uid, new_email: newEmail }),
-            });
-            const result = await res.json();
-            if (!res.ok) throw new Error(result.error || 'Approval failed.');
-
-            showToast(`${name}'s email updated to ${newEmail}.`, 'success');
-            if (row) { row.style.opacity = '0'; row.style.transition = 'opacity 0.25s'; setTimeout(() => loadEmailRequests(), 260); }
-        } catch (err) {
-            console.error(err);
-            showToast('Failed to approve: ' + err.message, 'error');
-            btns?.forEach(b => b.disabled = false);
-        }
-    }
-
-    // ── REJECT EMAIL CHANGE ──
-    async function rejectEmailChange(requestId, name) {
-        if (!confirm(`Reject email change request from ${name}?`)) return;
-
-        const { error } = await _supabase
-            .from('email_change_requests')
-            .update({ status: 'rejected', reviewed_at: new Date().toISOString() })
-            .eq('id', requestId);
-
-        if (error) { showToast('Failed to reject: ' + error.message, 'error'); return; }
-
-        const row = document.getElementById(`reqrow-${requestId}`);
-        if (row) { row.style.opacity = '0'; row.style.transition = 'opacity 0.25s'; setTimeout(() => loadEmailRequests(), 260); }
-        showToast(`Request from ${name} rejected.`, 'warn');
-    }
-
-    // ── REGISTER USER ──
-    // Uses Supabase Admin invite flow: signUp creates the auth user,
-    // then we upsert the profiles row with the extra fields.
-        // ── REGISTER USER ──
-    // Uses Supabase Admin invite flow: signUp creates the auth user,
-    // then we upsert the profiles row with the extra fields.
-    async function registerUser() {
-        const fname = document.getElementById('reg-fname').value.trim();
-        const lname = document.getElementById('reg-lname').value.trim();
-        const email = document.getElementById('reg-email').value.trim();
-        const matId = document.getElementById('reg-matid').value.trim();
- 
-        const feedback = document.getElementById('regFeedback');
-        const btn = document.getElementById('registerBtn');
- 
-        // Clear previous errors
-        ['reg-fname','reg-lname','reg-email','reg-matid'].forEach(id => {
-            document.getElementById(id).classList.remove('input-error');
+    if (data) {
+        NOTIF_KEYS.forEach(key => {
+            const el = document.getElementById('notif-' + key);
+            if (el && data[key] !== undefined) el.checked = data[key];
         });
-        feedback.style.display = 'none';
- 
-        // Validate
-        let errors = [];
-        if (!fname) { document.getElementById('reg-fname').classList.add('input-error'); errors.push('First name'); }
-        if (!lname) { document.getElementById('reg-lname').classList.add('input-error'); errors.push('Last name'); }
-        if (!email || !email.includes('@')) { document.getElementById('reg-email').classList.add('input-error'); errors.push('Valid email'); }
-        if (!matId) { document.getElementById('reg-matid').classList.add('input-error'); errors.push('Assigned Mat'); }
- 
-        if (errors.length) {
-            showFeedback('reg', 'error', `Required: ${errors.join(', ')}.`);
-            return;
-        }
- 
-        btn.disabled = true;
-        btn.textContent = 'Registering...';
- 
-        try {
-            // Step 1: Create auth user via signUp (Supabase sends confirmation email)
-            const { data: authData, error: authErr } = await _supabase.auth.signUp({
-                email,
-                password: crypto.randomUUID(),
-                options: {
-                    data: { first_name: fname, last_name: lname }
-                }
-            });
- 
-            if (authErr) throw authErr;
- 
-            const newUid = authData?.user?.id;
-            if (!newUid) throw new Error('User creation failed — no UID returned.');
- 
-            // Step 2: Upsert profile row with all fields
-            const { error: profileErr } = await _supabase.from('profiles').upsert({
-                id: newUid,
-                first_name: fname,
-                last_name: lname,
-                mat_id: matId,
-                role: 'user',
-            });
- 
-            if (profileErr) throw profileErr;
- 
-            // Mat assignment is tracked via profiles.mat_id (set above) — the
-            // mat_management_settings table itself has no per-user columns.
- 
-            // Success
-            showFeedback('reg', 'success', `${fname} ${lname} registered successfully. A confirmation email has been sent to ${email}.`);
-            showToast(`User ${fname} ${lname} added.`, 'success');
- 
-            // Clear form
-            ['reg-fname','reg-lname','reg-email'].forEach(id => {
-                document.getElementById(id).value = '';
-            });
- 
-            await loadUserList();
-            await loadMatList();
- 
-        } catch (err) {
-            console.error(err);
-            const msg = err.message?.includes('already registered')
-                ? `Email "${email}" is already in use.`
-                : err.message || 'Registration failed. Please try again.';
-            showFeedback('reg', 'error', msg);
-            showToast('Registration failed.', 'error');
-        } finally {
-            btn.disabled = false;
-            btn.textContent = '+ Add User to SmartStep';
-        }
     }
- 
-    // ── DELETE USER ──
-    // NOTE: like the email-approval flow, actually removing someone from
-    // auth.users requires the Supabase Admin API (auth.admin.deleteUser),
-    // which needs the service_role key — never exposed to the browser. This
-    // calls a 'delete-user' Edge Function that holds that key server-side.
-    async function deleteUser(uid, name) {
-        if (!confirm(`Remove user "${name}" from SmartStep?\n\nThis permanently deletes their profile AND their login (auth) account. This cannot be undone.`)) return;
+}
 
-        const row = document.getElementById(`urow-${uid}`);
-        const btn = row?.querySelector('.row-btn-del');
-        if (btn) { btn.disabled = true; btn.textContent = 'Removing...'; }
+async function saveNotifications() {
+    const prefs = {
+        user_id: currentUser.id,
+        updated_at: new Date().toISOString()
+    };
 
-        try {
-            const { data: { session } } = await _supabase.auth.getSession();
-            const res = await fetch(`${SUPABASE_URL}/functions/v1/delete-user`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session.access_token}`,
-                },
-                body: JSON.stringify({ user_id: uid }),
-            });
-            const result = await res.json();
-            if (!res.ok) throw new Error(result.error || 'Removal failed.');
-
-            if (row) {
-                row.style.opacity = '0';
-                row.style.transition = 'opacity 0.25s';
-                setTimeout(() => { row.remove(); loadUserList(); }, 260);
-            }
-            showToast(`${name} removed.`, 'warn');
-        } catch (err) {
-            console.error(err);
-            showToast('Failed to remove user: ' + err.message, 'error');
-            if (btn) { btn.disabled = false; btn.textContent = 'Remove'; }
-        }
-    }
- 
-    // ── CLOUD SYNC ──
-    async function handleCloudSync() {
-        showToast('Cloud sync initiated. Data is up to date.', 'success');
-    }
-
-
-    // ── CSV EXPORT ──
-    async function handleExportCSV() {
-        const filterEl = document.getElementById('export-mat-filter');
-        const selectedMat = filterEl ? filterEl.value : 'all';
-
-        const TELEMETRY_COLUMNS = [
-            'mat_id', 'created_at', 'steps',
-            'harvest_v', 'harvest_ma', 'harvest_mw', 'harvest_wh',
-            'consume_v', 'consume_ma', 'consume_mw', 'consume_wh',
-            'total_wh'
-        ];
-
-        let query = _supabase
-            .from('telemetry')
-            .select(TELEMETRY_COLUMNS.join(', '))
-            .order('created_at', { ascending: false });
-
-        if (selectedMat !== 'all') {
-            query = query.eq('mat_id', selectedMat);
-        }
-
-        const { data, error } = await query;
-
-        if (error) { showToast('Export failed: ' + error.message, 'error'); return; }
-        if (!data?.length) {
-            showToast(selectedMat === 'all' ? 'No telemetry data to export.' : `No telemetry data for ${selectedMat}.`, 'warn');
-            return;
-        }
-
-        const headers = TELEMETRY_COLUMNS.join(',');
-        const rows = data.map(r => TELEMETRY_COLUMNS.map(col => r[col]).join(',')).join('\n');
-        const csv = headers + '\n' + rows;
-
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        const suffix = selectedMat === 'all' ? 'all-mats' : selectedMat;
-        a.download = `smartstep-telemetry-${suffix}-${new Date().toISOString().slice(0,10)}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
-        showToast('CSV downloaded.', 'success');
-    }
-
-    // ── SAVE PREFERENCES ──
-    function saveAllPreferences() {
-        const prefs = {
-            units: document.getElementById('unitSelect').value,
-            refresh: document.getElementById('refreshSelect').value,
-        };
-        localStorage.setItem('adminPrefs', JSON.stringify(prefs));
-        showToast('Preferences saved.', 'success');
-    }
-
-    function loadSavedPreferences() {
-        try {
-            const prefs = JSON.parse(localStorage.getItem('adminPrefs') || '{}');
-            if (prefs.units) document.getElementById('unitSelect').value = prefs.units;
-            if (prefs.refresh) document.getElementById('refreshSelect').value = prefs.refresh;
-        } catch {}
-    }
-
-    // ── FEEDBACK / TOAST ──
-    function showFeedback(form, type, msg) {
-        const el = document.getElementById(form === 'mat' ? 'matFeedback' : 'regFeedback');
-        el.textContent = msg;
-        el.className = `form-feedback ${type === 'success' ? 'feedback-success' : 'feedback-error'}`;
-        el.style.display = 'block';
-    }
-
-    function showToast(msg, type = 'success') {
-        const t = document.getElementById('toast');
-        t.textContent = msg;
-        t.className = `show t-${type}`;
-        setTimeout(() => { t.className = ''; }, 3500);
-    }
-
-    // ── INIT ──
-    window.addEventListener('load', async () => {
-        const { data: { session } } = await _supabase.auth.getSession();
-        if (!session) { window.location.href = 'login1.html'; return; }
-        loadAdminProfile(session.user.id);
-        loadMatList();
-        loadUserList();
-        loadEmailRequests();
-        loadSavedPreferences();
+    NOTIF_KEYS.forEach(key => {
+        const el = document.getElementById('notif-' + key);
+        if (el) prefs[key] = el.checked;
     });
-</script>
+
+    const { error } = await db
+        .from('notification_preferences')
+        .upsert(prefs, { onConflict: 'user_id' });
+
+    if (error) {
+        toast('Failed to save notifications: ' + error.message, 'error');
+    } else {
+        toast('Notification preferences saved!');
+    }
+}
+
+async function loadTelemetry(userId) {
+    const { data, error } = await db
+        .from('telemetry')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(1);
+
+    const row = data?.[0];
+
+    const tileGrid = document.getElementById('tileGrid');
+    const mats = [{ id: '01', health: 98 }];
+
+    tileGrid.innerHTML = '';
+    mats.forEach(mat => {
+        tileGrid.innerHTML += `
+            <div class="status-card">
+                <div class="sc-label">Mat ${mat.id}</div>
+                <div class="sc-val">${mat.health}%</div>
+                <div class="sc-status">
+                    <span class="dot-good"></span>
+                    <span style="color:var(--success);font-size:0.7rem;font-weight:600;">Optimal</span>
+                </div>
+                <div class="prog-bar">
+                    <div class="prog-fill-good" style="width:${mat.health}%"></div>
+                </div>
+            </div>`;
+    });
+
+    document.getElementById('tileWarning').style.display = 'none';
+
+    document.getElementById('matHealthBar').style.width = '98%';
+    document.getElementById('matHealthPct').textContent = '98.0%';
+
+    const batt = row?.battery_pct ?? 88;
+    const voltage = row?.voltage ?? 12.6;
+    const chargeRate = row?.charge_rate ?? 2.4;
+    const battHealth = row?.battery_health ?? 94;
+    const cycles = row?.cycle_count ?? 142;
+
+    document.getElementById('batteryPct').textContent = batt + '%';
+    document.getElementById('battVoltage').textContent = voltage + 'V';
+    document.getElementById('battChargeRate').textContent = chargeRate + 'A';
+    document.getElementById('battHealth').textContent = battHealth + '%';
+    document.getElementById('battCycles').textContent = cycles;
+    document.getElementById('battEOL').textContent = 'EOL: ' + (row?.battery_eol || 'Oct 2028');
+
+    const offset = 314 - (batt / 100) * 314;
+    document.getElementById('batteryRing').setAttribute('stroke-dashoffset', offset);
+
+    const battStatus = document.getElementById('batteryStatus');
+    if (batt < 20) {
+        battStatus.innerHTML = '<span style="font-size:0.8rem;font-weight:600;color:var(--danger);">Battery low — charge soon</span>';
+    } else {
+        battStatus.innerHTML = '<span style="font-size:0.8rem;font-weight:600;color:var(--success);">Battery in excellent condition</span>';
+    }
+}
+
+async function loadActionLog(userId) {
+    const { data, error } = await db
+        .from('action_log')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(8);
+
+    const logEl = document.getElementById('actionLog');
+
+    if (error || !data || data.length === 0) {
+        logEl.innerHTML = `
+            <div class="log-entry" style="border-left-color:var(--success);">
+                <div class="log-title">Recalibration Completed</div>
+                <div class="log-meta">Mar 29 · 09:30 AM · by USR</div>
+            </div>
+            <div class="log-entry">
+                <div class="log-title">System Restart</div>
+                <div class="log-meta">Mar 30 · 02:03 PM · by ADMIN</div>
+            </div>`;
+        return;
+    }
+
+    const colorMap = { restart: 'var(--navy-dark)', recalibrate: 'var(--success)', gateway: '#94a3b8' };
+
+    logEl.innerHTML = data.map(entry => {
+        const dt = new Date(entry.created_at);
+        const dateStr = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' · ' +
+            dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        const color = colorMap[entry.action_type] || '#94a3b8';
+        return `
+            <div class="log-entry" style="border-left-color:${color};">
+                <div class="log-title">${entry.label || entry.action_type}</div>
+                <div class="log-meta">${dateStr} · by ${entry.triggered_by || 'USER'}</div>
+            </div>`;
+    }).join('');
+
+    const lastRestart = data.find(e => e.action_type === 'restart');
+    const lastRecal   = data.find(e => e.action_type === 'recalibrate');
+
+    if (lastRestart) {
+        const d = new Date(lastRestart.created_at);
+        document.getElementById('lastRestart').textContent =
+            d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' · ' +
+            d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    }
+    if (lastRecal) {
+        const d = new Date(lastRecal.created_at);
+        document.getElementById('lastRecal').textContent =
+            d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' · ' +
+            d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    }
+}
+
+async function triggerAction(type) {
+    const labels  = { restart: 'System Restart', recalibrate: 'Sensor Recalibration' };
+    const details = {
+        restart:     'All sensors will re-initialize. Expect a 15–30s data gap.',
+        recalibrate: 'All tiles will be recalibrated to factory baseline accuracy.'
+    };
+
+    const confirmed = confirm(`Trigger ${labels[type]}?\n\n${details[type]}\n\nThis action will be logged.`);
+    if (!confirmed) return;
+
+    loading(true);
+
+    const { error } = await db.from('action_log').insert({
+        user_id:      currentUser.id,
+        action_type:  type,
+        label:        labels[type],
+        triggered_by: currentProfile?.mat_id || 'USER',
+    });
+
+    loading(false);
+
+    if (error) console.warn('action_log insert error:', error.message);
+
+    toast(`${labels[type]} command sent!`);
+    await loadActionLog(currentUser.id);
+}
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await db.auth.signOut();
+    window.location.href = 'login1.html';
+});
+
+init();
+    </script>
 </body>
 </html>
