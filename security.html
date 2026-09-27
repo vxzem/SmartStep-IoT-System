@@ -156,6 +156,19 @@
         .row-btn { padding: 5px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif; transition: 0.2s; border: 1px solid; }
         .row-btn-del { background: #fff1f2; color: #be123c; border-color: #fecdd3; }
         .row-btn-del:hover { background: #ffe4e6; }
+        .row-btn-accept { background: #d1fae5; color: #065f46; border-color: #a7f3d0; }
+        .row-btn-accept:hover { background: #bbf7d0; }
+        .row-btn-reject { background: #fff1f2; color: #be123c; border-color: #fecdd3; }
+        .row-btn-reject:hover { background: #ffe4e6; }
+
+        /* ── REQUEST ROW ── */
+        .request-row { display: flex; align-items: center; gap: 12px; padding: 12px 13px; background: var(--bg-slate); border: 1px solid var(--border); border-radius: 10px; }
+        .request-row-info { flex: 1; min-width: 0; }
+        .request-row-name { font-size: 0.84rem; font-weight: 600; color: var(--text-main); }
+        .request-row-emails { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-muted); margin-top: 3px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .request-row-emails .arrow { color: var(--gold); font-weight: 700; }
+        .request-row-time { font-size: 0.65rem; color: var(--text-muted); margin-top: 3px; }
+        .tab-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 17px; height: 17px; padding: 0 4px; background: var(--gold); color: var(--navy-dark); border-radius: 9px; font-size: 0.63rem; font-weight: 800; margin-left: 6px; font-family: 'JetBrains Mono', monospace; }
 
         /* Empty / loading */
         .empty-state { text-align: center; padding: 32px 16px; color: var(--text-muted); }
@@ -281,6 +294,7 @@
             <div class="prov-tabs">
                 <button class="prov-tab active" id="tab-btn-mats" onclick="switchProvTab('mats')">Mats</button>
                 <button class="prov-tab" id="tab-btn-users" onclick="switchProvTab('users')">Users</button>
+                <button class="prov-tab" id="tab-btn-requests" onclick="switchProvTab('requests')">User Requests<span class="tab-badge" id="reqBadge" style="display:none;"></span></button>
             </div>
 
             <!-- ══ MATS PANEL ══ -->
@@ -389,6 +403,17 @@
 
                 </div>
             </div>
+
+            <!-- ══ REQUESTS PANEL ══ -->
+            <div class="prov-panel" id="panel-requests">
+                <div class="user-list-header">
+                    <span class="user-list-title">Pending Email Change Requests</span>
+                    <span class="user-count" id="requestCount"></span>
+                </div>
+                <div class="user-list" id="requestList" style="max-height:460px;">
+                    <div class="spinner-row"><div class="spinner"></div></div>
+                </div>
+            </div>
         </section>
  
 
@@ -432,8 +457,10 @@
     function switchProvTab(tab) {
         document.getElementById('tab-btn-mats').classList.toggle('active', tab === 'mats');
         document.getElementById('tab-btn-users').classList.toggle('active', tab === 'users');
+        document.getElementById('tab-btn-requests').classList.toggle('active', tab === 'requests');
         document.getElementById('panel-mats').classList.toggle('active', tab === 'mats');
         document.getElementById('panel-users').classList.toggle('active', tab === 'users');
+        document.getElementById('panel-requests').classList.toggle('active', tab === 'requests');
     }
 
     // ── LOAD MAT LIST ──
@@ -627,6 +654,111 @@
         }).join('');
     }
 
+    // ── LOAD EMAIL CHANGE REQUESTS ──
+    async function loadEmailRequests() {
+        const list = document.getElementById('requestList');
+        list.innerHTML = '<div class="spinner-row"><div class="spinner"></div></div>';
+
+        const { data, error } = await _supabase
+            .from('email_change_requests')
+            .select('id, user_id, current_email, requested_email, status, created_at')
+            .eq('status', 'pending')
+            .order('created_at', { ascending: false });
+
+        const countEl = document.getElementById('requestCount');
+        const badge = document.getElementById('reqBadge');
+
+        if (error || !data?.length) {
+            list.innerHTML = '<div class="empty-state"><div class="empty-icon">—</div><p>No pending requests</p></div>';
+            countEl.textContent = '';
+            badge.style.display = 'none';
+            return;
+        }
+
+        countEl.textContent = `${data.length} pending`;
+        badge.textContent = data.length;
+        badge.style.display = 'inline-flex';
+
+        // Requests only store user_id — pull names from profiles in one extra query
+        const uids = [...new Set(data.map(r => r.user_id))];
+        const { data: profs } = await _supabase
+            .from('profiles')
+            .select('id, first_name, last_name')
+            .in('id', uids);
+        const nameById = new Map((profs || []).map(p => [p.id, `${p.first_name || ''} ${p.last_name || ''}`.trim() || 'Unknown user']));
+
+        list.innerHTML = data.map(r => {
+            const name = nameById.get(r.user_id) || 'Unknown user';
+            const when = r.created_at
+                ? new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })
+                : '—';
+            return `
+                <div class="request-row" id="reqrow-${r.id}">
+                    <div class="request-row-info">
+                        <div class="request-row-name">${name}</div>
+                        <div class="request-row-emails">${r.current_email} <span class="arrow">→</span> ${r.requested_email}</div>
+                        <div class="request-row-time">Requested ${when}</div>
+                    </div>
+                    <div class="user-row-actions">
+                        <button class="row-btn row-btn-accept" onclick="approveEmailChange('${r.id}', '${r.user_id}', '${r.requested_email}', '${name.replace(/'/g, "\\'")}')">Accept</button>
+                        <button class="row-btn row-btn-reject" onclick="rejectEmailChange('${r.id}', '${name.replace(/'/g, "\\'")}')">Reject</button>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    // ── APPROVE EMAIL CHANGE ──
+    // NOTE: actually changing a user's email in auth.users requires the Supabase
+    // Admin API (auth.admin.updateUserById), which needs the service_role key.
+    // That key must never be shipped to the browser, so this calls a Supabase
+    // Edge Function ('approve-email-change') that holds the service_role key
+    // server-side and performs the update. See the accompanying edge function
+    // file — it must be deployed for Accept to work.
+    async function approveEmailChange(requestId, uid, newEmail, name) {
+        if (!confirm(`Approve email change for ${name}?\n\n${newEmail} will become their new sign-in email.`)) return;
+
+        const row = document.getElementById(`reqrow-${requestId}`);
+        const btns = row?.querySelectorAll('button');
+        btns?.forEach(b => b.disabled = true);
+
+        try {
+            const { data: { session } } = await _supabase.auth.getSession();
+            const res = await fetch(`${SUPABASE_URL}/functions/v1/approve-email-change`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({ request_id: requestId, user_id: uid, new_email: newEmail }),
+            });
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.error || 'Approval failed.');
+
+            showToast(`${name}'s email updated to ${newEmail}.`, 'success');
+            if (row) { row.style.opacity = '0'; row.style.transition = 'opacity 0.25s'; setTimeout(() => loadEmailRequests(), 260); }
+        } catch (err) {
+            console.error(err);
+            showToast('Failed to approve: ' + err.message, 'error');
+            btns?.forEach(b => b.disabled = false);
+        }
+    }
+
+    // ── REJECT EMAIL CHANGE ──
+    async function rejectEmailChange(requestId, name) {
+        if (!confirm(`Reject email change request from ${name}?`)) return;
+
+        const { error } = await _supabase
+            .from('email_change_requests')
+            .update({ status: 'rejected', reviewed_at: new Date().toISOString() })
+            .eq('id', requestId);
+
+        if (error) { showToast('Failed to reject: ' + error.message, 'error'); return; }
+
+        const row = document.getElementById(`reqrow-${requestId}`);
+        if (row) { row.style.opacity = '0'; row.style.transition = 'opacity 0.25s'; setTimeout(() => loadEmailRequests(), 260); }
+        showToast(`Request from ${name} rejected.`, 'warn');
+    }
+
     // ── REGISTER USER ──
     // Uses Supabase Admin invite flow: signUp creates the auth user,
     // then we upsert the profiles row with the extra fields.
@@ -718,19 +850,41 @@
     }
  
     // ── DELETE USER ──
+    // NOTE: like the email-approval flow, actually removing someone from
+    // auth.users requires the Supabase Admin API (auth.admin.deleteUser),
+    // which needs the service_role key — never exposed to the browser. This
+    // calls a 'delete-user' Edge Function that holds that key server-side.
     async function deleteUser(uid, name) {
-        if (!confirm(`Remove user "${name}" from SmartStep?\n\nThis will delete their profile. Their auth account may still exist.`)) return;
- 
-        const { error } = await _supabase.from('profiles').delete().eq('id', uid);
-        if (error) { showToast('Failed to remove user: ' + error.message, 'error'); return; }
- 
+        if (!confirm(`Remove user "${name}" from SmartStep?\n\nThis permanently deletes their profile AND their login (auth) account. This cannot be undone.`)) return;
+
         const row = document.getElementById(`urow-${uid}`);
-        if (row) {
-            row.style.opacity = '0';
-            row.style.transition = 'opacity 0.25s';
-            setTimeout(() => { row.remove(); loadUserList(); }, 260);
+        const btn = row?.querySelector('.row-btn-del');
+        if (btn) { btn.disabled = true; btn.textContent = 'Removing...'; }
+
+        try {
+            const { data: { session } } = await _supabase.auth.getSession();
+            const res = await fetch(`${SUPABASE_URL}/functions/v1/delete-user`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({ user_id: uid }),
+            });
+            const result = await res.json();
+            if (!res.ok) throw new Error(result.error || 'Removal failed.');
+
+            if (row) {
+                row.style.opacity = '0';
+                row.style.transition = 'opacity 0.25s';
+                setTimeout(() => { row.remove(); loadUserList(); }, 260);
+            }
+            showToast(`${name} removed.`, 'warn');
+        } catch (err) {
+            console.error(err);
+            showToast('Failed to remove user: ' + err.message, 'error');
+            if (btn) { btn.disabled = false; btn.textContent = 'Remove'; }
         }
-        showToast(`${name} removed.`, 'warn');
     }
  
     // ── CLOUD SYNC ──
@@ -823,6 +977,7 @@
         loadAdminProfile(session.user.id);
         loadMatList();
         loadUserList();
+        loadEmailRequests();
         loadSavedPreferences();
     });
 </script>
