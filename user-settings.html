@@ -139,7 +139,19 @@
     .log-entry .log-title { font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
     .log-entry .log-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); margin-top: 3px; }
 
-    /* DIALOG */
+    /* EMAIL REQUEST ROW */
+    .input-row { display: flex; align-items: stretch; gap: 8px; }
+    .input-row input { flex: 1; min-width: 0; }
+    .btn-sm { padding: 0 16px; font-size: 0.78rem; white-space: nowrap; flex-shrink: 0; }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(5,22,46,0.55); backdrop-filter: blur(2px); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+    .modal-overlay.show { opacity: 1; pointer-events: auto; }
+    .modal-box { background: var(--white); border-radius: 16px; padding: 26px; width: 380px; max-width: 90vw; box-shadow: 0 20px 50px rgba(5,22,46,0.35); transform: translateY(-10px) scale(0.97); transition: transform 0.2s ease; }
+    .modal-overlay.show .modal-box { transform: translateY(0) scale(1); }
+    .modal-title { font-family: 'Lexend', sans-serif; font-size: 1.05rem; color: var(--navy-dark); margin-bottom: 10px; }
+    .modal-body { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px; }
     #toast { position: fixed; bottom: 24px; right: 24px; background: var(--navy-dark); color: white; padding: 12px 20px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transform: translateY(80px); opacity: 0; transition: all 0.3s ease; z-index: 999; }
     #toast.show { transform: translateY(0); opacity: 1; }
     #toast.toast-success { border-left: 4px solid var(--success); }
@@ -152,6 +164,21 @@
 <body>
 
     <div id="toast"></div>
+
+    <div class="modal-overlay" id="emailChangeModal">
+        <div class="modal-box">
+            <div class="modal-title">Request Email Change</div>
+            <div class="modal-body">Your current email is <strong id="modalCurrentEmail">—</strong>. Enter the new address below — an admin will review and confirm the change.</div>
+            <div class="form-group" style="margin-bottom:0;">
+                <label>New Email Address</label>
+                <input type="email" id="inputNewEmail" placeholder="new@example.com">
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="closeEmailChangeModal()">Cancel</button>
+                <button class="btn btn-gold" id="submitEmailChangeBtn" onclick="submitEmailChangeRequest()">Submit Request</button>
+            </div>
+        </div>
+    </div>
 
     <aside class="sidebar">
         <div class="logo">SmartStep</div>
@@ -214,8 +241,11 @@
                     </div>
                     <div class="form-group">
                         <label>Email Address</label>
-                        <input type="email" id="inputEmail" placeholder="you@example.com" disabled>
-                        <span class="field-note">Email cannot be changed here. Contact admin.</span>
+                        <div class="input-row">
+                            <input type="email" id="inputEmail" placeholder="you@example.com" disabled>
+                            <button type="button" class="btn btn-outline btn-sm" id="requestEmailChangeBtn" onclick="openEmailChangeModal()">Request Change</button>
+                        </div>
+                        <span class="field-note">Email cannot be changed here. Submit a request for admin approval.</span>
                     </div>
                     <div class="save-row">
                         <button class="btn btn-outline" onclick="resetProfileForm()">Cancel</button>
@@ -436,6 +466,53 @@ function toast(msg, type = 'success') {
 }
 function loading(show) {
     // Loading overlay removed — kept as a no-op so existing calls don't break.
+}
+
+function openEmailChangeModal() {
+    document.getElementById('modalCurrentEmail').textContent = currentUser?.email || '—';
+    document.getElementById('inputNewEmail').value = '';
+    document.getElementById('emailChangeModal').classList.add('show');
+}
+
+function closeEmailChangeModal() {
+    document.getElementById('emailChangeModal').classList.remove('show');
+}
+
+async function submitEmailChangeRequest() {
+    const newEmail = document.getElementById('inputNewEmail').value.trim();
+
+    if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+        toast('Enter a valid email address', 'error');
+        return;
+    }
+    if (newEmail.toLowerCase() === (currentUser?.email || '').toLowerCase()) {
+        toast('That is already your current email', 'error');
+        return;
+    }
+
+    const btn = document.getElementById('submitEmailChangeBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    // Logged for admin review, rather than applied directly — email changes
+    // on this account require manual approval.
+    const { error } = await db.from('email_change_requests').insert({
+        user_id:        currentUser.id,
+        current_email:  currentUser.email,
+        requested_email: newEmail,
+        status:         'pending',
+    });
+
+    btn.disabled = false;
+    btn.textContent = 'Submit Request';
+
+    if (error) {
+        toast('Failed to submit request: ' + error.message, 'error');
+        return;
+    }
+
+    closeEmailChangeModal();
+    toast('Email change request submitted for review.');
 }
 
 document.querySelectorAll('.tab-btn').forEach(btn => {
