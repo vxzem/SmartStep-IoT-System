@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -1103,7 +1103,7 @@
 
         // Live Voltage Spike Jitter Simulation
         setInterval(() => {
-            const v = (17.5 + Math.random() * 2.8).toFixed(1);
+            const v = (17.5 + Math.random() * 2.8).toFixed(2);
             const el = document.getElementById('heroPulseVolt');
             if (el) el.textContent = `${v} V Spike`;
         }, 3200);

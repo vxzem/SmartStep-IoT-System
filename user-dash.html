@@ -126,9 +126,44 @@
     .usb-eta { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); }
     .metric-row.four { grid-template-columns: repeat(4, 1fr); }
     .usb-note { font-size: 0.7rem; color: var(--text-muted); line-height: 1.5; }
+
+  /* ── RESPONSIVE: MOBILE SIDEBAR ── */
+  .sidebar-toggle { display: none; position: fixed; top: 14px; left: 14px; z-index: 1100; background: var(--navy-dark); border: 1px solid var(--gold); color: var(--gold); width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 1.3rem; line-height: 1; }
+
+  @media (max-width: 1024px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .main-grid { grid-template-columns: 1fr; }
+    .main-content { padding: 24px 20px; }
+  }
+
+  @media (max-width: 768px) {
+    .sidebar { position: fixed; left: -260px; top: 0; height: 100vh; z-index: 1050; transition: left 0.3s ease; box-shadow: 4px 0 20px rgba(0,0,0,0.3); }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; align-items: center; justify-content: center; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1040; }
+    .sidebar-overlay.open { display: block; }
+    body { flex-direction: column; }
+    .main-content { width: 100%; height: 100vh; padding: 70px 16px 24px; }
+    .stats-row { grid-template-columns: 1fr; }
+    .top-header-row { flex-direction: column; gap: 12px; }
+    .right-header { flex-wrap: wrap; }
+    .selector-bar { flex-direction: column; align-items: stretch; gap: 10px; }
+    .mat-select { min-width: 100%; }
+    .user-badge { min-width: auto; }
+  }
+
+  @media (max-width: 480px) {
+    .main-content { padding: 65px 10px 16px; }
+    .card { padding: 16px; }
+    .stat-card { padding: 14px 16px; }
+    .stat-val { font-size: 1.4rem; }
+    .page-header-content h1 { font-size: 1.25rem; }
+  }
 </style>
 </head>
 <body>
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">&#9776;</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
     <aside class="sidebar">
         <div class="logo">SmartStep</div>
         <div class="nav-section">Main</div>
@@ -434,13 +469,13 @@ function applyTelemetry(row) {
     // Power Generation
     document.getElementById('steps-val').innerText = steps.toLocaleString();
     document.getElementById('harvest-v').innerHTML = `${harvestV.toFixed(2)}<span class="metric-unit"> V</span>`;
-    document.getElementById('harvest-ma').innerHTML = `${harvestMa.toFixed(1)}<span class="metric-unit"> mA</span>`;
-    document.getElementById('harvest-wh').innerHTML = `${harvestWh.toFixed(3)}<span class="metric-unit"> Wh</span>`;
+    document.getElementById('harvest-ma').innerHTML = `${harvestMa.toFixed(2)}<span class="metric-unit"> mA</span>`;
+    document.getElementById('harvest-wh').innerHTML = `${harvestWh.toFixed(2)}<span class="metric-unit"> Wh</span>`;
 
     // System Health
-    document.getElementById('consume-mw').innerHTML = `${consumeMw.toFixed(1)}<span class="metric-unit"> mW</span>`;
-    document.getElementById('consume-ma').innerHTML = `${consumeMa.toFixed(1)}<span class="metric-unit"> mA</span>`;
-    document.getElementById('consume-wh').innerHTML = `${consumeWh.toFixed(3)}<span class="metric-unit"> Wh</span>`;
+    document.getElementById('consume-mw').innerHTML = `${consumeMw.toFixed(2)}<span class="metric-unit"> mW</span>`;
+    document.getElementById('consume-ma').innerHTML = `${consumeMa.toFixed(2)}<span class="metric-unit"> mA</span>`;
+    document.getElementById('consume-wh').innerHTML = `${consumeWh.toFixed(2)}<span class="metric-unit"> Wh</span>`;
     document.getElementById('last-reading').innerText = row.created_at ? formatTimeAgo(row.created_at) : '—';
 
     // Battery / charge estimate
@@ -574,7 +609,7 @@ function updateBattery(totalWh, harvestMw, consumeMw, harvestMa, consumeMa, batt
     const ring = document.getElementById('ring-fill');
     ring.style.strokeDasharray = RING_CIRCUMFERENCE;
     ring.style.strokeDashoffset = offset;
-    document.getElementById('soc-pct').innerText = `${soc.toFixed(0)}%`;
+    document.getElementById('soc-pct').innerText = `${soc.toFixed(2)}%`;
 
     const bolt = document.getElementById('soc-bolt');
     const chip = document.getElementById('charge-chip');
@@ -609,7 +644,7 @@ function updateBattery(totalWh, harvestMw, consumeMw, harvestMa, consumeMa, batt
         headline.textContent = netW > 0.001
             ? `Charging · ${formatDuration(remainingWh / netW)} to full`
             : 'Charging';
-        sub.textContent = `Harvesting ${harvestMa.toFixed(1)} mA into the battery`;
+        sub.textContent = `Harvesting ${harvestMa.toFixed(2)} mA into the battery`;
     } else if (state === 'discharging') {
         const remainingWh = BATTERY_CAPACITY_WH * (soc / 100);
         ring.style.stroke = 'var(--danger)';
@@ -620,25 +655,25 @@ function updateBattery(totalWh, harvestMw, consumeMw, harvestMa, consumeMa, batt
         headline.textContent = netW < -0.001
             ? `${formatDuration(remainingWh / Math.abs(netW))} of runtime left`
             : 'Discharging';
-        sub.textContent = `Battery is supplying ${consumeMa.toFixed(1)} mA to the USB output`;
+        sub.textContent = `Battery is supplying ${consumeMa.toFixed(2)} mA to the USB output`;
     } else {
         ring.style.stroke = 'var(--gold)';
         bolt.classList.remove('charging');
         bolt.style.background = 'rgba(255,255,255,0.5)';
         chip.textContent = 'Idle';
         chip.className = 'status-chip chip-idle';
-        headline.textContent = `${soc.toFixed(0)}% · Idle`;
+        headline.textContent = `${soc.toFixed(2)}% · Idle`;
         sub.textContent = 'No current flowing in or out of the battery';
     }
 
     sub.textContent += usingVoltage ? ' · % from battery voltage' : ' · % estimated from energy count';
     document.getElementById('flow-batt').textContent = batteryV > 0 ? `${batteryV.toFixed(2)} V` : '—';
     // Health is only known once the mat has measured the battery's internal resistance (needs a USB load to be plugged in)
-    document.getElementById('flow-health').textContent = internalMohms > 0 ? `${sohPercent.toFixed(0)}% · ${internalMohms.toFixed(0)} mΩ` : 'Measuring…';
+    document.getElementById('flow-health').textContent = internalMohms > 0 ? `${sohPercent.toFixed(2)}% · ${internalMohms.toFixed(2)} mΩ` : 'Measuring…';
 
-    document.getElementById('flow-harvest').textContent = `${(harvestW * 1000).toFixed(0)} mW`;
-    document.getElementById('flow-load').textContent = `${(consumeW * 1000).toFixed(0)} mW`;
-    document.getElementById('flow-net').textContent = `${(instNetW * 1000).toFixed(0)} mW`;
+    document.getElementById('flow-harvest').textContent = `${(harvestW * 1000).toFixed(2)} mW`;
+    document.getElementById('flow-load').textContent = `${(consumeW * 1000).toFixed(2)} mW`;
+    document.getElementById('flow-net').textContent = `${(instNetW * 1000).toFixed(2)} mW`;
 }
 
 function formatDuration(hours) {
@@ -770,7 +805,7 @@ function renderUsb() {
 
     // Ring + percentage
     ring.style.strokeDashoffset = RING_CIRCUMFERENCE * (1 - pct / 100);
-    pctEl.textContent = `~${pct.toFixed(0)}%`;
+    pctEl.textContent = `~${pct.toFixed(2)}%`;
 
     if (usb.active) {
         ring.style.stroke = (pct >= 99.5 || nearlyFull) ? 'var(--gold)' : 'var(--success)';
@@ -778,20 +813,20 @@ function renderUsb() {
         chip.textContent = pct >= 99.5 ? 'Full' : 'Charging';
         chip.className = 'status-chip ' + (pct >= 99.5 ? 'chip-idle' : 'chip-charging');
         headline.textContent = eta ? `Charging device · ${eta}` : 'Charging device';
-        status.textContent = `Drawing ${usb.lastMa.toFixed(0)} mA from the main battery`;
+        status.textContent = `Drawing ${usb.lastMa.toFixed(2)} mA from the main battery`;
     } else {
         ring.style.stroke = 'var(--gold)';
         dot.classList.remove('charging');
         chip.textContent = 'Done'; chip.className = 'status-chip chip-idle';
-        headline.textContent = `Session ended · ~${pct.toFixed(0)}%`;
-        status.textContent = `Final estimate · ${usb.energyWh.toFixed(3)} Wh delivered`;
+        headline.textContent = `Session ended · ~${pct.toFixed(2)}%`;
+        status.textContent = `Final estimate · ${usb.energyWh.toFixed(2)} Wh delivered`;
     }
 
     const endT = usb.active ? (usb.lastT || usb.endT) : usb.endT;
     const secs = Math.max(0, Math.round((endT - usb.startT) / 1000));
-    document.getElementById('usb-ma').textContent = `${(usb.active ? usb.lastMa : 0).toFixed(0)} mA`;
-    document.getElementById('usb-mw').textContent = `${(toDevW * 1000).toFixed(0)} mW`;
-    document.getElementById('usb-wh').textContent = `${usb.energyWh.toFixed(3)} Wh`;
+    document.getElementById('usb-ma').textContent = `${(usb.active ? usb.lastMa : 0).toFixed(2)} mA`;
+    document.getElementById('usb-mw').textContent = `${(toDevW * 1000).toFixed(2)} mW`;
+    document.getElementById('usb-wh').textContent = `${usb.energyWh.toFixed(2)} Wh`;
     document.getElementById('usb-time').textContent = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
 }
 
@@ -805,6 +840,17 @@ function updateChart(harvestMw, consumeMw) {
 
 // --- 9. LOGOUT ---
 window.handleLogout = async () => { await _supabase.auth.signOut(); };
+</script>
+<script>
+(function(){
+  var tog = document.getElementById('sidebarToggle');
+  var sb = document.querySelector('.sidebar');
+  var ov = document.getElementById('sidebarOverlay');
+  if (tog && sb && ov) {
+    tog.addEventListener('click', function(){ sb.classList.toggle('open'); ov.classList.toggle('open'); });
+    ov.addEventListener('click', function(){ sb.classList.remove('open'); ov.classList.remove('open'); });
+  }
+})();
 </script>
 </body>
 </html>

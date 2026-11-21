@@ -26,7 +26,7 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', sans-serif; background: var(--bg-slate); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-  /* ── SIDEBAR ── */
+  /* -- SIDEBAR -- */
   .sidebar { width: 250px; background: var(--navy-dark); color: white; padding: 28px 18px; display: flex; flex-direction: column; flex-shrink: 0; }
   .logo { font-family: 'Lexend', sans-serif; color: var(--gold); font-size: 1.4rem; margin-bottom: 30px; }
   .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); margin: 18px 0 8px; padding: 0 5px; }
@@ -38,10 +38,10 @@
   .logout-btn:hover { color: var(--danger); background: rgba(239,68,68,0.08); }
   .node-info { font-family: 'JetBrains Mono', monospace; font-size: 0.63rem; opacity: 0.35; margin-top: 10px; padding: 0 5px; line-height: 1.5; }
 
-  /* ── MAIN ── */
+  /* -- MAIN -- */
   .main-content { flex: 1; overflow-y: auto; padding: 32px 36px; }
 
-  /* ── HEADER ── */
+  /* -- HEADER -- */
   .top-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; gap: 20px; }
   .page-header-content { flex: 1; }
   .page-header-content h1 { font-family: 'Lexend', sans-serif; font-size: 1.55rem; color: var(--navy-dark); margin: 0 0 4px 0; }
@@ -49,13 +49,13 @@
   .eyebrow { color: var(--gold); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
   .right-header { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 
-  /* ── USER BADGE ── */
+  /* -- USER BADGE -- */
   .user-badge { display: flex; align-items: center; gap: 10px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 8px 16px; min-width: 190px; }
   .avatar { width: 34px; height: 34px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--navy-dark); font-size: 0.85rem; flex-shrink: 0; }
   .user-name { font-size: 0.86rem; font-weight: 600; color: var(--navy-dark); line-height: 1.2; }
   .user-role { font-size: 0.68rem; color: var(--gold); font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
 
-  /* ── MAT SELECTOR BAR ── */
+  /* -- MAT SELECTOR BAR -- */
   .selector-bar { display: flex; align-items: center; gap: 16px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 14px 22px; margin-bottom: 24px; flex-wrap: wrap; }
   .selector-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
   .mat-select { padding: 9px 14px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--bg-slate); font-family: 'Inter', sans-serif; font-weight: 600; color: var(--navy-dark); cursor: pointer; font-size: 0.86rem; min-width: 220px; transition: 0.2s; }
@@ -64,18 +64,18 @@
   .last-sync { margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
   .sync-dot { width: 7px; height: 7px; background: var(--success); border-radius: 50%; }
 
-  /* ── CARDS ── */
+  /* -- CARDS -- */
   .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
   .card-title { font-size: 0.92rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 18px; display: flex; align-items: center; }
   .ct-right { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--text-muted); font-weight: 500; }
   .notif-filter-select { margin-left: 16px; padding: 5px 10px; border-radius: 7px; border: 1.5px solid var(--border); background: var(--bg-slate); font-family: 'Inter', sans-serif; font-weight: 600; color: var(--navy-dark); cursor: pointer; font-size: 0.75rem; transition: 0.2s; }
   .notif-filter-select:focus { outline: none; border-color: var(--navy-dark); background: var(--white); }
 
-  /* ── GRID LAYOUTS ── */
+  /* -- GRID LAYOUTS -- */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
   .full-col { margin-bottom: 18px; }
 
-  /* ── BUTTONS ── */
+  /* -- BUTTONS -- */
   .btn { padding: 11px 20px; border-radius: 8px; font-weight: 700; font-family: 'Inter', sans-serif; cursor: pointer; border: none; font-size: 0.85rem; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
   .btn:hover:not(:disabled) { transform: translateY(-1px); }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
@@ -85,17 +85,17 @@
   .btn-gold:hover:not(:disabled) { background: var(--gold-hover); }
   .btn-group { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
 
-  /* ── STATUS PILL ── */
+  /* -- STATUS PILL -- */
   .status-pill { display: inline-block; padding: 5px 12px; border-radius: 20px; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; font-weight: 700; background: var(--bg-slate); color: var(--navy-dark); border: 1px solid var(--border); }
 
-  /* ── FIRMWARE ACTION LOG ── */
+  /* -- FIRMWARE ACTION LOG -- */
   .action-log { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
   .log-item { padding: 12px; background: var(--bg-slate); border-radius: 10px; border-left: 3px solid var(--navy-dark); }
   .log-label { font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
   .log-meta { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); margin-top: 3px; }
   .log-time { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-muted); white-space: nowrap; }
 
-  /* ── BATTERY DIAGNOSTICS ── */
+  /* -- BATTERY DIAGNOSTICS -- */
   .diag-item { margin-bottom: 18px; }
   .diag-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; margin-bottom: 7px; }
   .diag-val { font-weight: 700; color: var(--text-main); }
@@ -106,7 +106,7 @@
   .fill-danger { background: var(--danger); }
   .tech-info { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
 
-  /* ── TILE VOLTAGE GRID ── */
+  /* -- TILE VOLTAGE GRID -- */
   .tile-v-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 18px; }
   .tile-v-item { background: var(--bg-slate); border: 1px solid var(--border); border-radius: 10px; padding: 12px; text-align: center; }
   .tile-v-name { font-size: 0.65rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
@@ -115,7 +115,7 @@
   .tile-v-val.danger { color: var(--danger); }
   .tile-v-status { font-size: 0.62rem; font-weight: 600; margin-top: 4px; }
 
-  /* ── NOTIFICATION PREFERENCES ── */
+  /* -- NOTIFICATION PREFERENCES -- */
   .notif-pref-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
   .notif-pref-item { display: flex; align-items: center; justify-content: space-between; background: var(--bg-slate); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
   .notif-pref-label { font-size: 0.78rem; font-weight: 500; color: var(--text-main); }
@@ -123,7 +123,7 @@
   .pref-on { background: #d1fae5; color: #065f46; }
   .pref-off { background: #f1f5f9; color: #94a3b8; }
 
-  /* ── NOTIFICATIONS INBOX ── */
+  /* -- NOTIFICATIONS INBOX -- */
   .notif-inbox { display: flex; flex-direction: column; gap: 8px; }
   .notif-item { display: flex; gap: 12px; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--white); align-items: flex-start; }
   .notif-item.unread { background: var(--gold-soft); border-color: rgba(229,193,88,0.4); }
@@ -138,27 +138,62 @@
   .tag-system { background: #f1f5f9; color: #475569; }
   .unread-dot { width: 8px; height: 8px; background: var(--gold); border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
 
-  /* ── THRESHOLDS ── */
+  /* -- THRESHOLDS -- */
   .threshold-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
   .slider-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
   .threshold-val { color: var(--gold); font-size: 0.9rem; font-family: 'JetBrains Mono', monospace; }
   .slider-desc { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px; }
   input[type=range] { width: 100%; accent-color: var(--navy-dark); cursor: pointer; }
 
-  /* ── EMPTY STATES ── */
+  /* -- EMPTY STATES -- */
   .empty-state { text-align: center; padding: 36px 20px; color: var(--text-muted); }
   .empty-state p { font-size: 0.85rem; }
 
-  /* ── TOAST ── */
+  /* -- TOAST -- */
   #toast { position: fixed; bottom: 24px; right: 24px; background: var(--navy-dark); color: white; padding: 12px 20px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transform: translateY(80px); opacity: 0; transition: all 0.3s ease; z-index: 999; }
   #toast.show { transform: translateY(0); opacity: 1; }
   #toast.toast-success { border-left: 4px solid var(--success); }
   #toast.toast-error { border-left: 4px solid var(--danger); }
+
+  /* ── RESPONSIVE: MOBILE SIDEBAR ── */
+  .sidebar-toggle { display: none; position: fixed; top: 14px; left: 14px; z-index: 1100; background: var(--navy-dark); border: 1px solid var(--gold); color: var(--gold); width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 1.3rem; line-height: 1; }
+
+  @media (max-width: 1024px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .main-grid { grid-template-columns: 1fr; }
+    .main-content { padding: 24px 20px; }
+  }
+
+  @media (max-width: 768px) {
+    .sidebar { position: fixed; left: -260px; top: 0; height: 100vh; z-index: 1050; transition: left 0.3s ease; box-shadow: 4px 0 20px rgba(0,0,0,0.3); }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; align-items: center; justify-content: center; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1040; }
+    .sidebar-overlay.open { display: block; }
+    body { flex-direction: column; }
+    .main-content { width: 100%; height: 100vh; padding: 70px 16px 24px; }
+    .stats-row { grid-template-columns: 1fr; }
+    .top-header-row { flex-direction: column; gap: 12px; }
+    .right-header { flex-wrap: wrap; }
+    .selector-bar { flex-direction: column; align-items: stretch; gap: 10px; }
+    .mat-select { min-width: 100%; }
+    .user-badge { min-width: auto; }
+  }
+
+  @media (max-width: 480px) {
+    .main-content { padding: 65px 10px 16px; }
+    .card { padding: 16px; }
+    .stat-card { padding: 14px 16px; }
+    .stat-val { font-size: 1.4rem; }
+    .page-header-content h1 { font-size: 1.25rem; }
+  }
 </style>
 </head>
 <body>
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">&#9776;</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<!-- ── SIDEBAR ── -->
+<!-- -- SIDEBAR -- -->
 <aside class="sidebar">
   <div class="logo">SmartStep</div>
   <div class="nav-section">Admin</div>
@@ -170,17 +205,17 @@
   </nav>
   <div class="sidebar-footer">
     <div class="logout-btn" id="logoutBtn">Sign Out</div>
-    <div class="node-info">Node: ESP8266-031<br>Ver: 1.3.0-PRO · Admin Mode</div>
+    <div class="node-info">Node: ESP32-031<br>Ver: 1.3.0-PRO � Admin Mode</div>
   </div>
 </aside>
 
-<!-- ── MAIN ── -->
+<!-- -- MAIN -- -->
 <main class="main-content">
 
   <!-- HEADER -->
   <div class="top-header-row">
     <div class="page-header-content">
-      <p class="eyebrow">Core Configuration · Section 3</p>
+      <p class="eyebrow">Core Configuration � Section 3</p>
       <h1>Hardware Control Center</h1>
       <p>Per-mat diagnostics, firmware control, and notification status</p>
     </div>
@@ -189,7 +224,7 @@
         <div class="avatar" id="adminAvatar">--</div>
         <div>
           <div class="user-name" id="adminName">Loading...</div>
-          <div class="user-role">ADMIN · ACTIVE</div>
+          <div class="user-role">ADMIN � ACTIVE</div>
         </div>
       </div>
     </div>
@@ -199,9 +234,9 @@
   <div class="selector-bar">
     <span class="selector-label">Monitoring:</span>
     <select class="mat-select" id="matSelector" onchange="onMatChange()">
-      <option value="">— Select a User —</option>
+      <option value="">� Select a User �</option>
     </select>
-    <span class="selected-meta" id="selectedMeta">User ID: —</span>
+    <span class="selected-meta" id="selectedMeta">User ID: �</span>
     <div class="last-sync" id="lastSyncWrap" style="display:none;">
       <span class="sync-dot"></span>
       <span id="lastSyncText">Synced just now</span>
@@ -215,10 +250,10 @@
     <div class="card">
       <div class="card-title">
         Firmware &amp; Operation
-        <span class="ct-right" id="fwVersion">Ver: —</span>
+        <span class="ct-right" id="fwVersion">Ver: �</span>
       </div>
       <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:18px;line-height:1.6;">
-        Execute remote hardware commands to the selected mat's ESP8266 controller. Actions are logged to the audit trail.
+        Execute remote hardware commands to the selected mat's ESP32 controller. Actions are logged to the audit trail.
       </p>
       <div class="btn-group">
         <button class="btn btn-navy" id="btnRestart" onclick="triggerAction('restart')" disabled>Remote Restart</button>
@@ -247,7 +282,7 @@
       <!-- Harvest voltage readings from telemetry -->
       <div id="tileVoltageSection" style="display:none;">
         <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:10px;margin-top:18px;border-top:1px solid var(--border);padding-top:14px;">
-          Harvest Voltage — Last 4 Readings
+          Harvest Voltage � Last 4 Readings
         </div>
         <div class="tile-v-grid" id="tileVoltageGrid"></div>
       </div>
@@ -272,7 +307,7 @@
           <option value="unread">Unread</option>
           <option value="read">Read</option>
         </select>
-        <span class="ct-right" id="notifCount">— notifications</span>
+        <span class="ct-right" id="notifCount">� notifications</span>
       </div>
       <div id="notifInbox">
         <div class="empty-state"><p>Select a mat to view its notifications</p></div>
@@ -334,7 +369,7 @@
 <div id="toast"></div>
 
 <script>
-  // ── SUPABASE ──
+  // -- SUPABASE --
   const SUPABASE_URL = "https://qvadzitiwgkhzlgjmdac.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YWR6aXRpd2draHpsZ2ptZGFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjkyNjAsImV4cCI6MjA5MjM0NTI2MH0.8COO3BlKQNgXMwo_GZUTIt-Kxs0WfhHJ2yrL3e9--9c";
   const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -343,7 +378,7 @@
   let currentUserName = '';
   let currentMatId = null;
 
-  // ── AUTH ──
+  // -- AUTH --
   _supabase.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_OUT' || !session) window.location.href = 'login.html';
   });
@@ -364,7 +399,7 @@
     await _supabase.auth.signOut();
   });
 
-  // ── LOAD USER LIST ──
+  // -- LOAD USER LIST --
   async function loadUserList() {
     const { data, error } = await _supabase
       .from('profiles')
@@ -374,17 +409,17 @@
 
     if (error) { console.error(error); return; }
     const sel = document.getElementById('matSelector');
-    sel.innerHTML = '<option value="">— Select a User —</option>';
+    sel.innerHTML = '<option value="">� Select a User �</option>';
     (data || []).forEach(u => {
       const opt = document.createElement('option');
       opt.value = u.id;
       opt.textContent = `${(u.first_name || '').trim()} ${(u.last_name || '').trim()}`.trim() || 'Unnamed User';
-      opt.dataset.matId = u.mat_id || '—';
+      opt.dataset.matId = u.mat_id || '�';
       sel.appendChild(opt);
     });
   }
 
-  // ── ON MAT CHANGE ──
+  // -- ON MAT CHANGE --
   async function onMatChange() {
     const sel = document.getElementById('matSelector');
     const uid = sel.value;
@@ -393,7 +428,7 @@
     const opt = sel.options[sel.selectedIndex];
     currentUserId = uid;
     currentUserName = opt.textContent;
-    const matId = opt.dataset.matId || '—';
+    const matId = opt.dataset.matId || '�';
     currentMatId = matId;
 
     document.getElementById('selectedMeta').textContent = `User ID: ${uid}`;
@@ -404,7 +439,7 @@
     // Enable firmware buttons
     document.getElementById('btnRestart').disabled = false;
     document.getElementById('btnRecal').disabled = false;
-    document.getElementById('fwStatusPill').innerHTML = `<span class="status-pill">Controller Online · ${matId}</span>`;
+    document.getElementById('fwStatusPill').innerHTML = `<span class="status-pill">Controller Online � ${matId}</span>`;
 
     await Promise.all([
       loadActionLog(uid),
@@ -418,11 +453,11 @@
     document.getElementById('lastSyncText').textContent = 'Synced just now';
   }
 
-  // ── RESET ──
+  // -- RESET --
   function resetAll() {
-    document.getElementById('selectedMeta').textContent = 'User ID: —';
+    document.getElementById('selectedMeta').textContent = 'User ID: �';
     document.getElementById('lastSyncWrap').style.display = 'none';
-    document.getElementById('fwVersion').textContent = 'Ver: —';
+    document.getElementById('fwVersion').textContent = 'Ver: �';
     document.getElementById('btnRestart').disabled = true;
     document.getElementById('btnRecal').disabled = true;
     document.getElementById('fwStatusPill').innerHTML = '<span class="status-pill">Select a mat to enable controls</span>';
@@ -431,13 +466,13 @@
     document.getElementById('tileVoltageSection').style.display = 'none';
     document.getElementById('notifStatusSection').style.display = 'none';
     document.getElementById('notifInbox').innerHTML = '<div class="empty-state"><p>Select a mat to view its notifications</p></div>';
-    document.getElementById('notifCount').textContent = '— notifications';
+    document.getElementById('notifCount').textContent = '� notifications';
     currentNotifications = [];
     document.getElementById('notifFilter').value = 'all';
     applyThresholdsToUI(THRESHOLD_DEFAULTS);
   }
 
-  // ── FIRMWARE TRIGGER (restart only — recalibration has its own flow below) ──
+  // -- FIRMWARE TRIGGER (restart only � recalibration has its own flow below) --
   async function triggerAction(type) {
     if (!currentUserId) return;
     const labels = { restart: 'System Restart' };
@@ -460,7 +495,7 @@
     }
   }
 
-  // ── RECALIBRATE SENSORS: resets mat_management_settings to factory defaults + logs it ──
+  // -- RECALIBRATE SENSORS: resets mat_management_settings to factory defaults + logs it --
   const THRESHOLD_DEFAULTS = {
     lvco_threshold: 3.00,
     high_v_alert: 4.20,
@@ -512,7 +547,7 @@
     const { error: logError } = await _supabase.from('action_log').insert({
       user_id: currentUserId,
       action_type: 'recalibration',
-      label: 'Sensor Recalibration — thresholds reset to factory defaults',
+      label: 'Sensor Recalibration � thresholds reset to factory defaults',
       triggered_by: document.getElementById('adminName').innerText || 'Admin',
     });
 
@@ -521,13 +556,13 @@
     if (logError) {
       showToast('Sensors reset, but failed to log action: ' + logError.message, 'error');
     } else {
-      showToast('Sensor recalibration complete — thresholds reset to defaults.', 'success');
+      showToast('Sensor recalibration complete � thresholds reset to defaults.', 'success');
     }
 
     await loadActionLog(currentUserId);
   }
 
-  // ── ACTION LOG ──
+  // -- ACTION LOG --
   async function loadActionLog(uid) {
     const adminName = document.getElementById('adminName').innerText || 'Admin';
 
@@ -556,13 +591,13 @@
         <div class="log-item" style="border-left-color:${color};">
           <div>
             <div class="log-label">${a.label}</div>
-            <div class="log-meta">${dateStr} · ${timeStr} · by ${a.triggered_by || 'Admin'}</div>
+            <div class="log-meta">${dateStr} � ${timeStr} � by ${a.triggered_by || 'Admin'}</div>
           </div>
         </div>`;
     }).join('');
   }
 
-  // ── BATTERY DIAGNOSTICS ──
+  // -- BATTERY DIAGNOSTICS --
   async function loadBatteryDiagnostics(matId) {
     // Pull latest telemetry reading for this mat
     const { data: tel } = await _supabase
@@ -582,24 +617,24 @@
     const section = document.getElementById('batterySection');
     section.innerHTML = `
       <div class="diag-item">
-        <div class="diag-label">Battery Health Index <span class="diag-val">${healthPct !== null ? healthPct.toFixed(0) + '%' : '—'}</span></div>
+        <div class="diag-label">Battery Health Index <span class="diag-val">${healthPct !== null ? healthPct.toFixed(2) + '%' : '�'}</span></div>
         <div class="diag-bar"><div class="diag-fill ${healthPct >= 80 ? 'fill-good' : healthPct >= 60 ? 'fill-warn' : 'fill-danger'}" style="width:${healthPct ?? 0}%"></div></div>
         <div class="tech-info">Derived from cumulative energy output</div>
       </div>
       <div class="diag-item">
-        <div class="diag-label">Total Energy Harvested <span class="diag-val">${totalWh !== null ? totalWh.toFixed(1) + ' Wh' : '—'}</span></div>
+        <div class="diag-label">Total Energy Harvested <span class="diag-val">${totalWh !== null ? totalWh.toFixed(2) + ' Wh' : '�'}</span></div>
         <div class="diag-bar"><div class="diag-fill fill-good" style="width:${totalWh !== null ? Math.min((totalWh / 10000) * 100, 100) : 0}%"></div></div>
         <div class="tech-info">Cumulative from all sessions</div>
       </div>
       <div class="diag-item">
-        <div class="diag-label">Total Steps Logged <span class="diag-val">${steps !== null ? steps.toLocaleString() : '—'}</span></div>
+        <div class="diag-label">Total Steps Logged <span class="diag-val">${steps !== null ? steps.toLocaleString() : '�'}</span></div>
         <div class="diag-bar"><div class="diag-fill fill-good" style="width:${steps !== null ? Math.min((steps / 50000) * 100, 100) : 0}%"></div></div>
         <div class="tech-info">Lifetime footfall count on this mat</div>
       </div>
     `;
   }
 
-  // ── VOLTAGE GRID FROM telemetry.harvest_v (last 4 readings) ──
+  // -- VOLTAGE GRID FROM telemetry.harvest_v (last 4 readings) --
   async function loadTileVoltages(matId) {
     const { data, error } = await _supabase
       .from('telemetry')
@@ -635,13 +670,13 @@
       return `
         <div class="tile-v-item">
           <div class="tile-v-name">${t.name}</div>
-          <div class="tile-v-val ${cls}">${v !== null ? v.toFixed(2) + 'V' : '—'}</div>
+          <div class="tile-v-val ${cls}">${v !== null ? v.toFixed(2) + 'V' : '�'}</div>
           <div class="tile-v-status" style="color:${color}">${label}</div>
         </div>`;
     }).join('');
   }
 
-  // ── NOTIFICATION PREFERENCES ──
+  // -- NOTIFICATION PREFERENCES --
   async function loadNotifPreferences(uid) {
     const { data, error } = await _supabase
       .from('notification_preferences')
@@ -676,13 +711,13 @@
       </div>`).join('');
   }
 
-  // ── NOTIFICATIONS INBOX ──
+  // -- NOTIFICATIONS INBOX --
   let currentNotifications = [];
 
   async function loadNotifications(matId) {
     const container = document.getElementById('notifInbox');
 
-    if (!matId || matId === '—') {
+    if (!matId || matId === '�') {
       currentNotifications = [];
       container.innerHTML = '<div class="empty-state"><p>No notifications found for this mat</p></div>';
       document.getElementById('notifCount').textContent = '0 notifications';
@@ -716,7 +751,7 @@
     const filter = document.getElementById('notifFilter').value;
 
     const unreadCount = currentNotifications.filter(n => !n.is_read).length;
-    document.getElementById('notifCount').textContent = `${currentNotifications.length} total · ${unreadCount} unread`;
+    document.getElementById('notifCount').textContent = `${currentNotifications.length} total � ${unreadCount} unread`;
 
     const data = currentNotifications.filter(n => {
       if (filter === 'unread') return !n.is_read;
@@ -733,7 +768,7 @@
 
     container.innerHTML = `<div class="notif-inbox">` + data.map(n => {
       const date = new Date(n.created_at);
-      const timeStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' · ' +
+      const timeStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' � ' +
         date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
       const type = n.type || 'info';
       return `
@@ -751,7 +786,7 @@
     }).join('') + `</div>`;
   }
 
-  // ── SAVE THRESHOLDS: persists to mat_management_settings + logs to action_log ──
+  // -- SAVE THRESHOLDS: persists to mat_management_settings + logs to action_log --
   async function saveThresholds() {
     if (!currentUserId || !currentMatId) return;
 
@@ -779,7 +814,7 @@
     const { error: logError } = await _supabase.from('action_log').insert({
       user_id: currentUserId,
       action_type: 'threshold_save',
-      label: `Thresholds saved — LVCO: ${lvco.toFixed(2)}V, HV: ${hv.toFixed(2)}V, Sensor: ${sensor.toFixed(2)}, Parasitic: ${parasitic}mA`,
+      label: `Thresholds saved � LVCO: ${lvco.toFixed(2)}V, HV: ${hv.toFixed(2)}V, Sensor: ${sensor.toFixed(2)}, Parasitic: ${parasitic}mA`,
       triggered_by: document.getElementById('adminName').innerText || 'Admin',
     });
 
@@ -792,7 +827,7 @@
     await loadActionLog(currentUserId);
   }
 
-  // ── TOAST ──
+  // -- TOAST --
   function showToast(msg, type = 'success') {
     const t = document.getElementById('toast');
     t.textContent = msg;
@@ -800,13 +835,24 @@
     setTimeout(() => { t.className = ''; }, 3200);
   }
 
-  // ── INIT ──
+  // -- INIT --
   window.addEventListener('load', async () => {
     const { data: { session } } = await _supabase.auth.getSession();
     if (!session) { window.location.href = 'login.html'; return; }
     loadAdminProfile(session.user.id);
     loadUserList();
   });
+</script>
+<script>
+(function(){
+  var tog = document.getElementById('sidebarToggle');
+  var sb = document.querySelector('.sidebar');
+  var ov = document.getElementById('sidebarOverlay');
+  if (tog && sb && ov) {
+    tog.addEventListener('click', function(){ sb.classList.toggle('open'); ov.classList.toggle('open'); });
+    ov.addEventListener('click', function(){ sb.classList.remove('open'); ov.classList.remove('open'); });
+  }
+})();
 </script>
 </body>
 </html>

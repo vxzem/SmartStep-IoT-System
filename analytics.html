@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>SmartStep · Energy Analytics</title>
+<title>SmartStep � Energy Analytics</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lexend:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -26,7 +26,7 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Inter', sans-serif; background: var(--bg-slate); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-  /* ── SIDEBAR ── */
+  /* -- SIDEBAR -- */
   .sidebar { width: 250px; background: var(--navy-dark); color: white; padding: 28px 18px; display: flex; flex-direction: column; flex-shrink: 0; }
   .logo { font-family: 'Lexend', sans-serif; color: var(--gold); font-size: 1.4rem; margin-bottom: 30px; }
   .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); margin: 18px 0 8px; padding: 0 5px; }
@@ -38,10 +38,10 @@
   .logout-btn:hover { color: var(--danger); background: rgba(239,68,68,0.08); }
   .node-info { font-family: 'JetBrains Mono', monospace; font-size: 0.63rem; opacity: 0.35; margin-top: 10px; padding: 0 5px; line-height: 1.5; }
 
-  /* ── MAIN ── */
+  /* -- MAIN -- */
   .main-content { flex: 1; overflow-y: auto; padding: 32px 36px; }
 
-  /* ── HEADER ── */
+  /* -- HEADER -- */
   .top-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; gap: 20px; }
   .page-header-content { flex: 1; }
   .page-header-content h1 { font-family: 'Lexend', sans-serif; font-size: 1.55rem; color: var(--navy-dark); margin: 0 0 4px 0; }
@@ -49,17 +49,17 @@
   .eyebrow { color: var(--gold); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
   .right-header { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 
-  /* ── LIVE PILL ── */
+  /* -- LIVE PILL -- */
   .live-pill { display: flex; align-items: center; gap: 7px; background: var(--white); border: 1px solid var(--border); padding: 8px 16px; border-radius: 12px; font-size: 0.78rem; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
   .live-dot { width: 7px; height: 7px; background: var(--success); border-radius: 50%; }
 
-  /* ── USER BADGE ── */
+  /* -- USER BADGE -- */
   .user-badge { display: flex; align-items: center; gap: 10px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 8px 16px; min-width: 190px; }
   .avatar { width: 34px; height: 34px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--navy-dark); font-size: 0.85rem; flex-shrink: 0; }
   .user-name { font-size: 0.86rem; font-weight: 600; color: var(--navy-dark); line-height: 1.2; }
   .user-role { font-size: 0.68rem; color: var(--gold); font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
 
-  /* ── SELECTOR BAR ── */
+  /* -- SELECTOR BAR -- */
   .selector-bar { display: flex; align-items: center; gap: 16px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 14px 22px; margin-bottom: 24px; flex-wrap: wrap; }
   .selector-label { font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
   .mat-select, .control-select { padding: 9px 14px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--bg-slate); font-family: 'Inter', sans-serif; font-weight: 600; color: var(--navy-dark); cursor: pointer; font-size: 0.86rem; transition: 0.2s; }
@@ -73,26 +73,26 @@
   .selector-status.visible { display: flex; }
   .selector-status-dot { width: 7px; height: 7px; background: var(--success); border-radius: 50%; }
 
-  /* ── MAIN GRID ── */
+  /* -- MAIN GRID -- */
   .main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; }
 
-  /* ── CARD ── */
+  /* -- CARD -- */
   .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
   .card-title { font-size: 0.92rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 18px; display: flex; align-items: center; }
   .card-subtitle { margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--text-muted); font-weight: 500; }
 
-  /* ── CHART ── */
+  /* -- CHART -- */
   .chart-wrap { position: relative; height: 240px; }
   .chart-wrap.tall { height: 280px; }
 
-  /* ── PEAK STATS ── */
+  /* -- PEAK STATS -- */
   .peak-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .peak-box { background: var(--bg-slate); padding: 16px; border-radius: 10px; }
   .peak-label { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
   .peak-value { font-family: 'Lexend', sans-serif; font-size: 1.3rem; color: var(--navy-dark); line-height: 1; margin-bottom: 5px; }
   .peak-time { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-muted); }
 
-  /* ── REPORT ROWS ── */
+  /* -- REPORT ROWS -- */
   .report-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--border); }
   .report-row:last-child { border: none; }
   .report-label { font-size: 0.82rem; font-weight: 500; color: var(--text-main); }
@@ -100,14 +100,49 @@
   .efficiency-bar { height: 6px; background: #e2e8f0; border-radius: 3px; margin-top: 10px; overflow: hidden; }
   .efficiency-fill { height: 100%; border-radius: 3px; background: var(--gold); transition: width 0.6s ease; }
 
-  /* ── NO DATA ── */
+  /* -- NO DATA -- */
   .no-data { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.85rem; }
   .no-data-icon { font-size: 2rem; margin-bottom: 8px; opacity: 0.4; }
+
+  /* ── RESPONSIVE: MOBILE SIDEBAR ── */
+  .sidebar-toggle { display: none; position: fixed; top: 14px; left: 14px; z-index: 1100; background: var(--navy-dark); border: 1px solid var(--gold); color: var(--gold); width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 1.3rem; line-height: 1; }
+
+  @media (max-width: 1024px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .main-grid { grid-template-columns: 1fr; }
+    .main-content { padding: 24px 20px; }
+  }
+
+  @media (max-width: 768px) {
+    .sidebar { position: fixed; left: -260px; top: 0; height: 100vh; z-index: 1050; transition: left 0.3s ease; box-shadow: 4px 0 20px rgba(0,0,0,0.3); }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; align-items: center; justify-content: center; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1040; }
+    .sidebar-overlay.open { display: block; }
+    body { flex-direction: column; }
+    .main-content { width: 100%; height: 100vh; padding: 70px 16px 24px; }
+    .stats-row { grid-template-columns: 1fr; }
+    .top-header-row { flex-direction: column; gap: 12px; }
+    .right-header { flex-wrap: wrap; }
+    .selector-bar { flex-direction: column; align-items: stretch; gap: 10px; }
+    .mat-select { min-width: 100%; }
+    .user-badge { min-width: auto; }
+  }
+
+  @media (max-width: 480px) {
+    .main-content { padding: 65px 10px 16px; }
+    .card { padding: 16px; }
+    .stat-card { padding: 14px 16px; }
+    .stat-val { font-size: 1.4rem; }
+    .page-header-content h1 { font-size: 1.25rem; }
+  }
 </style>
 </head>
 <body>
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">&#9776;</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<!-- ── SIDEBAR ── -->
+<!-- -- SIDEBAR -- -->
 <aside class="sidebar">
   <div class="logo">SmartStep</div>
   <div class="nav-section">Admin</div>
@@ -119,29 +154,29 @@
   </nav>
   <div class="sidebar-footer">
     <div class="logout-btn" id="logoutBtn">Sign Out</div>
-    <div class="node-info">Node: ESP8266-031<br>Ver: 1.3.0-PRO · Admin Mode</div>
+    <div class="node-info">Node: ESP32-031<br>Ver: 1.3.0-PRO � Admin Mode</div>
   </div>
 </aside>
 
-<!-- ── MAIN ── -->
+<!-- -- MAIN -- -->
 <main class="main-content">
 
   <!-- HEADER -->
   <div class="top-header-row">
     <div class="page-header-content">
-      <p class="eyebrow">Administration Dashboard · Section 2</p>
+      <p class="eyebrow">Administration Dashboard � Section 2</p>
       <h1>Energy Analytics</h1>
       <p>Generation forecasts, peak performance, and consumption reports per user mat</p>
     </div>
     <div class="right-header">
       <div class="live-pill">
-        <div class="live-dot"></div> <span>Live · Auto-refresh 10s</span>
+        <div class="live-dot"></div> <span>Live � Auto-refresh 10s</span>
       </div>
       <div class="user-badge">
         <div class="avatar" id="adminAvatar">--</div>
         <div>
           <div class="user-name" id="adminName">Loading...</div>
-          <div class="user-role">ADMIN · ACTIVE</div>
+          <div class="user-role">ADMIN � ACTIVE</div>
         </div>
       </div>
     </div>
@@ -151,9 +186,9 @@
   <div class="selector-bar">
     <span class="selector-label">Monitoring:</span>
     <select class="mat-select" id="matSelector" onchange="onMatChange()">
-      <option value="">— Select a User —</option>
+      <option value="">� Select a User �</option>
     </select>
-    <span class="selected-uid" id="selectedUid">UID: —</span>
+    <span class="selected-uid" id="selectedUid">UID: �</span>
     <div class="selector-divider"></div>
     <div class="control-group">
       <span class="control-label">Period:</span>
@@ -192,13 +227,13 @@
         <div class="peak-stats">
           <div class="peak-box">
             <div class="peak-label">Peak Output</div>
-            <div class="peak-value" id="peakOutputValue">— mW</div>
-            <div class="peak-time" id="peakOutputTime">—</div>
+            <div class="peak-value" id="peakOutputValue">� mW</div>
+            <div class="peak-time" id="peakOutputTime">�</div>
           </div>
           <div class="peak-box">
             <div class="peak-label">Avg. Daily Harvest</div>
-            <div class="peak-value" id="avgDailyValue">— Wh</div>
-            <div class="peak-time" id="avgDailyLabel">—</div>
+            <div class="peak-value" id="avgDailyValue">� Wh</div>
+            <div class="peak-time" id="avgDailyLabel">�</div>
           </div>
         </div>
       </div>
@@ -208,19 +243,19 @@
         <div class="card-title">Consumption Report</div>
         <div class="report-row">
           <span class="report-label">Total Harvested</span>
-          <span class="report-data" id="totalHarvestedValue">— Wh</span>
+          <span class="report-data" id="totalHarvestedValue">� Wh</span>
         </div>
         <div class="report-row">
           <span class="report-label">Parasitic Draw</span>
-          <span class="report-data" id="parasiticDrawValue">— Wh</span>
+          <span class="report-data" id="parasiticDrawValue">� Wh</span>
         </div>
         <div class="report-row">
           <span class="report-label">Net Energy</span>
-          <span class="report-data" id="netEnergyValue">— Wh</span>
+          <span class="report-data" id="netEnergyValue">� Wh</span>
         </div>
         <div class="report-row">
           <span class="report-label">Efficiency</span>
-          <span class="report-data" id="efficiencyValue">—%</span>
+          <span class="report-data" id="efficiencyValue">�%</span>
         </div>
         <div class="efficiency-bar">
           <div class="efficiency-fill" id="efficiencyFill" style="width:0%"></div>
@@ -241,7 +276,7 @@
   let currentMatId  = null;
   let forecastChart = null;
 
-  // ── INIT ──
+  // -- INIT --
   async function init() {
     const { data: { session } } = await _supabase.auth.getSession();
     if (!session) { window.location.href = 'login.html'; return; }
@@ -251,7 +286,7 @@
     refreshDashboard();
   }
 
-  // ── AUTH GUARD ──
+  // -- AUTH GUARD --
   _supabase.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_OUT' || !session) window.location.href = 'login.html';
   });
@@ -276,12 +311,12 @@
     const { data, error } = await _supabase.from('profiles').select('id, first_name, last_name, mat_id').eq('role', 'user').order('first_name');
     if (error) { console.error(error); return; }
     const sel = document.getElementById('matSelector');
-    sel.innerHTML = '<option value="">— Select a User —</option>';
+    sel.innerHTML = '<option value="">� Select a User �</option>';
     (data || []).forEach(u => {
       const opt = document.createElement('option');
       opt.value = u.id;
       opt.textContent = `${(u.first_name || '').trim()} ${(u.last_name || '').trim()}`.trim() || 'Unnamed User';
-      opt.dataset.matId = u.mat_id || '—';
+      opt.dataset.matId = u.mat_id || '�';
       sel.appendChild(opt);
     });
   }
@@ -290,10 +325,10 @@
     const sel = document.getElementById('matSelector');
     currentUserId = sel.value;
     currentMatId  = currentUserId ? (sel.options[sel.selectedIndex].dataset.matId || null) : null;
-    if (currentMatId === '—') currentMatId = null;
+    if (currentMatId === '�') currentMatId = null;
     const userName = sel.options[sel.selectedIndex].text;
 
-    document.getElementById('selectedUid').textContent = currentUserId ? `UID: ${currentUserId.slice(0, 8)}...` : 'UID: —';
+    document.getElementById('selectedUid').textContent = currentUserId ? `UID: ${currentUserId.slice(0, 8)}...` : 'UID: �';
     document.getElementById('selectorStatus').classList.toggle('visible', !!currentUserId);
     document.getElementById('currentUserLabel').textContent = currentUserId
       ? `NODE CONTEXT: ${userName.toUpperCase()}`
@@ -302,7 +337,7 @@
     refreshDashboard();
   }
 
-  // ── PERIOD LOOKBACK WINDOWS (days) ──
+  // -- PERIOD LOOKBACK WINDOWS (days) --
   const PERIOD_DAYS = { daily: 1, weekly: 7, monthly: 28, quarterly: 90 };
 
   function getSinceIso(period) {
@@ -310,7 +345,7 @@
     return new Date(Date.now() - days * 24 * 3600 * 1000).toISOString();
   }
 
-  // ── FETCH REAL TELEMETRY ──
+  // -- FETCH REAL TELEMETRY --
   // Time-bucketing (the "heatmap") is derived entirely from telemetry.created_at.
   async function fetchTelemetry(matId, sinceIso) {
     let query = _supabase
@@ -325,7 +360,7 @@
     return data || [];
   }
 
-  // ── BUCKET ROWS BY TIME, KEYED OFF created_at ──
+  // -- BUCKET ROWS BY TIME, KEYED OFF created_at --
   function bucketRows(period, rows) {
     if (period === 'daily') {
       const labels = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'];
@@ -367,7 +402,7 @@
       return { labels, harvest, consume };
     }
 
-    // quarterly — bucket by real calendar month
+    // quarterly � bucket by real calendar month
     const now = new Date();
     const labels = [];
     const monthKeys = [];
@@ -389,7 +424,7 @@
     return { labels, harvest, consume };
   }
 
-  // ── PEAK / CONSUMPTION STATS FROM RAW ROWS ──
+  // -- PEAK / CONSUMPTION STATS FROM RAW ROWS --
   function computeStats(rows) {
     if (!rows.length) return null;
 
@@ -447,7 +482,7 @@
     });
   }
 
-  // ── MAIN REFRESH: pulls telemetry, buckets by time, updates chart + stat cards ──
+  // -- MAIN REFRESH: pulls telemetry, buckets by time, updates chart + stat cards --
   async function refreshDashboard() {
     const period = document.getElementById('periodSelector').value || 'weekly';
     const since = getSinceIso(period);
@@ -467,14 +502,14 @@
     const periodLabelMap = { daily: 'LAST 24H', weekly: 'THIS WEEK', monthly: 'LAST 4 WEEKS', quarterly: 'LAST 3 MONTHS' };
 
     if (!stats) {
-      document.getElementById('peakOutputValue').textContent = '— mW';
+      document.getElementById('peakOutputValue').textContent = '� mW';
       document.getElementById('peakOutputTime').textContent  = 'NO DATA';
-      document.getElementById('avgDailyValue').textContent   = '— Wh';
+      document.getElementById('avgDailyValue').textContent   = '� Wh';
       document.getElementById('avgDailyLabel').textContent   = periodLabelMap[period];
-      document.getElementById('totalHarvestedValue').textContent = '— Wh';
-      document.getElementById('parasiticDrawValue').textContent  = '— Wh';
-      document.getElementById('netEnergyValue').textContent      = '— Wh';
-      document.getElementById('efficiencyValue').textContent     = '—%';
+      document.getElementById('totalHarvestedValue').textContent = '� Wh';
+      document.getElementById('parasiticDrawValue').textContent  = '� Wh';
+      document.getElementById('netEnergyValue').textContent      = '� Wh';
+      document.getElementById('efficiencyValue').textContent     = '�%';
       document.getElementById('efficiencyFill').style.width      = '0%';
       return;
     }
@@ -495,6 +530,17 @@
   function updateCharts() { refreshDashboard(); }
 
   window.onload = init;
+</script>
+<script>
+(function(){
+  var tog = document.getElementById('sidebarToggle');
+  var sb = document.querySelector('.sidebar');
+  var ov = document.getElementById('sidebarOverlay');
+  if (tog && sb && ov) {
+    tog.addEventListener('click', function(){ sb.classList.toggle('open'); ov.classList.toggle('open'); });
+    ov.addEventListener('click', function(){ sb.classList.remove('open'); ov.classList.remove('open'); });
+  }
+})();
 </script>
 </body>
 </html>

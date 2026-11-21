@@ -26,7 +26,7 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background: var(--bg-slate); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-        /* ── SIDEBAR ── */
+        /* -- SIDEBAR -- */
         .sidebar { width: 250px; background: var(--navy-dark); color: white; padding: 28px 18px; display: flex; flex-direction: column; flex-shrink: 0; }
         .logo { font-family: 'Lexend', sans-serif; color: var(--gold); font-size: 1.4rem; margin-bottom: 30px; }
         .nav-section { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.3); margin: 18px 0 8px; padding: 0 5px; }
@@ -38,10 +38,10 @@
         .logout-btn:hover { color: var(--danger); background: rgba(239,68,68,0.08); }
         .node-info { font-family: 'JetBrains Mono', monospace; font-size: 0.63rem; opacity: 0.35; margin-top: 10px; padding: 0 5px; line-height: 1.5; }
 
-        /* ── MAIN ── */
+        /* -- MAIN -- */
         .main-content { flex: 1; overflow-y: auto; padding: 32px 36px; }
 
-        /* ── HEADER ── */
+        /* -- HEADER -- */
         .top-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; gap: 20px; }
         .page-header-content { flex: 1; }
         .page-header-content h1 { font-family: 'Lexend', sans-serif; font-size: 1.55rem; color: var(--navy-dark); margin: 0 0 4px 0; }
@@ -49,26 +49,26 @@
         .eyebrow { color: var(--gold); font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
         .right-header { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 
-        /* ── USER BADGE ── */
+        /* -- USER BADGE -- */
         .user-badge { display: flex; align-items: center; gap: 10px; background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 8px 16px; min-width: 190px; }
         .avatar { width: 34px; height: 34px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--navy-dark); font-size: 0.85rem; flex-shrink: 0; }
         .user-name { font-size: 0.86rem; font-weight: 600; color: var(--navy-dark); line-height: 1.2; }
         .user-role { font-size: 0.68rem; color: var(--gold); font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
 
-        /* ── SETTINGS CONTAINER ── */
+        /* -- SETTINGS CONTAINER -- */
         .settings-container { max-width: 960px; display: grid; grid-template-columns: 1fr; gap: 18px; }
 
-        /* ── CARD ── */
+        /* -- CARD -- */
         .card { background: var(--white); border: 1px solid var(--border); border-radius: 16px; padding: 22px; }
         .card-title { font-size: 0.92rem; font-weight: 700; color: var(--navy-dark); margin-bottom: 18px; }
 
-        /* ── SETTING ROW ── */
+        /* -- SETTING ROW -- */
         .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #f1f5f9; }
         .setting-row:last-child { border: none; }
         .setting-info h4 { font-size: 0.9rem; font-weight: 600; color: var(--navy-dark); margin-bottom: 3px; }
         .setting-info p { font-size: 0.78rem; color: var(--text-muted); }
 
-        /* ── TOGGLE ── */
+        /* -- TOGGLE -- */
         .switch { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #cbd5e1; transition: .3s; border-radius: 34px; }
@@ -76,7 +76,7 @@
         input:checked + .slider { background: var(--navy-dark); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* ── SELECT / BTN ── */
+        /* -- SELECT / BTN -- */
         select { padding: 9px 14px; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.84rem; border: 1.5px solid var(--border); color: var(--text-main); background: var(--white); cursor: pointer; outline: none; transition: border-color 0.2s; }
         select:focus { border-color: var(--gold); }
         .btn { padding: 10px 18px; border-radius: 8px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.84rem; cursor: pointer; border: none; transition: 0.2s; display: inline-flex; align-items: center; gap: 7px; }
@@ -89,17 +89,17 @@
         .btn-danger-soft { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
         .btn-danger-soft:hover:not(:disabled) { background: #ffe4e6; }
 
-        /* ── BACKUP GRID ── */
+        /* -- BACKUP GRID -- */
         .backup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
         .backup-option { border: 1px solid var(--border); padding: 18px; border-radius: 10px; text-align: center; transition: border-color 0.2s; }
         .backup-option:hover { border-color: var(--gold); }
         .backup-option h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; color: var(--navy-dark); }
         .backup-option p { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 14px; }
 
-        /* ── ADD USER SECTION ── */
+        /* -- ADD USER SECTION -- */
         .add-user-grid { display: grid; grid-template-columns: 380px 1fr; gap: 28px; }
 
-        /* ── PROVISIONING TABS ── */
+        /* -- PROVISIONING TABS -- */
         .prov-tabs { display: flex; gap: 6px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
         .prov-tab { padding: 10px 18px; font-size: 0.84rem; font-weight: 700; color: var(--text-muted); background: none; border: none; cursor: pointer; position: relative; top: 1px; border-bottom: 2px solid transparent; transition: 0.2s; font-family: 'Inter', sans-serif; }
         .prov-tab:hover { color: var(--navy-dark); }
@@ -107,7 +107,7 @@
         .prov-panel { display: none; }
         .prov-panel.active { display: block; }
 
-        /* ── MAT ROW ── */
+        /* -- MAT ROW -- */
         .mat-row { display: flex; align-items: center; gap: 12px; padding: 11px 13px; background: var(--bg-slate); border: 1px solid var(--border); border-radius: 10px; transition: border-color 0.2s; }
         .mat-row:hover { border-color: var(--gold); }
         .mat-row-icon { width: 34px; height: 34px; background: var(--navy-dark); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.62rem; color: var(--gold); flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
@@ -161,7 +161,7 @@
         .row-btn-reject { background: #fff1f2; color: #be123c; border-color: #fecdd3; }
         .row-btn-reject:hover { background: #ffe4e6; }
 
-        /* ── REQUEST ROW ── */
+        /* -- REQUEST ROW -- */
         .request-row { display: flex; align-items: center; gap: 12px; padding: 12px 13px; background: var(--bg-slate); border: 1px solid var(--border); border-radius: 10px; }
         .request-row-info { flex: 1; min-width: 0; }
         .request-row-name { font-size: 0.84rem; font-weight: 600; color: var(--text-main); }
@@ -178,7 +178,7 @@
         .spinner { width: 22px; height: 22px; border: 2.5px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.75s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ── TOAST ── */
+        /* -- TOAST -- */
         #toast { position: fixed; bottom: 24px; right: 24px; background: var(--navy-dark); color: white; padding: 12px 20px; border-radius: 10px; font-size: 0.84rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transform: translateY(80px); opacity: 0; transition: all 0.3s ease; z-index: 999; max-width: 340px; }
         #toast.show { transform: translateY(0); opacity: 1; }
         #toast.t-success { border-left: 4px solid var(--success); }
@@ -186,11 +186,46 @@
         #toast.t-warn { border-left: 4px solid var(--warning); }
 
         .save-row { display: flex; justify-content: flex-end; margin-top: 4px; }
-    </style>
+    
+  /* ── RESPONSIVE: MOBILE SIDEBAR ── */
+  .sidebar-toggle { display: none; position: fixed; top: 14px; left: 14px; z-index: 1100; background: var(--navy-dark); border: 1px solid var(--gold); color: var(--gold); width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 1.3rem; line-height: 1; }
+
+  @media (max-width: 1024px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .main-grid { grid-template-columns: 1fr; }
+    .main-content { padding: 24px 20px; }
+  }
+
+  @media (max-width: 768px) {
+    .sidebar { position: fixed; left: -260px; top: 0; height: 100vh; z-index: 1050; transition: left 0.3s ease; box-shadow: 4px 0 20px rgba(0,0,0,0.3); }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; align-items: center; justify-content: center; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1040; }
+    .sidebar-overlay.open { display: block; }
+    body { flex-direction: column; }
+    .main-content { width: 100%; height: 100vh; padding: 70px 16px 24px; }
+    .stats-row { grid-template-columns: 1fr; }
+    .top-header-row { flex-direction: column; gap: 12px; }
+    .right-header { flex-wrap: wrap; }
+    .selector-bar { flex-direction: column; align-items: stretch; gap: 10px; }
+    .mat-select { min-width: 100%; }
+    .user-badge { min-width: auto; }
+  }
+
+  @media (max-width: 480px) {
+    .main-content { padding: 65px 10px 16px; }
+    .card { padding: 16px; }
+    .stat-card { padding: 14px 16px; }
+    .stat-val { font-size: 1.4rem; }
+    .page-header-content h1 { font-size: 1.25rem; }
+  }
+</style>
 </head>
 <body>
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">&#9776;</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<!-- ── SIDEBAR ── -->
+<!-- -- SIDEBAR -- -->
 <aside class="sidebar">
     <div class="logo">SmartStep</div>
     <div class="nav-section">Admin</div>
@@ -202,17 +237,17 @@
     </nav>
     <div class="sidebar-footer">
         <div class="logout-btn" id="logoutBtn">Sign Out</div>
-        <div class="node-info">Node: ESP8266-031<br>Ver: 1.3.0-PRO · Admin Mode</div>
+        <div class="node-info">Node: ESP32-031<br>Ver: 1.3.0-PRO � Admin Mode</div>
     </div>
 </aside>
 
-<!-- ── MAIN ── -->
+<!-- -- MAIN -- -->
 <main class="main-content">
 
     <!-- HEADER -->
     <div class="top-header-row">
         <div class="page-header-content">
-            <p class="eyebrow">System Preference Configuration · Section 4</p>
+            <p class="eyebrow">System Preference Configuration � Section 4</p>
             <h1>Global System Preferences</h1>
             <p>UI settings, data management, and user provisioning</p>
         </div>
@@ -221,7 +256,7 @@
                 <div class="avatar" id="adminAvatar">--</div>
                 <div>
                     <div class="user-name" id="adminName">Loading...</div>
-                    <div class="user-role">ADMIN · ACTIVE</div>
+                    <div class="user-role">ADMIN � ACTIVE</div>
                 </div>
             </div>
         </div>
@@ -245,7 +280,7 @@
             <div class="setting-row">
                 <div class="setting-info">
                     <h4>Refresh Rate</h4>
-                    <p>How often the ESP8266 pushes data to this UI.</p>
+                    <p>How often the ESP32 pushes data to this UI.</p>
                 </div>
                 <select id="refreshSelect">
                     <option>Real-time (1s)</option>
@@ -297,7 +332,7 @@
                 <button class="prov-tab" id="tab-btn-requests" onclick="switchProvTab('requests')">User Requests<span class="tab-badge" id="reqBadge" style="display:none;"></span></button>
             </div>
 
-            <!-- ══ MATS PANEL ══ -->
+            <!-- -- MATS PANEL -- -->
             <div class="prov-panel active" id="panel-mats">
                 <div class="add-user-grid">
 
@@ -351,7 +386,7 @@
                 </div>
             </div>
 
-            <!-- ══ USERS PANEL ══ -->
+            <!-- -- USERS PANEL -- -->
             <div class="prov-panel" id="panel-users">
                 <div class="add-user-grid">
 
@@ -404,7 +439,7 @@
                 </div>
             </div>
 
-            <!-- ══ REQUESTS PANEL ══ -->
+            <!-- -- REQUESTS PANEL -- -->
             <div class="prov-panel" id="panel-requests">
                 <div class="user-list-header">
                     <span class="user-list-title">Pending Email Change Requests</span>
@@ -436,7 +471,7 @@
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF2YWR6aXRpd2draHpsZ2ptZGFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3NjkyNjAsImV4cCI6MjA5MjM0NTI2MH0.8COO3BlKQNgXMwo_GZUTIt-Kxs0WfhHJ2yrL3e9--9c";
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // ── AUTH ──
+    // -- AUTH --
     _supabase.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_OUT' || !session) window.location.href = 'login.html';
     });
@@ -453,7 +488,7 @@
         await _supabase.auth.signOut();
     });
 
-    // ── PROVISIONING TABS ──
+    // -- PROVISIONING TABS --
     function switchProvTab(tab) {
         document.getElementById('tab-btn-mats').classList.toggle('active', tab === 'mats');
         document.getElementById('tab-btn-users').classList.toggle('active', tab === 'users');
@@ -463,7 +498,7 @@
         document.getElementById('panel-requests').classList.toggle('active', tab === 'requests');
     }
 
-    // ── LOAD MAT LIST ──
+    // -- LOAD MAT LIST --
     async function loadMatList() {
         const list = document.getElementById('matList');
         list.innerHTML = '<div class="spinner-row"><div class="spinner"></div></div>';
@@ -482,7 +517,7 @@
         const countEl = document.getElementById('matCount');
 
         if (error || !data?.length) {
-            list.innerHTML = '<div class="empty-state"><div class="empty-icon">—</div><p>No mats provisioned yet</p></div>';
+            list.innerHTML = '<div class="empty-state"><div class="empty-icon">�</div><p>No mats provisioned yet</p></div>';
             countEl.textContent = '';
             populateMatDropdown([], assignedSet);
             populateExportFilter([]);
@@ -498,7 +533,7 @@
                     <div class="mat-row-icon">MAT</div>
                     <div class="mat-row-info">
                         <div class="mat-row-id">${m.mat_id}</div>
-                        <div class="mat-row-meta">Sensor ${m.sensor_threshold ?? '—'} · HV ${m.high_v_alert ?? '—'}V · LVCO ${m.lvco_threshold ?? '—'}V · Status: ${m.current_status ?? '—'}</div>
+                        <div class="mat-row-meta">Sensor ${m.sensor_threshold ?? '�'} � HV ${m.high_v_alert ?? '�'}V � LVCO ${m.lvco_threshold ?? '�'}V � Status: ${m.current_status ?? '�'}</div>
                     </div>
                     <span class="mat-row-status ${isAssigned ? 'status-active' : 'status-unassigned'}">${isAssigned ? 'Assigned' : 'Unassigned'}</span>
                     <div class="user-row-actions">
@@ -533,7 +568,7 @@
         sel.innerHTML = `<option value="">Select a mat...</option>${options}`;
     }
 
-    // ── PROVISION MAT ──
+    // -- PROVISION MAT --
     async function registerMat() {
         const matId = document.getElementById('mat-id').value.trim();
         const sensorInput = document.getElementById('mat-sensor-threshold');
@@ -546,7 +581,7 @@
         document.getElementById('mat-id').classList.remove('input-error');
         feedback.style.display = 'none';
 
-        // Mat ID is the only required field — everything else falls back to its DB default
+        // Mat ID is the only required field � everything else falls back to its DB default
         if (!matId) {
             document.getElementById('mat-id').classList.add('input-error');
             showFeedback('mat', 'error', 'Mat ID is required.');
@@ -596,7 +631,7 @@
         }
     }
 
-    // ── DELETE MAT ──
+    // -- DELETE MAT --
     async function deleteMat(matId) {
         if (!confirm(`Remove mat "${matId}" from SmartStep?\n\nThis cannot be undone.`)) return;
 
@@ -612,7 +647,7 @@
         showToast(`${matId} removed.`, 'warn');
     }
 
-    // ── LOAD USER LIST ──
+    // -- LOAD USER LIST --
     async function loadUserList() {
         const list = document.getElementById('userList');
         list.innerHTML = '<div class="spinner-row"><div class="spinner"></div></div>';
@@ -626,7 +661,7 @@
         const countEl = document.getElementById('userCount');
 
         if (error || !data?.length) {
-            list.innerHTML = '<div class="empty-state"><div class="empty-icon">—</div><p>No users registered yet</p></div>';
+            list.innerHTML = '<div class="empty-state"><div class="empty-icon">�</div><p>No users registered yet</p></div>';
             countEl.textContent = '';
             return;
         }
@@ -638,7 +673,7 @@
             const fullName = `${u.first_name || ''} ${u.last_name || ''}`.trim();
             const joined = u.created_at
                 ? new Date(u.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                : '—';
+                : '�';
             return `
                 <div class="user-row" id="urow-${u.id}">
                     <div class="user-row-avatar">${initials}</div>
@@ -646,7 +681,7 @@
                         <div class="user-row-name">${fullName}</div>
                         <div class="user-row-meta">Joined ${joined}</div>
                     </div>
-                    <span class="user-row-mat">${u.mat_id || '—'}</span>
+                    <span class="user-row-mat">${u.mat_id || '�'}</span>
                     <div class="user-row-actions">
                         <button class="row-btn row-btn-del" onclick="deleteUser('${u.id}', '${fullName}')">Remove</button>
                     </div>
@@ -654,7 +689,7 @@
         }).join('');
     }
 
-    // ── LOAD EMAIL CHANGE REQUESTS ──
+    // -- LOAD EMAIL CHANGE REQUESTS --
     async function loadEmailRequests() {
         const list = document.getElementById('requestList');
         list.innerHTML = '<div class="spinner-row"><div class="spinner"></div></div>';
@@ -669,7 +704,7 @@
         const badge = document.getElementById('reqBadge');
 
         if (error || !data?.length) {
-            list.innerHTML = '<div class="empty-state"><div class="empty-icon">—</div><p>No pending requests</p></div>';
+            list.innerHTML = '<div class="empty-state"><div class="empty-icon">�</div><p>No pending requests</p></div>';
             countEl.textContent = '';
             badge.style.display = 'none';
             return;
@@ -679,7 +714,7 @@
         badge.textContent = data.length;
         badge.style.display = 'inline-flex';
 
-        // Requests only store user_id — pull names from profiles in one extra query
+        // Requests only store user_id � pull names from profiles in one extra query
         const uids = [...new Set(data.map(r => r.user_id))];
         const { data: profs } = await _supabase
             .from('profiles')
@@ -691,12 +726,12 @@
             const name = nameById.get(r.user_id) || 'Unknown user';
             const when = r.created_at
                 ? new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })
-                : '—';
+                : '�';
             return `
                 <div class="request-row" id="reqrow-${r.id}">
                     <div class="request-row-info">
                         <div class="request-row-name">${name}</div>
-                        <div class="request-row-emails">${r.current_email} <span class="arrow">→</span> ${r.requested_email}</div>
+                        <div class="request-row-emails">${r.current_email} <span class="arrow">?</span> ${r.requested_email}</div>
                         <div class="request-row-time">Requested ${when}</div>
                     </div>
                     <div class="user-row-actions">
@@ -707,13 +742,13 @@
         }).join('');
     }
 
-    // ── APPROVE EMAIL CHANGE ──
+    // -- APPROVE EMAIL CHANGE --
     // NOTE: actually changing a user's email in auth.users requires the Supabase
     // Admin API (auth.admin.updateUserById), which needs the service_role key.
     // That key must never be shipped to the browser, so this calls a Supabase
     // Edge Function ('approve-email-change') that holds the service_role key
     // server-side and performs the update. See the accompanying edge function
-    // file — it must be deployed for Accept to work.
+    // file � it must be deployed for Accept to work.
     async function approveEmailChange(requestId, uid, newEmail, name) {
         if (!confirm(`Approve email change for ${name}?\n\n${newEmail} will become their new sign-in email.`)) return;
 
@@ -743,7 +778,7 @@
         }
     }
 
-    // ── REJECT EMAIL CHANGE ──
+    // -- REJECT EMAIL CHANGE --
     async function rejectEmailChange(requestId, name) {
         if (!confirm(`Reject email change request from ${name}?`)) return;
 
@@ -759,10 +794,10 @@
         showToast(`Request from ${name} rejected.`, 'warn');
     }
 
-    // ── REGISTER USER ──
+    // -- REGISTER USER --
     // Uses Supabase Admin invite flow: signUp creates the auth user,
     // then we upsert the profiles row with the extra fields.
-        // ── REGISTER USER ──
+        // -- REGISTER USER --
     // Uses Supabase Admin invite flow: signUp creates the auth user,
     // then we upsert the profiles row with the extra fields.
     async function registerUser() {
@@ -808,7 +843,7 @@
             if (authErr) throw authErr;
  
             const newUid = authData?.user?.id;
-            if (!newUid) throw new Error('User creation failed — no UID returned.');
+            if (!newUid) throw new Error('User creation failed � no UID returned.');
  
             // Step 2: Upsert profile row with all fields
             const { error: profileErr } = await _supabase.from('profiles').upsert({
@@ -821,7 +856,7 @@
  
             if (profileErr) throw profileErr;
  
-            // Mat assignment is tracked via profiles.mat_id (set above) — the
+            // Mat assignment is tracked via profiles.mat_id (set above) � the
             // mat_management_settings table itself has no per-user columns.
  
             // Success
@@ -849,10 +884,10 @@
         }
     }
  
-    // ── DELETE USER ──
+    // -- DELETE USER --
     // NOTE: like the email-approval flow, actually removing someone from
     // auth.users requires the Supabase Admin API (auth.admin.deleteUser),
-    // which needs the service_role key — never exposed to the browser. This
+    // which needs the service_role key � never exposed to the browser. This
     // calls a 'delete-user' Edge Function that holds that key server-side.
     async function deleteUser(uid, name) {
         if (!confirm(`Remove user "${name}" from SmartStep?\n\nThis permanently deletes their profile AND their login (auth) account. This cannot be undone.`)) return;
@@ -887,13 +922,13 @@
         }
     }
  
-    // ── CLOUD SYNC ──
+    // -- CLOUD SYNC --
     async function handleCloudSync() {
         showToast('Cloud sync initiated. Data is up to date.', 'success');
     }
 
 
-    // ── CSV EXPORT ──
+    // -- CSV EXPORT --
     async function handleExportCSV() {
         const filterEl = document.getElementById('export-mat-filter');
         const selectedMat = filterEl ? filterEl.value : 'all';
@@ -937,7 +972,7 @@
         showToast('CSV downloaded.', 'success');
     }
 
-    // ── SAVE PREFERENCES ──
+    // -- SAVE PREFERENCES --
     function saveAllPreferences() {
         const prefs = {
             units: document.getElementById('unitSelect').value,
@@ -955,7 +990,7 @@
         } catch {}
     }
 
-    // ── FEEDBACK / TOAST ──
+    // -- FEEDBACK / TOAST --
     function showFeedback(form, type, msg) {
         const el = document.getElementById(form === 'mat' ? 'matFeedback' : 'regFeedback');
         el.textContent = msg;
@@ -970,7 +1005,7 @@
         setTimeout(() => { t.className = ''; }, 3500);
     }
 
-    // ── INIT ──
+    // -- INIT --
     window.addEventListener('load', async () => {
         const { data: { session } } = await _supabase.auth.getSession();
         if (!session) { window.location.href = 'login.html'; return; }
@@ -980,6 +1015,17 @@
         loadEmailRequests();
         loadSavedPreferences();
     });
+</script>
+<script>
+(function(){
+  var tog = document.getElementById('sidebarToggle');
+  var sb = document.querySelector('.sidebar');
+  var ov = document.getElementById('sidebarOverlay');
+  if (tog && sb && ov) {
+    tog.addEventListener('click', function(){ sb.classList.toggle('open'); ov.classList.toggle('open'); });
+    ov.addEventListener('click', function(){ sb.classList.remove('open'); ov.classList.remove('open'); });
+  }
+})();
 </script>
 </body>
 </html>

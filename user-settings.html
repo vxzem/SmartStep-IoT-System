@@ -164,16 +164,51 @@
     #toast.toast-info { border-left: 4px solid var(--gold); }
 
 
+
+  /* ── RESPONSIVE: MOBILE SIDEBAR ── */
+  .sidebar-toggle { display: none; position: fixed; top: 14px; left: 14px; z-index: 1100; background: var(--navy-dark); border: 1px solid var(--gold); color: var(--gold); width: 40px; height: 40px; border-radius: 10px; cursor: pointer; font-size: 1.3rem; line-height: 1; }
+
+  @media (max-width: 1024px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .main-grid { grid-template-columns: 1fr; }
+    .main-content { padding: 24px 20px; }
+  }
+
+  @media (max-width: 768px) {
+    .sidebar { position: fixed; left: -260px; top: 0; height: 100vh; z-index: 1050; transition: left 0.3s ease; box-shadow: 4px 0 20px rgba(0,0,0,0.3); }
+    .sidebar.open { left: 0; }
+    .sidebar-toggle { display: flex; align-items: center; justify-content: center; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1040; }
+    .sidebar-overlay.open { display: block; }
+    body { flex-direction: column; }
+    .main-content { width: 100%; height: 100vh; padding: 70px 16px 24px; }
+    .stats-row { grid-template-columns: 1fr; }
+    .top-header-row { flex-direction: column; gap: 12px; }
+    .right-header { flex-wrap: wrap; }
+    .selector-bar { flex-direction: column; align-items: stretch; gap: 10px; }
+    .mat-select { min-width: 100%; }
+    .user-badge { min-width: auto; }
+  }
+
+  @media (max-width: 480px) {
+    .main-content { padding: 65px 10px 16px; }
+    .card { padding: 16px; }
+    .stat-card { padding: 14px 16px; }
+    .stat-val { font-size: 1.4rem; }
+    .page-header-content h1 { font-size: 1.25rem; }
+  }
 </style>
 </head>
 <body>
+<button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle Sidebar">&#9776;</button>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <div id="toast"></div>
 
     <div class="modal-overlay" id="emailChangeModal">
         <div class="modal-box">
             <div class="modal-title">Request Email Change</div>
-            <div class="modal-body">Your current email is <strong id="modalCurrentEmail">—</strong>. Enter the new address below — an admin will review and confirm the change.</div>
+            <div class="modal-body">Your current email is <strong id="modalCurrentEmail">�</strong>. Enter the new address below � an admin will review and confirm the change.</div>
             <div class="form-group" style="margin-bottom:0;">
                 <label>New Email Address</label>
                 <input type="email" id="inputNewEmail" placeholder="new@example.com">
@@ -194,7 +229,7 @@
         <a href="user-notif.html" class="nav-link">Notifications</a>
         <div class="sidebar-footer">
             <div class="logout-btn" id="logoutBtn">Sign Out</div>
-            <div class="node-info" id="nodeInfo">Node: —<br>Ver: 1.3.0-PRO · User Mode</div>
+            <div class="node-info" id="nodeInfo">Node: �<br>Ver: 1.3.0-PRO � User Mode</div>
         </div>
     </aside>
 
@@ -207,10 +242,10 @@
             </div>
             <div class="right-header">
                 <div class="user-badge">
-                    <div class="avatar" id="headerAvatar">…</div>
+                    <div class="avatar" id="headerAvatar">�</div>
                     <div>
                         <div class="user-name" id="headerName">Loading...</div>
-                        <div class="user-role">USER · ACTIVE</div>
+                        <div class="user-role">USER � ACTIVE</div>
                     </div>
                 </div>
             </div>
@@ -229,11 +264,11 @@
                 <div class="card">
                     <div class="card-title">Account & Profile</div>
                     <div class="profile-hero">
-                        <div class="profile-avatar" id="profileAvatar">…</div>
+                        <div class="profile-avatar" id="profileAvatar">�</div>
                         <div>
                             <div class="profile-name" id="profileFullName">Loading...</div>
-                            <div class="profile-email" id="profileEmail">—</div>
-                            <span class="profile-id" id="profileMatId">Mat ID: —</span>
+                            <div class="profile-email" id="profileEmail">�</div>
+                            <span class="profile-id" id="profileMatId">Mat ID: �</span>
                         </div>
                     </div>
                     <div class="form-group">
@@ -262,7 +297,7 @@
                     <div class="card-title">Password & Security</div>
                     <div class="form-group">
                         <label>Current Password</label>
-                        <div class="pw-field"><input type="password" id="inputCurrentPw" placeholder="••••••••"><button type="button" class="pw-toggle" onclick="togglePw('inputCurrentPw', this)" aria-label="Show password"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
+                        <div class="pw-field"><input type="password" id="inputCurrentPw" placeholder="��������"><button type="button" class="pw-toggle" onclick="togglePw('inputCurrentPw', this)" aria-label="Show password"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div>
                     </div>
                     <div class="form-group">
                         <label>New Password</label>
@@ -318,7 +353,7 @@
                             <label class="switch"><input type="checkbox" id="notif-mat"><span class="slider-sw"></span></label>
                         </div>
                         <div class="notif-row">
-                            <div class="notif-info"><h4>System Restart Notice</h4><p>Notify when ESP8266 restarts</p></div>
+                            <div class="notif-info"><h4>System Restart Notice</h4><p>Notify when ESP32 restarts</p></div>
                             <label class="switch"><input type="checkbox" id="notif-restart"><span class="slider-sw"></span></label>
                         </div>
                         <div class="notif-row">
@@ -362,7 +397,7 @@
                     <div class="status-grid" id="tileGrid"></div>
                     <div id="tileWarning" class="tile-warning-row" style="display:none;">
                         <p id="tileWarningTitle">Tile Warning</p>
-                        <p id="tileWarningText">—</p>
+                        <p id="tileWarningText">�</p>
                     </div>
                     <div class="health-row" style="margin-top:6px;">
                         <span class="health-key">Overall Mat Health</span>
@@ -370,7 +405,7 @@
                             <div style="flex:1;height:8px;background:#e2e8f0;border-radius:5px;overflow:hidden;">
                                 <div id="matHealthBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--success),var(--gold));border-radius:5px;transition:width 0.6s;"></div>
                             </div>
-                            <span id="matHealthPct" class="health-val">—</span>
+                            <span id="matHealthPct" class="health-val">�</span>
                         </div>
                     </div>
                 </div>
@@ -386,7 +421,7 @@
                                     stroke-linecap="round" transform="rotate(-90 60 60)" style="transition:stroke-dashoffset 0.8s;"/>
                             </svg>
                             <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
-                                <div id="batteryPct" style="font-family:'Lexend',sans-serif;font-size:1.3rem;color:var(--navy-dark);font-weight:700;">—</div>
+                                <div id="batteryPct" style="font-family:'Lexend',sans-serif;font-size:1.3rem;color:var(--navy-dark);font-weight:700;">�</div>
                                 <div style="font-size:0.63rem;color:var(--text-muted);">State of Charge</div>
                             </div>
                         </div>
@@ -394,23 +429,23 @@
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
                         <div class="status-card">
                             <div class="sc-label">Voltage</div>
-                            <div class="sc-val" id="battVoltage">—</div>
+                            <div class="sc-val" id="battVoltage">�</div>
                             <div class="sc-status"><span class="dot-good"></span><span style="color:var(--success);font-size:0.7rem;font-weight:600;">Nominal</span></div>
                         </div>
                         <div class="status-card">
                             <div class="sc-label">Charge Rate</div>
-                            <div class="sc-val" id="battChargeRate">—</div>
+                            <div class="sc-val" id="battChargeRate">�</div>
                             <div class="sc-status"><span class="dot-good"></span><span style="color:var(--success);font-size:0.7rem;font-weight:600;">Charging</span></div>
                         </div>
                         <div class="status-card">
                             <div class="sc-label">Health Index</div>
-                            <div class="sc-val" id="battHealth">—</div>
+                            <div class="sc-val" id="battHealth">�</div>
                             <div class="sc-status"><span class="dot-good"></span><span style="color:var(--success);font-size:0.7rem;font-weight:600;">Excellent</span></div>
                         </div>
                         <div class="status-card">
                             <div class="sc-label">Cycle Count</div>
-                            <div class="sc-val" id="battCycles">—</div>
-                            <div class="sc-status" style="font-size:0.68rem;color:var(--text-muted);" id="battEOL">EOL: —</div>
+                            <div class="sc-val" id="battCycles">�</div>
+                            <div class="sc-status" style="font-size:0.68rem;color:var(--text-muted);" id="battEOL">EOL: �</div>
                         </div>
                     </div>
                     <div id="batteryStatus" class="health-row" style="justify-content:center;">
@@ -426,7 +461,7 @@
                 <div class="card">
                     <div class="card-title">Firmware Control</div>
                     <p style="font-size:0.83rem;color:var(--text-muted);margin-bottom:18px;line-height:1.6;">
-                        Sends direct commands to the ESP8266 controller. May briefly interrupt live data.
+                        Sends direct commands to the ESP32 controller. May briefly interrupt live data.
                     </p>
                     <div class="fw-grid">
                         <button class="fw-btn fw-restart" onclick="triggerAction('restart')">System Restart</button>
@@ -437,8 +472,8 @@
                     </div>
                     <div class="fw-meta-row">
                         <div id="lastActionInfo">
-                            <strong>Last Restart:</strong> <span id="lastRestart">—</span><br>
-                            <strong>Last Recalibration:</strong> <span id="lastRecal">—</span>
+                            <strong>Last Restart:</strong> <span id="lastRestart">�</span><br>
+                            <strong>Last Recalibration:</strong> <span id="lastRecal">�</span>
                         </div>
                         <span class="ver-tag">Ver: 1.3.0-PRO</span>
                     </div>
@@ -470,11 +505,11 @@ function toast(msg, type = 'success') {
     setTimeout(() => { t.className = ''; }, 3200);
 }
 function loading(show) {
-    // Loading overlay removed — kept as a no-op so existing calls don't break.
+    // Loading overlay removed � kept as a no-op so existing calls don't break.
 }
 
 function openEmailChangeModal() {
-    document.getElementById('modalCurrentEmail').textContent = currentUser?.email || '—';
+    document.getElementById('modalCurrentEmail').textContent = currentUser?.email || '�';
     document.getElementById('inputNewEmail').value = '';
     document.getElementById('emailChangeModal').classList.add('show');
 }
@@ -499,7 +534,7 @@ async function submitEmailChangeRequest() {
     btn.disabled = true;
     btn.textContent = 'Submitting...';
 
-    // Logged for admin review, rather than applied directly — email changes
+    // Logged for admin review, rather than applied directly � email changes
     // on this account require manual approval.
     const { error } = await db.from('email_change_requests').insert({
         user_id:        currentUser.id,
@@ -570,7 +605,7 @@ async function loadProfile(user) {
     currentProfile = profile;
     const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'User';
     const initials = ((profile.first_name?.[0] || '') + (profile.last_name?.[0] || '')).toUpperCase() || '?';
-    const email = user.email || '—';
+    const email = user.email || '�';
 
     document.getElementById('headerAvatar').textContent = initials;
     document.getElementById('headerName').textContent = fullName;
@@ -578,7 +613,7 @@ async function loadProfile(user) {
     document.getElementById('profileFullName').textContent = fullName;
     document.getElementById('profileEmail').textContent = email;
     document.getElementById('profileMatId').textContent = `Mat ID: ${profile.mat_id || 'N/A'}`;
-    document.getElementById('nodeInfo').innerHTML = `Node: ${profile.mat_id || 'N/A'}<br>Ver: 1.3.0-PRO · User Mode`;
+    document.getElementById('nodeInfo').innerHTML = `Node: ${profile.mat_id || 'N/A'}<br>Ver: 1.3.0-PRO � User Mode`;
     document.getElementById('inputFirstName').value = profile.first_name || '';
     document.getElementById('inputLastName').value = profile.last_name || '';
     document.getElementById('inputEmail').value = email;
@@ -818,7 +853,7 @@ async function loadTelemetry(userId) {
 
     const battStatus = document.getElementById('batteryStatus');
     if (batt < 20) {
-        battStatus.innerHTML = '<span style="font-size:0.8rem;font-weight:600;color:var(--danger);">Battery low — charge soon</span>';
+        battStatus.innerHTML = '<span style="font-size:0.8rem;font-weight:600;color:var(--danger);">Battery low � charge soon</span>';
     } else {
         battStatus.innerHTML = '<span style="font-size:0.8rem;font-weight:600;color:var(--success);">Battery in excellent condition</span>';
     }
@@ -838,11 +873,11 @@ async function loadActionLog(userId) {
         logEl.innerHTML = `
             <div class="log-entry" style="border-left-color:var(--success);">
                 <div class="log-title">Recalibration Completed</div>
-                <div class="log-meta">Mar 29 · 09:30 AM · by USR</div>
+                <div class="log-meta">Mar 29 � 09:30 AM � by USR</div>
             </div>
             <div class="log-entry">
                 <div class="log-title">System Restart</div>
-                <div class="log-meta">Mar 30 · 02:03 PM · by ADMIN</div>
+                <div class="log-meta">Mar 30 � 02:03 PM � by ADMIN</div>
             </div>`;
         return;
     }
@@ -851,13 +886,13 @@ async function loadActionLog(userId) {
 
     logEl.innerHTML = data.map(entry => {
         const dt = new Date(entry.created_at);
-        const dateStr = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' · ' +
+        const dateStr = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' � ' +
             dt.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
         const color = colorMap[entry.action_type] || '#94a3b8';
         return `
             <div class="log-entry" style="border-left-color:${color};">
                 <div class="log-title">${entry.label || entry.action_type}</div>
-                <div class="log-meta">${dateStr} · by ${entry.triggered_by || 'USER'}</div>
+                <div class="log-meta">${dateStr} � by ${entry.triggered_by || 'USER'}</div>
             </div>`;
     }).join('');
 
@@ -867,13 +902,13 @@ async function loadActionLog(userId) {
     if (lastRestart) {
         const d = new Date(lastRestart.created_at);
         document.getElementById('lastRestart').textContent =
-            d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' · ' +
+            d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' � ' +
             d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     }
     if (lastRecal) {
         const d = new Date(lastRecal.created_at);
         document.getElementById('lastRecal').textContent =
-            d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' · ' +
+            d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' � ' +
             d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
     }
 }
@@ -881,7 +916,7 @@ async function loadActionLog(userId) {
 async function triggerAction(type) {
     const labels  = { restart: 'System Restart', recalibrate: 'Sensor Recalibration' };
     const details = {
-        restart:     'All sensors will re-initialize. Expect a 15–30s data gap.',
+        restart:     'All sensors will re-initialize. Expect a 15�30s data gap.',
         recalibrate: 'All tiles will be recalibrated to factory baseline accuracy.'
     };
 
@@ -912,5 +947,16 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
 
 init();
     </script>
+<script>
+(function(){
+  var tog = document.getElementById('sidebarToggle');
+  var sb = document.querySelector('.sidebar');
+  var ov = document.getElementById('sidebarOverlay');
+  if (tog && sb && ov) {
+    tog.addEventListener('click', function(){ sb.classList.toggle('open'); ov.classList.toggle('open'); });
+    ov.addEventListener('click', function(){ sb.classList.remove('open'); ov.classList.remove('open'); });
+  }
+})();
+</script>
 </body>
 </html>
