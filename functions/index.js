@@ -2,8 +2,8 @@ const { onValueWritten } = require("firebase-functions/v2/database");
 const { createClient } = require("@supabase/supabase-js");
 
 // Your specific Project Credentials
-const SUPABASE_URL = "https://qvadzitiwgkhzlgjmdac.supabase.co";
-const SUPABASE_SERVICE_ROLE_KEY = "sb_secret_isjfXA2dEgClZ322F-n8oA_MuJdfMVo"; 
+const SUPABASE_URL = process.env.SUPABASE_URL || "https://qvadzitiwgkhzlgjmdac.supabase.co";
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || ""; 
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
