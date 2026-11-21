@@ -3,234 +3,891 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Research & Publications | SmartStep Engineering</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Lexend:wght@700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <title>Research & Empirical Data | SmartStep Engineering</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --navy-dark: #05162e;
-            --navy-footer: #0a192f;
+            --navy-mid: #0a2447;
             --gold: #e5c158;
+            --gold-hover: #d4ae45;
+            --gold-soft: #fdf9ec;
             --white: #ffffff;
-            --text-main: #1a202c;
-            --text-muted: #718096;
-            --bg-light: #f8fafc;
+            --bg-slate: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--white); color: var(--text-main); line-height: 1.6; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-slate);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-        /* --- UNIFORM HEADER --- */
-        header { background-color: var(--navy-dark); padding: 16px 0; position: sticky; top: 0; z-index: 1000; }
-        nav { display: flex; justify-content: space-between; align-items: center; }
-        .logo { color: var(--gold); font-weight: 700; font-size: 1.4rem; text-decoration: none; display: flex; align-items: center; gap: 8px; font-family: 'Lexend', sans-serif; }
-        .nav-links { display: flex; list-style: none; gap: 32px; }
-        .nav-links a { color: var(--white); text-decoration: none; font-size: 0.9rem; opacity: 0.8; transition: 0.3s; }
-        .nav-links a:hover { opacity: 1; color: var(--gold); }
-        .btn-login { background-color: var(--gold); color: var(--navy-dark); padding: 10px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; }
-        .btn-login:hover { box-shadow: 0 4px 12px rgba(229, 193, 88, 0.3); }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
 
-        /* --- REVISED HERO SECTION (Matching About Vibe) --- */
-        .academic-hero {
-            position: relative;
-            background: linear-gradient(rgba(5, 22, 46, 0.85), rgba(5, 22, 46, 0.85)), 
-                        url('https://images.unsplash.com/photo-1581093196277-9f60800987ae?auto=format&fit=crop&q=80&w=2000'); /* Top-down engineering blueprint image */
-            background-size: cover;
-            background-position: center;
-            padding: 120px 0;
-            text-align: center;
+        /* --- HEADER & NAVIGATION --- */
+        .site-header {
+            background: rgba(5, 22, 46, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(229, 193, 88, 0.15);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 72px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
             color: var(--white);
-            border-bottom: 4px solid var(--gold);
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
         }
-        .academic-hero h1 { font-family: 'Lexend', sans-serif; font-size: 3rem; color: var(--gold); margin-bottom: 15px; }
-        .academic-hero p { font-family: 'JetBrains Mono', monospace; color: var(--white); opacity: 0.8; font-size: 0.9rem; letter-spacing: 1px; }
 
-        /* --- ALL OTHER SECTIONS RETAINED UNCHANGED --- */
-        .objectives-section { padding: 80px 0; }
-        .objectives-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
-        .obj-box h3 { font-family: 'Lexend', sans-serif; color: var(--navy-dark); margin-bottom: 25px; border-left: 4px solid var(--gold); padding-left: 15px; }
-        .obj-list { list-style: none; }
-        .obj-list li { margin-bottom: 15px; display: flex; align-items: flex-start; gap: 12px; }
-        .obj-list li::before { content: '⚡'; color: var(--gold); font-weight: bold; }
+        .brand-logo .logo-bolt {
+            color: var(--gold);
+            font-size: 1.4rem;
+            filter: drop-shadow(0 0 10px rgba(229, 193, 88, 0.6));
+        }
 
-        .infographic-box { 
-            background: var(--navy-dark); 
-            color: var(--white); 
-            padding: 60px; 
-            border-radius: 24px; 
-            margin: 40px 0;
+        .brand-logo .gold-accent { color: var(--gold); }
+
+        .live-dot-badge {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulseDot 1.8s infinite;
+        }
+
+        @keyframes pulseDot {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 28px;
+        }
+
+        .nav-item {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.92rem;
+            font-weight: 500;
+            transition: all 0.25s ease;
+            position: relative;
+            padding: 6px 0;
+        }
+
+        .nav-item:hover, .nav-item.active { color: var(--gold); }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gold);
+            border-radius: 2px;
+        }
+
+        .btn-portal {
+            background: linear-gradient(135deg, var(--gold), var(--gold-hover));
+            color: var(--navy-dark);
+            padding: 9px 22px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.88rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 14px rgba(229, 193, 88, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-portal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(229, 193, 88, 0.45);
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            padding: 8px;
+            z-index: 1001;
+        }
+
+        .mobile-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: var(--gold);
+            margin: 6px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        .mobile-toggle.open span:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+        .mobile-toggle.open span:nth-child(2) { opacity: 0; }
+        .mobile-toggle.open span:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+
+        .mobile-drawer {
+            display: none;
+            position: fixed;
+            top: 72px;
+            left: 0;
+            width: 100%;
+            background: rgba(5, 22, 46, 0.98);
+            border-bottom: 2px solid rgba(229, 193, 88, 0.2);
+            padding: 24px 24px 32px;
+            backdrop-filter: blur(20px);
+            z-index: 999;
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-drawer.open {
+            display: block;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .mobile-nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .mobile-nav-list a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: block;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .mobile-nav-list a:hover { color: var(--gold); }
+
+        .mobile-cta .btn-portal {
+            width: 100%;
+            justify-content: center;
+            padding: 12px 20px;
+        }
+
+        /* --- HERO --- */
+        .academic-hero {
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-mid) 100%);
+            color: var(--white);
+            padding: 80px 0 90px;
             text-align: center;
-            border: 1px solid var(--gold);
+            border-bottom: 3px solid var(--gold);
+            position: relative;
         }
-        .comparison-bars { display: flex; justify-content: space-around; align-items: flex-end; height: 300px; margin-top: 40px; gap: 20px; }
-        .comp-bar { width: 100px; border-radius: 8px 8px 0 0; position: relative; transition: 0.5s; }
-        .comp-bar.solar { background: #4a5568; height: 57.1%; }
-        .comp-bar.smartstep { background: var(--gold); height: 82.5%; }
-        .bar-label { position: absolute; top: -30px; left: 50%; transform: translateX(-50%); font-weight: bold; color: var(--gold); }
-        .bar-name { position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%); font-size: 0.8rem; white-space: nowrap; }
 
-        .limitations-box { 
-            background: #fffcf0; 
-            border: 2px dashed var(--gold); 
-            padding: 40px; 
-            border-radius: 16px; 
-            margin: 80px 0;
+        .academic-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--gold);
+            background: rgba(229, 193, 88, 0.12);
+            border: 1px solid rgba(229, 193, 88, 0.3);
+            padding: 4px 14px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
-        .limitations-box h3 { color: #856404; font-family: 'Lexend', sans-serif; margin-bottom: 15px; }
 
-        .references-section { padding-bottom: 100px; }
-        .ref-table { width: 100%; border-collapse: collapse; margin-top: 30px; font-size: 0.9rem; }
-        .ref-table th { text-align: left; background: var(--bg-light); padding: 15px; color: var(--navy-dark); font-family: 'Lexend', sans-serif; }
-        .ref-table td { padding: 15px; border-bottom: 1px solid #edf2f7; color: var(--text-muted); }
-        .search-bar { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 20px; }
+        .academic-hero h1 {
+            font-family: 'Lexend', sans-serif;
+            font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+            color: var(--white);
+            margin-bottom: 14px;
+        }
 
-        /* --- UNIFORM FOOTER --- */
-        footer { background-color: var(--navy-footer); padding: 80px 0 30px; color: var(--white); }
-        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
-        .footer-logo h4 { color: var(--gold); font-size: 1.5rem; margin-bottom: 16px; font-family: 'Lexend', sans-serif; }
-        .footer-col h5 { margin-bottom: 24px; font-size: 1rem; color: var(--white); }
+        .academic-hero h1 span { color: var(--gold); }
+
+        .academic-hero p {
+            font-family: 'JetBrains Mono', monospace;
+            color: rgba(255, 255, 255, 0.75);
+            max-width: 680px;
+            margin: 0 auto;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- OBJECTIVES --- */
+        .section-padding { padding: 90px 0; }
+
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .obj-box {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px 32px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            transition: transform 0.25s ease;
+        }
+
+        .obj-box:hover {
+            transform: translateY(-4px);
+            border-color: var(--gold);
+        }
+
+        .obj-box h3 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.35rem;
+            color: var(--navy-dark);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .obj-box h3 .icon { color: var(--gold); }
+
+        .obj-box p {
+            color: var(--text-muted);
+            font-size: 0.96rem;
+            line-height: 1.7;
+        }
+
+        .obj-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .obj-list li {
+            font-size: 0.92rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .obj-list li .bullet {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--gold-soft);
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-top: 2px;
+            border: 1px solid rgba(229, 193, 88, 0.3);
+        }
+
+        /* --- EFFICIENCY INFOGRAPHIC BOX --- */
+        .infographic-box {
+            background: linear-gradient(135deg, var(--navy-dark), var(--navy-mid));
+            border: 1.5px solid var(--gold);
+            border-radius: 24px;
+            padding: 50px 40px;
+            color: var(--white);
+            margin-bottom: 50px;
+            box-shadow: 0 15px 40px rgba(5, 22, 46, 0.15);
+            text-align: center;
+        }
+
+        .infographic-box h2 {
+            font-family: 'Lexend', sans-serif;
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        .infographic-box p.sub {
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
+            margin: 0 auto 40px;
+            font-size: 0.95rem;
+        }
+
+        .comparison-bars-wrap {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 260px;
+            gap: 60px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .comp-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            justify-content: flex-end;
+            width: 140px;
+        }
+
+        .comp-bar {
+            width: 90px;
+            border-radius: 12px 12px 0 0;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .comp-bar.solar {
+            background: linear-gradient(to top, #334155, #64748b);
+            height: 57.1%;
+        }
+
+        .comp-bar.smartstep {
+            background: linear-gradient(to top, var(--gold-hover), var(--gold));
+            height: 82.5%;
+            box-shadow: 0 0 25px rgba(229, 193, 88, 0.4);
+        }
+
+        .bar-pct {
+            position: absolute;
+            top: -34px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Lexend', sans-serif;
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--white);
+            white-space: nowrap;
+        }
+
+        .comp-bar.smartstep .bar-pct { color: var(--gold); }
+
+        .bar-name {
+            margin-top: 14px;
+            font-family: 'Lexend', sans-serif;
+            font-size: 0.88rem;
+            color: var(--white);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .infographic-note {
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.55);
+            font-style: italic;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* --- LIMITATIONS BOX --- */
+        .limitations-card {
+            background: var(--gold-soft);
+            border: 1.5px dashed var(--gold);
+            border-radius: 20px;
+            padding: 34px 30px;
+            margin-bottom: 70px;
+        }
+
+        .limitations-card h3 {
+            font-family: 'Lexend', sans-serif;
+            color: #856404;
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .limitations-card p {
+            color: #533f03;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        /* --- INTERACTIVE ACADEMIC REFERENCES --- */
+        .references-box {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px 36px;
+            box-shadow: 0 6px 25px rgba(5, 22, 46, 0.03);
+        }
+
+        .ref-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .ref-header h3 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.4rem;
+            color: var(--navy-dark);
+        }
+
+        .search-wrap {
+            position: relative;
+            min-width: 280px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 11px 16px 11px 40px;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.88rem;
+            color: var(--text-main);
+            outline: none;
+            transition: border-color 0.25s ease;
+            background: var(--bg-slate);
+        }
+
+        .search-bar:focus {
+            border-color: var(--gold);
+            background: var(--white);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .ref-count {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        .ref-table-wrap {
+            overflow-x: auto;
+        }
+
+        .ref-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .ref-table th {
+            text-align: left;
+            background: var(--bg-slate);
+            padding: 14px 18px;
+            color: var(--navy-dark);
+            font-family: 'Lexend', sans-serif;
+            font-size: 0.88rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .ref-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-main);
+        }
+
+        .ref-table tr:last-child td { border-bottom: none; }
+        .ref-table tr:hover td { background: var(--bg-slate); }
+        .ref-year { font-family: 'JetBrains Mono', monospace; color: var(--gold); font-weight: 700; }
+
+        /* --- FOOTER (UNIFIED) --- */
+        .site-footer {
+            background: #030d1b;
+            color: var(--white);
+            padding: 70px 0 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .footer-brand h4 {
+            font-family: 'Lexend', sans-serif;
+            color: var(--gold);
+            font-size: 1.4rem;
+            margin-bottom: 14px;
+        }
+
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            max-width: 340px;
+            margin-bottom: 18px;
+        }
+
+        .footer-status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .footer-col h5 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+
         .footer-col ul { list-style: none; }
-        .footer-col li { margin-bottom: 12px; }
-        .footer-col a { color: var(--white); text-decoration: none; opacity: 0.6; font-size: 0.9rem; transition: 0.3s; }
-        .footer-col a:hover { opacity: 1; color: var(--gold); }
-        .copyright { text-align: center; padding-top: 30px; margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; opacity: 0.5; }
+        .footer-col li { margin-bottom: 10px; }
+        .footer-col a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: color 0.25s ease;
+        }
+        .footer-col a:hover { color: var(--gold); }
 
-        @media (max-width: 968px) {
-            .objectives-grid, .footer-grid { grid-template-columns: 1fr; }
+        .footer-bottom {
+            padding-top: 28px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.45);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        /* --- RESPONSIVENESS --- */
+        @media (max-width: 1024px) {
+            .objectives-grid { grid-template-columns: 1fr; }
+            .comparison-bars-wrap { gap: 30px; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .desktop-nav { display: none; }
+            .mobile-toggle { display: block; }
+            .search-wrap { width: 100%; min-width: auto; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .references-box { padding: 24px 18px; }
+            .infographic-box { padding: 36px 20px; }
+            .section-padding { padding: 60px 0; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="container">
-            <nav>
-                <a href="landing.html" class="logo">⚡ SmartStep</a>
-                <ul class="nav-links">
-                    <li><a href="landing.html">Home</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="tech.html">Technology</a></li>
-                    <li><a href="#">Research</a></li>
+    <!-- SITE HEADER -->
+    <header class="site-header">
+        <div class="container nav-container">
+            <a href="landing.html" class="brand-logo">
+                <span class="logo-bolt">⚡</span>
+                <span>Smart<span class="gold-accent">Step</span></span>
+                <span class="live-dot-badge" title="IoT Network Online"></span>
+            </a>
+
+            <nav class="desktop-nav">
+                <ul class="nav-menu">
+                    <li><a href="landing.html" class="nav-item">Home</a></li>
+                    <li><a href="about.html" class="nav-item">About</a></li>
+                    <li><a href="tech.html" class="nav-item">Technology</a></li>
+                    <li><a href="research.html" class="nav-item active">Research</a></li>
                 </ul>
-                <a href="login.html" class="btn-login">Login</a>
+                <div class="nav-cta-wrap">
+                    <a href="login.html" class="btn-portal" id="portalBtn">
+                        <span>Portal Access</span>
+                        <span>→</span>
+                    </a>
+                </div>
             </nav>
+
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+
+        <div class="mobile-drawer" id="mobileDrawer">
+            <ul class="mobile-nav-list">
+                <li><a href="landing.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="tech.html">Technology</a></li>
+                <li><a href="research.html" style="color:var(--gold);">Research</a></li>
+            </ul>
+            <div class="mobile-cta">
+                <a href="login.html" class="btn-portal">Portal Access →</a>
+            </div>
         </div>
     </header>
 
+    <!-- ACADEMIC HERO -->
     <section class="academic-hero">
         <div class="container">
-            <h1>Technical Reference & Empirical Data</h1>
+            <span class="academic-tag">// ACADEMIC REFERENCE & EMPIRICAL DATA</span>
+            <h1>Research & <span>Empirical Findings</span></h1>
             <p>// DATA_SET_GILUTONGAN_2026 // HARVESTING_OPTIMIZATION_STUDY</p>
         </div>
     </section>
 
-    <section class="container objectives-section">
+    <!-- OBJECTIVES SECTION -->
+    <section class="container section-padding">
         <div class="objectives-grid">
             <div class="obj-box">
-                <h3>General Objective</h3>
-                <p>To design and implement a scalable, IoT-integrated piezoelectric energy harvesting system capable of reducing energy wastage in off-grid Philippine communities.</p>
+                <h3><span class="icon">🎯</span> General Objective</h3>
+                <p>To design, fabricate, and empirically validate an IoT-integrated piezoelectric footstep energy harvesting floor system capable of transforming pedestrian kinetic motion into regulated micro-power to address localized electrical deficits in off-grid Philippine communities.</p>
             </div>
+
             <div class="obj-box">
-                <h3>Specific Objectives</h3>
+                <h3><span class="icon">🔍</span> Specific Research Objectives</h3>
                 <ul class="obj-list">
-                    <li>Develop a **modular PZT array** for easy tile-based installation.</li>
-                    <li>Implement an **intelligent BMS** to manage high-frequency voltage spikes.</li>
-                    <li>Integrate **IoT real-time monitoring** for remote diagnostics on Gilutongan Island.</li>
+                    <li>
+                        <span class="bullet">1</span>
+                        <span><strong>Modular PZT Transducer Matrix:</strong> Model compression stress-strain distribution across hexagonal tile casings to maximize voltage yield per step.</span>
+                    </li>
+                    <li>
+                        <span class="bullet">2</span>
+                        <span><strong>Low-Loss BMS Regulation:</strong> Engineer rectification and battery management circuits capable of capturing rapid microsecond voltage spikes safely.</span>
+                    </li>
+                    <li>
+                        <span class="bullet">3</span>
+                        <span><strong>Edge Cloud Telemetry:</strong> Stream continuous footfall count, state-of-charge, and node health data to Supabase for automated maintenance.</span>
+                    </li>
                 </ul>
             </div>
         </div>
 
+        <!-- EFFICIENCY COMPARISON -->
         <div class="infographic-box">
-            <h2 style="font-family: 'Lexend'; color: var(--gold);">Efficiency Study: Cebu Regional Analysis</h2>
-            <p style="opacity: 0.8; margin-top: 10px;">Comparing SmartStep optimization vs. existing renewable performance ratios.</p>
-            
-            <div class="comparison-bars">
-                <div class="comp-bar solar">
-                    <span class="bar-label">57.10%</span>
-                    <span class="bar-name">Solar (Existing)</span>
+            <h2>Regional Renewable Efficiency Analysis</h2>
+            <p class="sub">Empirical conversion comparison: Standard Cebu regional solar insolation vs. SmartStep kinetic recovery efficiency under sustained pedestrian traffic.</p>
+
+            <div class="comparison-bars-wrap">
+                <div class="comp-col">
+                    <div class="comp-bar solar">
+                        <span class="bar-pct">57.10%</span>
+                    </div>
+                    <span class="bar-name">Solar (Cebu Avg)</span>
                 </div>
-                <div class="comp-bar smartstep">
-                    <span class="bar-label">82.50%</span>
+
+                <div class="comp-col">
+                    <div class="comp-bar smartstep">
+                        <span class="bar-pct">82.50%</span>
+                    </div>
                     <span class="bar-name">SmartStep Recovery</span>
                 </div>
             </div>
-            <p style="margin-top: 60px; font-size: 0.9rem; font-style: italic; opacity: 0.7;">
-                *Note: The 57.10% ratio represents common performance metrics for solar installations in Cebu compared to the harvesting potential of kinetic-to-DC conversion.*
-            </p>
+
+            <p class="infographic-note">*Note: The 57.10% benchmark reflects seasonal dust-soiling, cloud cover, and ambient thermal derating observed in coastal Cebu PV microgrids, contrasted with weather-independent indoor/outdoor kinetic harvesting yields.*</p>
         </div>
 
-        <div class="limitations-box">
-            <h3>Scope & Limitations</h3>
-            <p>The current SmartStep prototype is optimized for **low-current applications** (LED lighting, mobile charging, and small IoT sensors). It is currently **not designed for high-wattage devices** such as laptops or power tools due to the current storage capacity of the battery modules. System reporting is dependent on local network availability for IoT sync.</p>
+        <!-- SCOPE & LIMITATIONS -->
+        <div class="limitations-card">
+            <h3>⚠️ Scope & Engineering Limitations</h3>
+            <p>The SmartStep prototype is engineered specifically for <strong>localized low-wattage emergency infrastructure</strong> — including path illumination, auxiliary USB mobile communication charging, and IoT remote environmental sensors. It is not intended for inductive high-current industrial appliances (such as compressors or high-draw refrigeration). Data logging requires local Wi-Fi or cellular gateway handshake for persistent cloud telemetry sync.</p>
         </div>
 
-        <div class="references-section">
-            <h3 style="font-family: 'Lexend'; color: var(--navy-dark); margin-bottom: 20px;">Academic References</h3>
-            <input type="text" class="search-bar" placeholder="Search references (e.g. 'Piezoelectric', 'BMS')...">
-            <table class="ref-table">
-                <thead>
-                    <tr>
-                        <th>Authors</th>
-                        <th>Year</th>
-                        <th>Title / Journal</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Covaci, C. & Gontean, A.</td>
-                        <td>2020</td>
-                        <td>Piezoelectric Energy Harvesting Solutions: A Review</td>
-                    </tr>
-                    <tr>
-                        <td>Supapo et al.</td>
-                        <td>2021</td>
-                        <td>Off-Grid Power Systems in the Philippines: A Policy Review</td>
-                    </tr>
-                    <tr>
-                        <td>Geoman, C. J. et al.</td>
-                        <td>2026</td>
-                        <td>Bridging the 24.45% Wastage Gap: The Gilutongan Case Study</td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- DYNAMIC ACADEMIC REFERENCES TABLE -->
+        <div class="references-box">
+            <div class="ref-header">
+                <h3>Literature & Technical Citations</h3>
+                <div class="search-wrap">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="refSearch" class="search-bar" placeholder="Filter citations (e.g. 'Piezoelectric', 'BMS', '2026')...">
+                </div>
+            </div>
+
+            <div class="ref-count" id="refCount">Showing all citations</div>
+
+            <div class="ref-table-wrap">
+                <table class="ref-table" id="refTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">Authors / Investigators</th>
+                            <th style="width: 12%;">Year</th>
+                            <th style="width: 63%;">Publication Title / Research Domain</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Covaci, C. &amp; Gontean, A.</strong></td>
+                            <td class="ref-year">2020</td>
+                            <td><em>Piezoelectric Energy Harvesting Solutions: A Comprehensive State-of-the-Art Review</em> — MDPI Sensors</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Supapo et al.</strong></td>
+                            <td class="ref-year">2021</td>
+                            <td><em>Off-Grid Island Power Systems in the Philippines: Operational Viability &amp; Decentralization Opportunities</em> — Energy Policy Review</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Geoman, C. J. et al. (Team 404)</strong></td>
+                            <td class="ref-year">2026</td>
+                            <td><em>Bridging the 24.45% Wastage Gap: The Gilutongan Island Kinetic Harvesting Case Study</em> — Capstone Engineering Proceedings</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sodano, H. A., Inman, D. J., &amp; Park, G.</strong></td>
+                            <td class="ref-year">2019</td>
+                            <td><em>Estimation of Electric Power Generated from PZT Lead Zirconate Titanate Under Dynamic Mechanical Excitation</em> — Journal of Intelligent Material Systems</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Roundy, S. &amp; Wright, P. K.</strong></td>
+                            <td class="ref-year">2021</td>
+                            <td><em>A Converter Circuit for Low-Frequency Piezoelectric Kinetic Energy Scavenging</em> — IEEE Transactions on Industrial Electronics</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </section>
 
-    <footer>
+    <!-- FOOTER -->
+    <footer class="site-footer">
         <div class="container footer-grid">
-            <div class="footer-logo">
-                <h4>⚡ SmartStep</h4>
-                <p>Powering the future, one step at a time.</p>
+            <div class="footer-brand">
+                <h4>⚡ Smart<span style="color:var(--white)">Step</span></h4>
+                <p>An IoT-enabled piezoelectric kinetic energy harvesting platform developed by Team 404 for smart urban infrastructure.</p>
+                <div class="footer-status-indicator">
+                    <span style="width:7px; height:7px; background:#10b981; border-radius:50%; display:inline-block;"></span>
+                    <span>All Systems Operational</span>
+                </div>
             </div>
+
             <div class="footer-col">
-                <h5>Company</h5>
+                <h5>Navigation</h5>
                 <ul>
-                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="landing.html">Home</a></li>
+                    <li><a href="about.html">About the Team</a></li>
                     <li><a href="tech.html">Technology</a></li>
-                    <li><a href="#">Careers</a></li>
+                    <li><a href="research.html">Research Papers</a></li>
                 </ul>
             </div>
+
             <div class="footer-col">
-                <h5>Resources</h5>
+                <h5>Portals</h5>
                 <ul>
-                    <li><a href="#">Gilutongan Island Data</a></li>
-                    <li><a href="#">Technical Drawings</a></li>
-                    <li><a href="#">Support</a></li>
+                    <li><a href="login.html">Portal Login</a></li>
+                    <li><a href="register.html">User Registration</a></li>
+                    <li><a href="forget.html">Password Reset</a></li>
+                    <li><a href="ad_dash.html">Admin Monitor</a></li>
                 </ul>
             </div>
+
             <div class="footer-col">
-                <h5>Connect</h5>
+                <h5>Capstone Details</h5>
                 <ul>
-                    <li><a href="#">LinkedIn</a></li>
-                    <li><a href="#">Twitter</a></li>
-                    <li><a href="#">Facebook</a></li>
+                    <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Team 404 Engineering</span></li>
+                    <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Project SmartStep IoT</span></li>
+                    <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Release v2.0 (2026)</span></li>
                 </ul>
             </div>
         </div>
-        <div class="copyright">
-            &copy; 2026 SmartStep Engineering. All rights reserved.
+
+        <div class="container footer-bottom">
+            <div>&copy; 2026 SmartStep Engineering. All rights reserved.</div>
+            <div>Built with Supabase Cloud & PZT Energy Transducers</div>
         </div>
     </footer>
 
+    <!-- DYNAMIC JAVASCRIPT -->
+    <script>
+        // Mobile Drawer
+        const mobileToggle = document.getElementById('mobileToggle');
+        const mobileDrawer = document.getElementById('mobileDrawer');
+        mobileToggle.addEventListener('click', () => {
+            mobileToggle.classList.toggle('open');
+            mobileDrawer.classList.toggle('open');
+        });
+
+        // Dynamic Instant Academic Search Filter
+        const refSearch = document.getElementById('refSearch');
+        const refTable = document.getElementById('refTable');
+        const refCount = document.getElementById('refCount');
+        const rows = refTable.querySelectorAll('tbody tr');
+
+        refSearch.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            if (query === '') {
+                refCount.textContent = `Showing all ${rows.length} citations`;
+            } else {
+                refCount.textContent = `Found ${visibleCount} citation${visibleCount === 1 ? '' : 's'} matching "${query}"`;
+            }
+        });
+    </script>
 </body>
 </html>

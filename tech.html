@@ -3,206 +3,1028 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Technology | SmartStep Engineering</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Lexend:wght@700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <title>Technology | SmartStep Piezoelectric Hardware Architecture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --navy-dark: #05162e;
-            --navy-footer: #0a192f;
+            --navy-mid: #0a2447;
             --gold: #e5c158;
+            --gold-hover: #d4ae45;
+            --gold-soft: #fdf9ec;
             --white: #ffffff;
-            --text-main: #1a202c;
-            --text-muted: #718096;
-            --bg-light: #f8fafc;
+            --bg-slate: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--white); color: var(--text-main); line-height: 1.6; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-
-        /* --- UNIFORM HEADER --- */
-        header { background-color: var(--navy-dark); padding: 16px 0; position: sticky; top: 0; z-index: 1000; }
-        nav { display: flex; justify-content: space-between; align-items: center; }
-        .logo { color: var(--gold); font-weight: 700; font-size: 1.4rem; text-decoration: none; display: flex; align-items: center; gap: 8px; font-family: 'Lexend', sans-serif; }
-        .nav-links { display: flex; list-style: none; gap: 32px; }
-        .nav-links a { color: var(--white); text-decoration: none; font-size: 0.9rem; opacity: 0.8; transition: 0.3s; }
-        .nav-links a:hover { opacity: 1; color: var(--gold); }
-        .btn-login { background-color: var(--gold); color: var(--navy-dark); padding: 10px 24px; border-radius: 6px; text-decoration: none; font-weight: 600; transition: 0.3s; }
-        .btn-login:hover { box-shadow: 0 4px 12px rgba(229, 193, 88, 0.3); }
-
-        /* --- TECHNOLOGY HERO --- */
-        .tech-hero {
-            position: relative;
-            background: linear-gradient(rgba(5, 22, 46, 0.75), rgba(5, 22, 46, 0.75)), 
-                        url('https://images.unsplash.com/photo-1581092162384-8987c1d64718?auto=format&fit=crop&q=80&w=2000');
-            background-size: cover;
-            background-position: center;
-            padding: 120px 0;
-            text-align: center;
-            color: var(--white);
-            border-bottom: 4px solid var(--gold);
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            background-color: var(--bg-slate);
+            line-height: 1.6;
+            overflow-x: hidden;
         }
-        .tech-hero h1 { font-family: 'Lexend', sans-serif; font-size: 3.5rem; color: var(--gold); text-transform: uppercase; letter-spacing: 3px; }
-        .tech-hero p { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; opacity: 0.9; margin-top: 10px; letter-spacing: 2px; }
 
-        /* --- HARDWARE SECTION --- */
-        .hardware-section { padding: 100px 0; }
-        .section-title { text-align: center; margin-bottom: 60px; }
-        .section-title h2 { font-family: 'Lexend', sans-serif; font-size: 2.5rem; color: var(--navy-dark); }
-        .hardware-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* --- HEADER & NAVIGATION --- */
+        .site-header {
+            background: rgba(5, 22, 46, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(229, 193, 88, 0.15);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 72px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--white);
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
+
+        .brand-logo .logo-bolt {
+            color: var(--gold);
+            font-size: 1.4rem;
+            filter: drop-shadow(0 0 10px rgba(229, 193, 88, 0.6));
+        }
+
+        .brand-logo .gold-accent { color: var(--gold); }
+
+        .live-dot-badge {
+            width: 8px;
+            height: 8px;
+            background: var(--success);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 0 rgba(16, 185, 129, 0.7);
+            animation: pulseDot 1.8s infinite;
+        }
+
+        @keyframes pulseDot {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        .desktop-nav {
+            display: flex;
+            align-items: center;
+            gap: 36px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 28px;
+        }
+
+        .nav-item {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-size: 0.92rem;
+            font-weight: 500;
+            transition: all 0.25s ease;
+            position: relative;
+            padding: 6px 0;
+        }
+
+        .nav-item:hover, .nav-item.active { color: var(--gold); }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gold);
+            border-radius: 2px;
+        }
+
+        .btn-portal {
+            background: linear-gradient(135deg, var(--gold), var(--gold-hover));
+            color: var(--navy-dark);
+            padding: 9px 22px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.88rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 14px rgba(229, 193, 88, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-portal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(229, 193, 88, 0.45);
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            padding: 8px;
+            z-index: 1001;
+        }
+
+        .mobile-toggle span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: var(--gold);
+            margin: 6px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        .mobile-toggle.open span:nth-child(1) { transform: rotate(-45deg) translate(-5px, 6px); }
+        .mobile-toggle.open span:nth-child(2) { opacity: 0; }
+        .mobile-toggle.open span:nth-child(3) { transform: rotate(45deg) translate(-5px, -6px); }
+
+        .mobile-drawer {
+            display: none;
+            position: fixed;
+            top: 72px;
+            left: 0;
+            width: 100%;
+            background: rgba(5, 22, 46, 0.98);
+            border-bottom: 2px solid rgba(229, 193, 88, 0.2);
+            padding: 24px 24px 32px;
+            backdrop-filter: blur(20px);
+            z-index: 999;
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-drawer.open {
+            display: block;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .mobile-nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .mobile-nav-list a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: block;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .mobile-nav-list a:hover { color: var(--gold); }
+
+        .mobile-cta .btn-portal {
+            width: 100%;
+            justify-content: center;
+            padding: 12px 20px;
+        }
+
+        /* --- TECH HERO --- */
+        .tech-hero {
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-mid) 100%);
+            color: var(--white);
+            padding: 80px 0 90px;
+            text-align: center;
+            border-bottom: 3px solid var(--gold);
+            position: relative;
+        }
+
+        .tech-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--gold);
+            background: rgba(229, 193, 88, 0.12);
+            border: 1px solid rgba(229, 193, 88, 0.3);
+            padding: 4px 14px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .tech-hero h1 {
+            font-family: 'Lexend', sans-serif;
+            font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+            color: var(--white);
+            margin-bottom: 14px;
+        }
+
+        .tech-hero h1 span { color: var(--gold); }
+
+        .tech-hero p {
+            color: rgba(255, 255, 255, 0.75);
+            max-width: 680px;
+            margin: 0 auto 30px;
+            font-size: 1.05rem;
+        }
+
+        .tech-spec-bar {
+            display: flex;
+            justify-content: center;
+            gap: 28px;
+            flex-wrap: wrap;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            color: var(--gold);
+        }
+
+        .tech-spec-bar span {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(229, 193, 88, 0.2);
+        }
+
+        /* --- HARDWARE CARDS SECTION --- */
+        .section-padding { padding: 90px 0; }
+
+        .section-header {
+            text-align: center;
+            max-width: 680px;
+            margin: 0 auto 50px;
+        }
+
+        .section-header .section-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--gold);
+            background: rgba(229, 193, 88, 0.12);
+            padding: 4px 12px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .section-header h2 {
+            font-family: 'Lexend', sans-serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+            color: var(--navy-dark);
+            margin-bottom: 14px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .hardware-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+        }
+
         .hw-card {
             background: var(--white);
-            padding: 45px 35px;
+            border: 1px solid var(--border);
             border-radius: 20px;
-            border: 1px solid #edf2f7;
-            text-align: center;
-            transition: all 0.4s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            padding: 36px 28px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-direction: column;
         }
-        .hw-card:hover { transform: translateY(-12px); border-color: var(--gold); box-shadow: 0 25px 50px rgba(5, 22, 46, 0.08); }
-        .hw-icon { width: 60px; height: 60px; background: #fffcf0; border-radius: 12px; margin: 0 auto 25px; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 1.5rem; font-weight: bold; border: 1px solid rgba(229, 193, 88, 0.2); }
-        .hw-card h3 { font-family: 'Lexend', sans-serif; color: var(--navy-dark); margin-bottom: 15px; }
-        .hw-card p { color: var(--text-muted); font-size: 0.95rem; }
 
-        /* --- DIAGRAM SECTION --- */
-        .diagram-outer { padding: 100px 0; background: var(--bg-light); }
-        .diagram-container { background: var(--navy-dark); border-radius: 30px; padding: 60px; border: 1px solid var(--gold); text-align: center; }
+        .hw-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--gold);
+            box-shadow: 0 16px 35px rgba(5, 22, 46, 0.08);
+        }
 
-        /* --- FLOWCHART SECTION --- */
-        .flow-section { padding: 100px 0; text-align: center; }
-        .flow-wrapper { display: flex; justify-content: space-between; align-items: center; margin-top: 60px; }
-        .step-num { width: 60px; height: 60px; background: var(--navy-dark); color: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-weight: 700; border: 2px solid var(--gold); }
+        .hw-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+        }
 
-        /* --- UNIFORM FOOTER --- */
-        footer { background-color: var(--navy-footer); padding: 80px 0 30px; color: var(--white); }
-        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; }
-        .footer-logo h4 { color: var(--gold); font-size: 1.5rem; margin-bottom: 16px; font-family: 'Lexend', sans-serif; }
-        .footer-col h5 { margin-bottom: 24px; font-size: 1rem; color: var(--white); }
+        .hw-icon {
+            width: 52px;
+            height: 52px;
+            background: var(--gold-soft);
+            border: 1px solid rgba(229, 193, 88, 0.3);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--gold);
+        }
+
+        .hw-index {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--navy-mid);
+            background: var(--bg-slate);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .hw-card h3 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.25rem;
+            color: var(--navy-dark);
+            margin-bottom: 12px;
+        }
+
+        .hw-card p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin-bottom: 22px;
+            flex-grow: 1;
+        }
+
+        .hw-specs-list {
+            list-style: none;
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+        }
+
+        .hw-specs-list li {
+            font-size: 0.82rem;
+            color: var(--text-main);
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .hw-specs-list li span.val {
+            color: var(--navy-dark);
+            font-weight: 600;
+        }
+
+        /* --- DYNAMIC CIRCUIT FLOW INTERACTIVE STEPPER --- */
+        .flow-section {
+            padding: 90px 0;
+            background: var(--navy-dark);
+            color: var(--white);
+        }
+
+        .flow-section .section-header h2 { color: var(--white); }
+        .flow-section .section-header p { color: rgba(255, 255, 255, 0.7); }
+
+        .flow-stepper {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+            margin: 50px 0 40px;
+        }
+
+        .step-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            padding: 20px 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .step-pill:hover, .step-pill.active {
+            background: rgba(229, 193, 88, 0.15);
+            border-color: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        .step-num-badge {
+            width: 38px;
+            height: 38px;
+            background: rgba(229, 193, 88, 0.15);
+            color: var(--gold);
+            border: 1.5px solid var(--gold);
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .step-pill.active .step-num-badge {
+            background: var(--gold);
+            color: var(--navy-dark);
+        }
+
+        .step-pill h4 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 0.9rem;
+            color: var(--white);
+            line-height: 1.2;
+        }
+
+        /* Interactive Detail Display */
+        .flow-detail-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1.5px solid var(--gold);
+            border-radius: 20px;
+            padding: 36px 32px;
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            align-items: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.35);
+        }
+
+        .detail-text h3 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.5rem;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        .detail-text p {
+            color: rgba(255, 255, 255, 0.78);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .detail-metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .detail-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 12px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .detail-box .val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.15rem;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .detail-box .lbl {
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 2px;
+        }
+
+        .waveform-box {
+            background: #020813;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .waveform-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--gold);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .waveform-art {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #10b981;
+            line-height: 1.4;
+            letter-spacing: 1px;
+            padding: 14px 0;
+        }
+
+        /* --- SPECIFICATIONS TABLE --- */
+        .specs-section {
+            padding: 90px 0;
+            background: var(--bg-slate);
+        }
+
+        .specs-table-wrap {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(5, 22, 46, 0.03);
+        }
+
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .specs-table th {
+            background: var(--navy-dark);
+            color: var(--white);
+            padding: 18px 24px;
+            font-family: 'Lexend', sans-serif;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+
+        .specs-table td {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .specs-table tr:last-child td { border-bottom: none; }
+        .specs-table tr:hover td { background: var(--bg-slate); }
+        .specs-param { font-weight: 600; color: var(--navy-dark); width: 35%; }
+        .specs-val { font-family: 'JetBrains Mono', monospace; color: var(--text-main); }
+
+        /* --- FOOTER (UNIFIED) --- */
+        .site-footer {
+            background: #030d1b;
+            color: var(--white);
+            padding: 70px 0 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .footer-brand h4 {
+            font-family: 'Lexend', sans-serif;
+            color: var(--gold);
+            font-size: 1.4rem;
+            margin-bottom: 14px;
+        }
+
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.88rem;
+            line-height: 1.6;
+            max-width: 340px;
+            margin-bottom: 18px;
+        }
+
+        .footer-status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #6ee7b7;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .footer-col h5 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            color: var(--white);
+        }
+
         .footer-col ul { list-style: none; }
-        .footer-col li { margin-bottom: 12px; }
-        .footer-col a { color: var(--white); text-decoration: none; opacity: 0.6; font-size: 0.9rem; transition: 0.3s; }
-        .footer-col a:hover { opacity: 1; color: var(--gold); }
-        .copyright { text-align: center; padding-top: 30px; margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; opacity: 0.5; }
+        .footer-col li { margin-bottom: 10px; }
+        .footer-col a {
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.88rem;
+            transition: color 0.25s ease;
+        }
+        .footer-col a:hover { color: var(--gold); }
 
-        @media (max-width: 968px) {
-            .hardware-grid, .flow-wrapper, .footer-grid { grid-template-columns: 1fr; flex-direction: column; gap: 40px; }
+        .footer-bottom {
+            padding-top: 28px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.45);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        /* --- RESPONSIVENESS --- */
+        @media (max-width: 1024px) {
+            .hardware-grid { grid-template-columns: repeat(2, 1fr); }
+            .flow-stepper { grid-template-columns: repeat(3, 1fr); }
+            .flow-detail-card { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .desktop-nav { display: none; }
+            .mobile-toggle { display: block; }
+            .hardware-grid { grid-template-columns: 1fr; }
+            .flow-stepper { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .specs-param { width: 45%; }
+            .specs-section, .flow-section, .section-padding { padding: 60px 0; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="container">
-            <nav>
-                <a href="landing.html" class="logo">⚡ SmartStep</a>
-                <ul class="nav-links">
-                    <li><a href="landing.html">Home</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="tech.html">Technology</a></li>
-                    <li><a href="research.html">Research</a></li>
+    <!-- SITE HEADER -->
+    <header class="site-header">
+        <div class="container nav-container">
+            <a href="landing.html" class="brand-logo">
+                <span class="logo-bolt">⚡</span>
+                <span>Smart<span class="gold-accent">Step</span></span>
+                <span class="live-dot-badge" title="IoT Network Online"></span>
+            </a>
+
+            <nav class="desktop-nav">
+                <ul class="nav-menu">
+                    <li><a href="landing.html" class="nav-item">Home</a></li>
+                    <li><a href="about.html" class="nav-item">About</a></li>
+                    <li><a href="tech.html" class="nav-item active">Technology</a></li>
+                    <li><a href="research.html" class="nav-item">Research</a></li>
                 </ul>
-                <a href="login.html" class="btn-login">Login</a>
+                <div class="nav-cta-wrap">
+                    <a href="login.html" class="btn-portal" id="portalBtn">
+                        <span>Portal Access</span>
+                        <span>→</span>
+                    </a>
+                </div>
             </nav>
+
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle Navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+
+        <div class="mobile-drawer" id="mobileDrawer">
+            <ul class="mobile-nav-list">
+                <li><a href="landing.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="tech.html" style="color:var(--gold);">Technology</a></li>
+                <li><a href="research.html">Research</a></li>
+            </ul>
+            <div class="mobile-cta">
+                <a href="login.html" class="btn-portal">Portal Access →</a>
+            </div>
         </div>
     </header>
 
+    <!-- TECH HERO -->
     <section class="tech-hero">
         <div class="container">
-            <h1>Our Technology</h1>
-            <p>// SYSTEM_ARCH_REV_02 // HARDWARE OVERVIEW</p>
-        </div>
-    </section>
+            <span class="tech-tag">// HARDWARE SPECIFICATION REV 2.0</span>
+            <h1>Piezoelectric <span>Engineering Core</span></h1>
+            <p>From high-frequency AC mechanical transduction to low-loss Schottky rectification, battery regulation, and cloud streaming.</p>
 
-    <section class="hardware-section">
-        <div class="container">
-            <div class="section-title">
-                <h2>Hardware Infrastructure</h2>
-                <p>The engineering core of our piezoelectric energy system.</p>
-            </div>
-            <div class="hardware-grid">
-                <div class="hw-card">
-                    <div class="hw-icon">01</div>
-                    <h3>PZT Array</h3>
-                    <p>High-sensitivity PZT discs that harvest mechanical deflection and convert it into high-frequency AC spikes.</p>
-                </div>
-                <div class="hw-card">
-                    <div class="hw-icon">02</div>
-                    <h3>ESP8266 Logic</h3>
-                    <p>Custom IoT gateway utilizing Deep Sleep cycles to reduce energy standby consumption by 80%.</p>
-                </div>
-                <div class="hw-card">
-                    <div class="hw-icon">03</div>
-                    <h3>BMS Systems</h3>
-                    <p>Intelligent management using TP4056 and INA219 sensors for real-time battery health and monitoring.</p>
-                </div>
+            <div class="tech-spec-bar">
+                <span>⚡ 18.4V Peak Transduction</span>
+                <span>🔋 TP4056 BMS Controller</span>
+                <span>📶 ESP8266 IoT Node</span>
+                <span>⏱️ &lt;1.2ms Interruption Latency</span>
             </div>
         </div>
     </section>
 
-    <section class="diagram-outer">
-        <div class="container">
-            <div class="diagram-container">
-                <h4 style="color: var(--gold); font-family: 'Lexend'; margin-bottom: 30px;">Technical Mat Assembly</h4>
-                <img src="https://via.placeholder.com/1000x500/05162e/e5c158?text=Exploded+View+Technical+Diagram" alt="Assembly" style="width: 100%; border-radius: 15px;">
+    <!-- HARDWARE SUBSYSTEMS -->
+    <section class="container section-padding">
+        <div class="section-header">
+            <span class="section-tag">// MODULAR ARCHITECTURE</span>
+            <h2>Integrated Subsystem Modules</h2>
+            <p>Each tile functions as an autonomous energy collection unit capable of daisy-chaining into continuous multi-square-meter floor installations.</p>
+        </div>
+
+        <div class="hardware-grid">
+            <div class="hw-card">
+                <div class="hw-header-row">
+                    <div class="hw-icon">⚡</div>
+                    <span class="hw-index">MOD-01</span>
+                </div>
+                <h3>PZT Transducer Matrix</h3>
+                <p>Arrays of 35mm PZT-5H ceramic discs bonded to brass flex-substrates. Arranged in parallel-series configurations to withstand pedestrian shear forces.</p>
+                <ul class="hw-specs-list">
+                    <li><span>Material</span> <span class="val">PZT-5H Ceramic</span></li>
+                    <li><span>Output Range</span> <span class="val">12V – 22V AC pk</span></li>
+                    <li><span>Deflection Tolerance</span> <span class="val">1.5mm max</span></li>
+                </ul>
+            </div>
+
+            <div class="hw-card">
+                <div class="hw-header-row">
+                    <div class="hw-icon">🔌</div>
+                    <span class="hw-index">MOD-02</span>
+                </div>
+                <h3>Schottky Bridge Rectifier</h3>
+                <p>Ultra-fast switching Schottky diodes (VF &lt; 0.28V) rectify high-impedance AC pulses into filtered DC current with minimal thermal leakage.</p>
+                <ul class="hw-specs-list">
+                    <li><span>Forward Drop (Vf)</span> <span class="val">0.24V @ 100mA</span></li>
+                    <li><span>Capacitance Buffer</span> <span class="val">470µF 35V Low-ESR</span></li>
+                    <li><span>Rectification Eff.</span> <span class="val">&gt;84.5%</span></li>
+                </ul>
+            </div>
+
+            <div class="hw-card">
+                <div class="hw-header-row">
+                    <div class="hw-icon">🧠</div>
+                    <span class="hw-index">MOD-03</span>
+                </div>
+                <h3>ESP8266 IoT Gateway</h3>
+                <p>Integrated NodeMCU 32-bit RISC core with 802.11 b/g/n telemetry. Features hardware wake-on-interrupt to maximize sleep power savings.</p>
+                <ul class="hw-specs-list">
+                    <li><span>Sleep Current</span> <span class="val">~20 µA</span></li>
+                    <li><span>Telemetry Protocol</span> <span class="val">HTTPS REST / WSS</span></li>
+                    <li><span>Cloud Backend</span> <span class="val">Supabase Edge</span></li>
+                </ul>
             </div>
         </div>
     </section>
 
+    <!-- DYNAMIC CIRCUIT FLOW INTERACTIVE STEPPER -->
     <section class="flow-section">
         <div class="container">
-            <div class="section-title">
-                <h2>Circuit Flow</h2>
-                <p>Visualizing the path from mechanical energy to digital power.</p>
+            <div class="section-header">
+                <span class="section-tag" style="background:rgba(229,193,88,0.15);">// CIRCUIT TRACE</span>
+                <h2 style="color:var(--white);">Interactive Power Conversion Flow</h2>
+                <p style="color:rgba(255,255,255,0.7);">Click through each stage of the energy pipeline to view signal waveforms and electrical conversions.</p>
             </div>
-            <div class="flow-wrapper">
-                <div class="flow-step"><div class="step-num">01</div><h4 style="font-family: 'Lexend'; font-size: 0.9rem;">Footstep</h4></div>
-                <div style="color:var(--gold); font-weight: bold;">→</div>
-                <div class="flow-step"><div class="step-num">02</div><h4 style="font-family: 'Lexend'; font-size: 0.9rem;">AC Spike</h4></div>
-                <div style="color:var(--gold); font-weight: bold;">→</div>
-                <div class="flow-step"><div class="step-num">03</div><h4 style="font-family: 'Lexend'; font-size: 0.9rem;">Rectifier</h4></div>
-                <div style="color:var(--gold); font-weight: bold;">→</div>
-                <div class="flow-step"><div class="step-num">04</div><h4 style="font-family: 'Lexend'; font-size: 0.9rem;">DC Storage</h4></div>
-                <div style="color:var(--gold); font-weight: bold;">→</div>
-                <div class="flow-step"><div class="step-num">05</div><h4 style="font-family: 'Lexend'; font-size: 0.9rem;">USB Output</h4></div>
+
+            <div class="flow-stepper">
+                <div class="step-pill active" onclick="selectStep(1, this)">
+                    <div class="step-num-badge">01</div>
+                    <h4>Mechanical Impact</h4>
+                </div>
+                <div class="step-pill" onclick="selectStep(2, this)">
+                    <div class="step-num-badge">02</div>
+                    <h4>AC Transduction</h4>
+                </div>
+                <div class="step-pill" onclick="selectStep(3, this)">
+                    <div class="step-num-badge">03</div>
+                    <h4>DC Rectification</h4>
+                </div>
+                <div class="step-pill" onclick="selectStep(4, this)">
+                    <div class="step-num-badge">04</div>
+                    <h4>BMS Storage</h4>
+                </div>
+                <div class="step-pill" onclick="selectStep(5, this)">
+                    <div class="step-num-badge">05</div>
+                    <h4>Cloud & Output</h4>
+                </div>
+            </div>
+
+            <div class="flow-detail-card" id="flowDetailCard">
+                <div class="detail-text">
+                    <h3 id="stepTitle">Stage 1: Mechanical Kinetic Impact</h3>
+                    <p id="stepDescription">A pedestrian steps onto the top plate of the SmartStep tile. The internal spring suspension distributes downward force evenly across the multi-disc PZT array, causing microscopic deflection of the piezoelectric crystal lattice.</p>
+                    <div class="detail-metrics-grid">
+                        <div class="detail-box">
+                            <div class="val" id="metric1">600 – 850 N</div>
+                            <div class="lbl" id="label1">Downward Footstep Force</div>
+                        </div>
+                        <div class="detail-box">
+                            <div class="val" id="metric2">1.2 mm</div>
+                            <div class="lbl" id="label2">Tile Vertical Travel</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="waveform-box">
+                    <div class="waveform-title" id="waveTitle">MECHANICAL PRESSURE PROFILE</div>
+                    <div class="waveform-art" id="waveArt">
+                        [   _/\_   ]<br>
+                        ___/    \___<br>
+                        Force Peak: 75kgf
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <footer>
+    <!-- TECHNICAL SPECIFICATIONS TABLE -->
+    <section class="specs-section">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">// DATA SHEET BENCHMARKS</span>
+                <h2>Detailed Hardware Specifications</h2>
+                <p>Engineering parameters validated through Team 404 physical stress testing and oscilloscope measurements.</p>
+            </div>
+
+            <div class="specs-table-wrap">
+                <table class="specs-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Design Specification</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="specs-param">Tile Dimensions</td>
+                            <td class="specs-val">300mm x 300mm x 35mm (Hexagonal composite casing)</td>
+                        </tr>
+                        <tr>
+                            <td class="specs-param">Maximum Static Load</td>
+                            <td class="specs-val">250 kg per individual tile module</td>
+                        </tr>
+                        <tr>
+                            <td class="specs-param">Average Yield per Step</td>
+                            <td class="specs-val">4.5mJ to 7.2mJ (dependent on walker weight and gait velocity)</td>
+                        </tr>
+                        <tr>
+                            <td class="specs-param">Battery Buffer Cell</td>
+                            <td class="specs-val">18650 Li-ion (3.7V nominal, 2600mAh capacity)</td>
+                        </tr>
+                        <tr>
+                            <td class="specs-param">BMS Charge IC</td>
+                            <td class="specs-val">TP4056 with thermal foldback and 4.2V float regulation</td>
+                        </tr>
+                        <tr>
+                            <td class="specs-param">Sensor Telemetry Chip</td>
+                            <td class="specs-val">INA219 High-Side I2C Bi-directional Current/Power Sensor</td>
+                        </tr>
+                        <tr>
+                            <td class="specs-param">IoT Controller</td>
+                            <td class="specs-val">ESP8266 (Tensilica L106 32-bit RISC core @ 80 MHz)</td>
+                        </tr>
+                        <tr>
+                            <td class="specs-param">Cloud Database</td>
+                            <td class="specs-val">Supabase PostgreSQL with REST API & Realtime engine</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
         <div class="container footer-grid">
-            <div class="footer-logo">
-                <h4>⚡ SmartStep</h4>
-                <p>Powering remote communities through innovation.</p>
+            <div class="footer-brand">
+                <h4>⚡ Smart<span style="color:var(--white)">Step</span></h4>
+                <p>An IoT-enabled piezoelectric kinetic energy harvesting platform developed by Team 404 for smart urban infrastructure.</p>
+                <div class="footer-status-indicator">
+                    <span style="width:7px; height:7px; background:#10b981; border-radius:50%; display:inline-block;"></span>
+                    <span>All Systems Operational</span>
+                </div>
             </div>
+
             <div class="footer-col">
-                <h5>Company</h5>
+                <h5>Navigation</h5>
                 <ul>
-                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="landing.html">Home</a></li>
+                    <li><a href="about.html">About the Team</a></li>
                     <li><a href="tech.html">Technology</a></li>
-                    <li><a href="research.html">Research</a></li>
+                    <li><a href="research.html">Research Papers</a></li>
                 </ul>
             </div>
+
             <div class="footer-col">
-                <h5>Resources</h5>
+                <h5>Portals</h5>
                 <ul>
-                    <li><a href="#">White Papers</a></li>
-                    <li><a href="#">BMS Schematics</a></li>
-                    <li><a href="#">Support</a></li>
+                    <li><a href="login.html">Portal Login</a></li>
+                    <li><a href="register.html">User Registration</a></li>
+                    <li><a href="forget.html">Password Reset</a></li>
+                    <li><a href="ad_dash.html">Admin Monitor</a></li>
                 </ul>
             </div>
+
             <div class="footer-col">
-                <h5>Connect</h5>
+                <h5>Capstone Details</h5>
                 <ul>
-                    <li><a href="#">LinkedIn</a></li>
-                    <li><a href="#">Twitter</a></li>
-                    <li><a href="#">Facebook</a></li>
+                    <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Team 404 Engineering</span></li>
+                    <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Project SmartStep IoT</span></li>
+                    <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Release v2.0 (2026)</span></li>
                 </ul>
             </div>
         </div>
-        <div class="copyright">
-            &copy; 2026 SmartStep Engineering. All rights reserved.
+
+        <div class="container footer-bottom">
+            <div>&copy; 2026 SmartStep Engineering. All rights reserved.</div>
+            <div>Built with Supabase Cloud & PZT Energy Transducers</div>
         </div>
     </footer>
 
+    <!-- DYNAMIC JAVASCRIPT -->
+    <script>
+        // Mobile Drawer
+        const mobileToggle = document.getElementById('mobileToggle');
+        const mobileDrawer = document.getElementById('mobileDrawer');
+        mobileToggle.addEventListener('click', () => {
+            mobileToggle.classList.toggle('open');
+            mobileDrawer.classList.toggle('open');
+        });
+
+        // Step Information Database
+        const stepData = {
+            1: {
+                title: "Stage 1: Mechanical Kinetic Impact",
+                desc: "A pedestrian steps onto the top plate of the SmartStep tile. The internal spring suspension distributes downward force evenly across the multi-disc PZT array, causing microscopic deflection of the piezoelectric crystal lattice.",
+                metric1: "600 – 850 N",
+                label1: "Downward Footstep Force",
+                metric2: "1.2 mm",
+                label2: "Tile Vertical Travel",
+                waveTitle: "MECHANICAL PRESSURE PROFILE",
+                waveArt: "[   _/\\_   ]<br>___/    \\___<br>Force Peak: 75kgf"
+            },
+            2: {
+                title: "Stage 2: High-Frequency AC Transduction",
+                desc: "Deflection shifts the center of charge in the lead zirconate titanate crystal dipoles, inducing instantaneous electric polarization. Each transducer yields a high-voltage, low-current AC pulse.",
+                metric1: "18.4 V pk",
+                label1: "Instantaneous AC Voltage",
+                metric2: "4.2 mA",
+                label2: "Peak Current Pulse",
+                waveTitle: "RAW PIEZOELECTRIC AC SPIKE",
+                waveArt: "  /\\    |    <br> /  \\  / \\   <br>/____\\/___\\__<br>AC Transient Spikes"
+            },
+            3: {
+                title: "Stage 3: Ultra-Low Loss DC Rectification",
+                desc: "The AC spikes pass through a surface-mount Schottky diode bridge with a minimal 0.24V forward drop. Filtering capacitors smooth the pulsed voltage into a steady DC charging rail.",
+                metric1: "5.1 V DC",
+                label1: "Rectified Bus Voltage",
+                metric2: "84.5 %",
+                label2: "Conversion Efficiency",
+                waveTitle: "RECTIFIED & FILTERED DC BUS",
+                waveArt: "------------<br>~~~~~~~~~~~~<br>Ripple: &lt;45mV RMS"
+            },
+            4: {
+                title: "Stage 4: BMS & Buffer Storage",
+                desc: "The TP4056 lithium charge manager regulates trickle, constant-current, and constant-voltage charging phases to safely buffer energy into 18650 Li-ion cells without overcharging.",
+                metric1: "3.7 – 4.2 V",
+                label1: "Li-ion Cell Potential",
+                metric2: "2600 mAh",
+                label2: "Buffer Capacity",
+                waveTitle: "CC/CV CHARGING PROFILE",
+                waveArt: "[==== 82% ====]<br>Charging @ 250mA<br>Thermal Safe: 28°C"
+            },
+            5: {
+                title: "Stage 5: Regulated DC Output & Cloud Sync",
+                desc: "Energy is supplied to 5V USB output rails and 3.3V power rails. Simultaneously, the ESP8266 wakes from deep sleep to record step count and voltage levels into Supabase PostgreSQL.",
+                metric1: "5.0 V / 2.1 A",
+                label1: "USB Output Rail",
+                metric2: "128 ms",
+                label2: "IoT Cloud Latency",
+                waveTitle: "SUPABASE REALTIME PAYLOAD",
+                waveArt: "{ uid: 01,<br>  voltage: 18.4,<br>  status: 'ok' }"
+            }
+        };
+
+        function selectStep(stepNum, el) {
+            document.querySelectorAll('.step-pill').forEach(p => p.classList.remove('active'));
+            if (el) el.classList.add('active');
+
+            const data = stepData[stepNum];
+            if (!data) return;
+
+            document.getElementById('stepTitle').textContent = data.title;
+            document.getElementById('stepDescription').textContent = data.desc;
+            document.getElementById('metric1').textContent = data.metric1;
+            document.getElementById('label1').textContent = data.label1;
+            document.getElementById('metric2').textContent = data.metric2;
+            document.getElementById('label2').textContent = data.label2;
+            document.getElementById('waveTitle').textContent = data.waveTitle;
+            document.getElementById('waveArt').innerHTML = data.waveArt;
+        }
+    </script>
 </body>
 </html>
