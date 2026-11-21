@@ -413,17 +413,16 @@
       return 'badge-offline';
     }
 
-    // "Battery Health" — interpreted from the harvest/consume (charge/discharge) ratio
+    // "Battery Health" — State of Health measured by the mat from the battery's internal resistance
     let healthVal = 'N/A', healthRaw = null;
-    if (harvestWh > 0 || consumeWh > 0) {
-      if (consumeWh > 0) {
-        const ratioPct = (harvestWh / consumeWh) * 100;
-        if (ratioPct >= 120)      { healthVal = `Optimal (${ratioPct.toFixed(0)}%)`;  healthRaw = 'optimal'; }
-        else if (ratioPct >= 80)  { healthVal = `Monitor (${ratioPct.toFixed(0)}%)`;  healthRaw = 'monitor'; }
-        else                      { healthVal = `Critical (${ratioPct.toFixed(0)}%)`; healthRaw = 'critical'; }
-      } else {
-        healthVal = 'Optimal (surplus)'; healthRaw = 'optimal'; // harvesting with no draw at all
-      }
+    const sohPct = d.soh_percent ?? null;
+    const rMohms = d.internal_resistance_mohms ?? 0;
+    if (sohPct !== null && rMohms > 0) {
+      if (sohPct >= 80)      { healthVal = `Optimal (${sohPct.toFixed(0)}%)`;  healthRaw = 'optimal'; }
+      else if (sohPct >= 60) { healthVal = `Monitor (${sohPct.toFixed(0)}%)`;  healthRaw = 'monitor'; }
+      else                   { healthVal = `Critical (${sohPct.toFixed(0)}%)`; healthRaw = 'critical'; }
+    } else {
+      healthVal = 'Measuring…';   // no load step has been measured yet
     }
 
     // "Charge Rate" — harvest_mw is already a power (rate) reading, used directly
@@ -435,7 +434,7 @@
       { name: 'Charge Rate',     val: chargeRateVal,                                                       raw: chargeRateRaw },
       { name: 'Load Voltage',    val: consumeV   !== null ? consumeV.toFixed(2) + ' V'             : 'N/A', raw: consumeV   !== null ? consumeV.toFixed(2) + 'v' : null },
       { name: 'Total Harvested', val: totalWh    !== null ? (totalWh * 1000).toFixed(2) + ' mWh'   : '0.00 mWh', raw: totalWh !== null ? 'good' : null },
-      { name: 'Consume Power',   val: consumeMw  !== null ? consumeMw.toFixed(1) + ' mW'           : 'N/A', raw: consumeMw !== null ? (harvestMw !== null && harvestMw >= consumeMw ? 'good' : 'critical') : null },
+      { name: 'Consume Power',   val: consumeMw  !== null ? consumeMw.toFixed(1) + ' mW'           : 'N/A', raw: consumeMw !== null ? (consumeMw <= 0 || (harvestMw !== null && harvestMw >= consumeMw) ? 'good' : 'warn') : null }, // consume_mw is now the USB output draw (0 when idle), so normal use shows amber, not critical
     ];
 
     document.getElementById('healthList').innerHTML = items.map(i => `

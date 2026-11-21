@@ -65,7 +65,7 @@
     .charge-ring-wrap { position: relative; width: 118px; height: 118px; flex-shrink: 0; }
     .charge-ring-wrap svg { transform: rotate(-90deg); width: 100%; height: 100%; }
     .ring-track { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 9; }
-    .ring-fill { fill: none; stroke: var(--gold); stroke-width: 9; stroke-linecap: round; transition: stroke-dashoffset 0.8s ease, stroke 0.4s ease; }
+    .ring-fill { fill: none; stroke: var(--gold); stroke-width: 9; stroke-linecap: round; transition: stroke-dashoffset 0.3s ease, stroke 0.2s ease; }
     .ring-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .ring-pct { font-family: 'Lexend', sans-serif; font-size: 1.5rem; color: white; line-height: 1; }
     .ring-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 8px; background: rgba(255,255,255,0.5); }
@@ -109,6 +109,23 @@
     .health-val { font-size: 0.82rem; font-weight: 600; color: var(--navy-dark); font-family: 'JetBrains Mono', monospace; }
     .health-val.ok { color: var(--success); }
     .health-val.warn { color: var(--warning); }
+
+    /* ===== USB OUTPUT / DEVICE CHARGING ===== */
+    .usb-hero { margin-top: 0; }
+    .usb-settings-card { margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; padding: 16px 22px; }
+    .usb-settings-card .usb-note { flex: 1; min-width: 220px; }
+    .usb-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; flex-wrap: wrap; margin-bottom: 14px; }
+    .usb-inputs { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+    .usb-inputs label { font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; }
+    .usb-inputs input { width: 104px; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 0.85rem; color: var(--text-main); background: var(--bg-slate); outline: none; }
+    .usb-inputs input:focus { border-color: var(--gold); background: var(--white); }
+    .usb-btn { padding: 9px 14px; border: none; border-radius: 8px; background: var(--gold); color: var(--navy-dark); font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.8rem; cursor: pointer; transition: 0.2s; }
+    .usb-btn:hover { background: #d4ae45; }
+    .usb-headline { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 16px; }
+    .usb-pct { font-family: 'Lexend', sans-serif; font-size: 2rem; color: var(--navy-dark); }
+    .usb-eta { font-size: 0.9rem; font-weight: 600; color: var(--text-muted); }
+    .metric-row.four { grid-template-columns: repeat(4, 1fr); }
+    .usb-note { font-size: 0.7rem; color: var(--text-muted); line-height: 1.5; }
 </style>
 </head>
 <body>
@@ -167,7 +184,45 @@
                 <div>Harvest: <b id="flow-harvest">0 mW</b></div>
                 <div>Load: <b id="flow-load">0 mW</b></div>
                 <div>Net: <b id="flow-net">0 mW</b></div>
+                <div>Battery: <b id="flow-batt">—</b></div>
+                <div>Health: <b id="flow-health">—</b></div>
             </div>
+        </div>
+
+        <!-- OUTPUT CHARGING (USB) — separate display from the main battery -->
+        <div class="section-label">Output Charging &middot; USB Device</div>
+        <div class="battery-card usb-hero">
+            <div class="charge-ring-wrap">
+                <svg viewBox="0 0 120 120">
+                    <circle class="ring-track" cx="60" cy="60" r="52"></circle>
+                    <circle id="usb-ring" class="ring-fill" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"></circle>
+                </svg>
+                <div class="ring-center">
+                    <div class="ring-pct" id="usb-pct">&mdash;</div>
+                    <div class="ring-dot" id="usb-dot"></div>
+                </div>
+            </div>
+            <div class="battery-info">
+                <div class="battery-status-text">
+                    <span id="usb-headline">No device connected</span>
+                    <span class="status-chip chip-idle" id="usb-chip">Idle</span>
+                </div>
+                <div class="battery-sub" id="usb-status">Plug a device into the USB output to start tracking</div>
+            </div>
+            <div class="battery-flow-detail">
+                <div>Output: <b id="usb-ma">0 mA</b></div>
+                <div>To device: <b id="usb-mw">0 mW</b></div>
+                <div>Delivered: <b id="usb-wh">0.000 Wh</b></div>
+                <div>Time: <b id="usb-time">0:00</b></div>
+            </div>
+        </div>
+        <div class="card usb-settings-card">
+            <div class="usb-inputs">
+                <label>Device battery (mAh)<input type="number" id="usb-cap" value="4500" min="500" step="100" oninput="renderUsb()"></label>
+                <label>Starting %<input type="number" id="usb-start" value="20" min="0" max="100" oninput="renderUsb()"></label>
+                <button class="usb-btn" onclick="resetUsbSession()">New session</button>
+            </div>
+            <div class="usb-note">Estimates only: the mat can&rsquo;t read your device&rsquo;s real battery level. The percentage comes from the energy delivered, the battery size and starting % you enter, and an assumed 75% overall efficiency.</div>
         </div>
 
         <!-- POWER GENERATION + SYSTEM HEALTH -->
@@ -242,10 +297,12 @@ const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // Assumed nominal capacity of the mat's storage cell. Adjust to match the
 // real hardware spec — this is not stored in the telemetry table, so it is
 // the one modeling assumption the "Time to Full" estimate depends on.
-const BATTERY_CAPACITY_WH = 5.0;
+const BATTERY_CAPACITY_WH = 108;   // 12 V x 9 Ah
 
 let refreshInterval = null;
 let currentMatId = null;
+const POLL_MAX_SECONDS = 2;   // fallback poll rate (realtime handles the normal case)
+let lastRowTime = null;       // created_at of the newest row shown; also used to skip duplicates
 
 // --- 1. AUTH GUARD ---
 async function checkUser() {
@@ -315,15 +372,23 @@ function setupRealtimeData(matId, refreshSeconds = 5) {
         )
         .subscribe();
 
+    // Realtime pushes new rows instantly; this poll is only a fallback in case the websocket
+    // drops, so it runs at most every POLL_MAX_SECONDS regardless of the saved refresh setting.
     refreshLatestTelemetry(matId);
-    refreshInterval = setInterval(() => refreshLatestTelemetry(matId), refreshSeconds * 1000);
+    const pollSeconds = Math.min(refreshSeconds, POLL_MAX_SECONDS);
+    refreshInterval = setInterval(() => refreshLatestTelemetry(matId), pollSeconds * 1000);
 }
+
+// Keeps the "Last reading" label ticking every second between uploads
+setInterval(() => {
+    if (lastRowTime) document.getElementById('last-reading').innerText = formatTimeAgo(lastRowTime);
+}, 1000);
 
 // --- 5. FETCH LATEST TELEMETRY ROW ---
 async function refreshLatestTelemetry(matId) {
     const { data, error } = await _supabase
         .from('telemetry')
-        .select('steps, total_wh, harvest_v, harvest_ma, harvest_mw, harvest_wh, consume_v, consume_ma, consume_mw, consume_wh, created_at')
+        .select('steps, total_wh, harvest_v, harvest_ma, harvest_mw, harvest_wh, consume_v, consume_ma, consume_mw, consume_wh, soh_percent, internal_resistance_mohms, created_at')
         .eq('mat_id', matId)
         .order('created_at', { ascending: false })
         .limit(1)
@@ -348,6 +413,11 @@ async function refreshLatestTelemetry(matId) {
 
 // --- 6. APPLY A TELEMETRY ROW TO THE UI ---
 function applyTelemetry(row) {
+    // Realtime and polling both deliver the same row; apply each row only once so the
+    // chart and the smoothing buffers aren't fed duplicates.
+    if (row.created_at && lastRowTime && Date.parse(row.created_at) === Date.parse(lastRowTime)) return;
+    if (row.created_at) lastRowTime = row.created_at;
+
     const steps = row.steps || 0;
     const harvestV = row.harvest_v || 0;
     const harvestMa = row.harvest_ma || 0;
@@ -358,6 +428,8 @@ function applyTelemetry(row) {
     const consumeMw = row.consume_mw || 0;
     const consumeWh = row.consume_wh || 0;
     const totalWh = row.total_wh || 0;
+    const internalMohms = row.internal_resistance_mohms || 0;
+    const sohPercent = row.soh_percent ?? 100;
 
     // Power Generation
     document.getElementById('steps-val').innerText = steps.toLocaleString();
@@ -372,7 +444,12 @@ function applyTelemetry(row) {
     document.getElementById('last-reading').innerText = row.created_at ? formatTimeAgo(row.created_at) : '—';
 
     // Battery / charge estimate
-    updateBattery(totalWh, harvestMw, consumeMw);
+    // Battery voltage: harvest sensor if it sees the battery (9-15 V), otherwise the consume sensor while a load is on
+    const batteryV = (harvestV > 9 && harvestV < 15) ? harvestV : ((consumeV > 9 && consumeV < 15) ? consumeV : harvestV);
+    updateBattery(totalWh, harvestMw, consumeMw, harvestMa, consumeMa, batteryV, internalMohms, sohPercent);
+
+    // USB output / device-charging tracker
+    updateUsbOutput(row.created_at, consumeMa, consumeMw);
 
     // Chart
     updateChart(harvestMw, consumeMw);
@@ -381,13 +458,116 @@ function applyTelemetry(row) {
 // --- 7. BATTERY STATE OF CHARGE + TIME-TO-FULL ---
 const RING_CIRCUMFERENCE = 2 * Math.PI * 52;
 
-function updateBattery(totalWh, harvestMw, consumeMw) {
-    const socRaw = (totalWh / BATTERY_CAPACITY_WH) * 100;
-    const soc = Math.max(0, Math.min(100, socRaw));
+// Direction comes from the SIGN of the current, not from power (INA219 power is never negative):
+//   harvest_ma > 0  -> current flowing INTO the battery (charging)
+//   consume_ma > 0  -> current flowing OUT of the battery to the USB output (discharging)
+const CURRENT_THRESHOLD_MA = 3;   // mA — at or below this counts as "no current" (raised from 1 to ride out sensor noise)
+const CURRENT_SMOOTHING_SAMPLES = 3;  // average raw mA over this many readings before testing the threshold
+const harvestMaHistory = [];
+const consumeMaHistory = [];
 
-    const harvestW = harvestMw / 1000;
-    const consumeW = consumeMw / 1000;
-    const netW = harvestW - consumeW;
+const NET_SMOOTHING_SAMPLES = 3;  // ~15 s of readings, so time estimates settle quickly but don't jump on every step
+const netHistory = [];
+
+// The charging/discharging/idle LABEL is debounced separately from the numeric smoothing above:
+// a state only takes effect once the same raw classification has shown up this many times in a
+// row, so one noisy or dropped-out sample can't flip the chip by itself.
+const STATE_DEBOUNCE_SAMPLES = 2;
+let pendingState = null, pendingStateCount = 0, displayedState = 'idle';
+
+function averageHistory(history, value, maxSamples) {
+    history.push(value);
+    if (history.length > maxSamples) history.shift();
+    return history.reduce((a, b) => a + b, 0) / history.length;
+}
+
+function debounceState(rawState) {
+    if (rawState === displayedState) { pendingState = null; pendingStateCount = 0; return displayedState; }
+    if (rawState === pendingState) {
+        pendingStateCount++;
+    } else {
+        pendingState = rawState;
+        pendingStateCount = 1;
+    }
+    if (pendingStateCount >= STATE_DEBOUNCE_SAMPLES) {
+        displayedState = rawState;
+        pendingState = null;
+        pendingStateCount = 0;
+    }
+    return displayedState;
+}
+
+// Battery percentage from VOLTAGE (12 V sealed lead-acid assumed). harvest_v is the
+// voltage at the battery terminal (harvest INA219 VIN- is on the battery side).
+// Approximate resting-voltage curve: [volts, percent]. Edit if your battery differs
+// (lead-acid curves vary by maker/temperature; lithium 12 V packs need a different table).
+//
+// NOTE: this curve only spans ~1.05 V across the whole 0–100% range, so it is very
+// sensitive to sensor noise — piezo harvesting current is pulsed (footstep spikes), not
+// a steady trickle, so raw harvest_v swings more than you'd see on a steady charger.
+// That's compensated for below with a wider smoothing window and a slew-rate limit on
+// the displayed percentage, not by changing the curve itself.
+const SOC_CURVE = [[11.70, 0], [11.90, 10], [12.10, 25], [12.30, 50], [12.50, 75], [12.65, 90], [12.75, 100]];
+const BATTERY_INTERNAL_OHMS = 0.05;   // lets us undo the small voltage sag/rise caused by load/charge current
+const VOLT_SMOOTHING_SAMPLES = 8;     // wider than the 3-sample default elsewhere — this curve needs it
+const voltHistory = [];
+
+function socFromVoltage(v, harvestMa, consumeMa, internalMohms) {
+    if (!(v > 9 && v < 15)) return null;   // not a believable 12 V battery reading -> use energy count instead
+
+    // Approximate the resting voltage: load pulls the reading down, charging pushes it up
+    const rOhms = internalMohms > 0 ? internalMohms / 1000 : BATTERY_INTERNAL_OHMS;   // measured by the mat when known
+    const restV = v + (consumeMa / 1000) * rOhms - (harvestMa / 1000) * rOhms;
+    voltHistory.push(restV);
+    if (voltHistory.length > VOLT_SMOOTHING_SAMPLES) voltHistory.shift();
+    const avgV = voltHistory.reduce((a, b) => a + b, 0) / voltHistory.length;
+
+    if (avgV <= SOC_CURVE[0][0]) return 0;
+    if (avgV >= SOC_CURVE[SOC_CURVE.length - 1][0]) return 100;
+    for (let i = 1; i < SOC_CURVE.length; i++) {
+        const [v1, p1] = SOC_CURVE[i];
+        const [v0, p0] = SOC_CURVE[i - 1];
+        if (avgV <= v1) return p0 + ((avgV - v0) / (v1 - v0)) * (p1 - p0);
+    }
+    return null;
+}
+
+// The displayed % is slew-rate limited: however much the raw computed SOC jumps between
+// readings, the on-screen number can only move this many points per update. This is what
+// actually stops the visible flicker — it works regardless of where the noise comes from
+// (voltage sensor, piezo current spikes, a momentary bad sample, etc).
+const SOC_DISPLAY_MAX_STEP = 1.0;   // percentage points per telemetry row
+let displayedSoc = null;
+
+function updateBattery(totalWh, harvestMw, consumeMw, harvestMa, consumeMa, batteryV, internalMohms, sohPercent) {
+    const energySoc = (totalWh / BATTERY_CAPACITY_WH) * 100;
+    const voltageSoc = socFromVoltage(batteryV, harvestMa, consumeMa, internalMohms);
+    const usingVoltage = voltageSoc !== null;
+    const rawSoc = Math.max(0, Math.min(100, usingVoltage ? voltageSoc : energySoc));
+
+    if (displayedSoc === null) {
+        displayedSoc = rawSoc;   // first reading — jump straight there, nothing to ease from
+    } else {
+        const diff = rawSoc - displayedSoc;
+        displayedSoc += Math.sign(diff) * Math.min(Math.abs(diff), SOC_DISPLAY_MAX_STEP);
+    }
+    const soc = displayedSoc;
+
+    // Average the raw currents over a few samples before testing the threshold, so one
+    // noisy/zero reading can't momentarily look like "no current" or flip the direction.
+    const avgHarvestMa = averageHistory(harvestMaHistory, harvestMa, CURRENT_SMOOTHING_SAMPLES);
+    const avgConsumeMa = averageHistory(consumeMaHistory, consumeMa, CURRENT_SMOOTHING_SAMPLES);
+    const isCharging = avgHarvestMa > CURRENT_THRESHOLD_MA;
+    const isDraining = avgConsumeMa > CURRENT_THRESHOLD_MA;
+
+    const harvestW = isCharging ? Math.max(0, harvestMw) / 1000 : 0;
+    const consumeW = isDraining ? Math.max(0, consumeMw) / 1000 : 0;
+    const instNetW = harvestW - consumeW;
+
+    // Smoothed net power, used only for the time-to-full / runtime estimates
+    netHistory.push(instNetW);
+    if (netHistory.length > NET_SMOOTHING_SAMPLES) netHistory.shift();
+    const netW = netHistory.reduce((a, b) => a + b, 0) / netHistory.length;
 
     // Ring
     const offset = RING_CIRCUMFERENCE * (1 - soc / 100);
@@ -400,9 +580,19 @@ function updateBattery(totalWh, harvestMw, consumeMw) {
     const chip = document.getElementById('charge-chip');
     const headline = document.getElementById('charge-headline');
     const sub = document.getElementById('charge-sub');
-    const NET_THRESHOLD = 0.005; // W — ignore noise around zero net power
 
-    if (soc >= 99.5) {
+    // Decide the state from (smoothed) current direction, then debounce: the displayed
+    // state only changes once the same raw classification repeats for a couple of readings,
+    // so a single noisy/dropped-out sample can't flip the chip back and forth.
+    let rawState;
+    if (isCharging && isDraining) rawState = instNetW >= 0 ? 'charging' : 'discharging';
+    else if (isCharging)          rawState = 'charging';
+    else if (isDraining)          rawState = 'discharging';
+    else                          rawState = 'idle';
+    let state = debounceState(rawState);
+    if (soc >= 99.5 && state !== 'discharging') state = 'full';
+
+    if (state === 'full') {
         ring.style.stroke = 'var(--gold)';
         bolt.classList.remove('charging');
         bolt.style.background = 'var(--gold)';
@@ -410,25 +600,27 @@ function updateBattery(totalWh, harvestMw, consumeMw) {
         chip.className = 'status-chip chip-idle';
         headline.textContent = '100% · Fully Charged';
         sub.textContent = 'Battery topped up — no net charge needed';
-    } else if (netW > NET_THRESHOLD) {
+    } else if (state === 'charging') {
         const remainingWh = BATTERY_CAPACITY_WH * (1 - soc / 100);
-        const hoursToFull = remainingWh / netW;
         ring.style.stroke = 'var(--success)';
         bolt.classList.add('charging');
         chip.textContent = 'Charging';
         chip.className = 'status-chip chip-charging';
-        headline.textContent = `Charging · ${formatDuration(hoursToFull)} to full`;
-        sub.textContent = `Net gain of ${(netW * 1000).toFixed(0)} mW from harvesting`;
-    } else if (netW < -NET_THRESHOLD) {
+        headline.textContent = netW > 0.001
+            ? `Charging · ${formatDuration(remainingWh / netW)} to full`
+            : 'Charging';
+        sub.textContent = `Harvesting ${harvestMa.toFixed(1)} mA into the battery`;
+    } else if (state === 'discharging') {
         const remainingWh = BATTERY_CAPACITY_WH * (soc / 100);
-        const hoursLeft = remainingWh / Math.abs(netW);
         ring.style.stroke = 'var(--danger)';
         bolt.classList.remove('charging');
         bolt.style.background = 'var(--danger)';
         chip.textContent = 'Discharging';
         chip.className = 'status-chip chip-discharging';
-        headline.textContent = `${formatDuration(hoursLeft)} of runtime left`;
-        sub.textContent = `Drawing ${(Math.abs(netW) * 1000).toFixed(0)} mW more than is being harvested`;
+        headline.textContent = netW < -0.001
+            ? `${formatDuration(remainingWh / Math.abs(netW))} of runtime left`
+            : 'Discharging';
+        sub.textContent = `Battery is supplying ${consumeMa.toFixed(1)} mA to the USB output`;
     } else {
         ring.style.stroke = 'var(--gold)';
         bolt.classList.remove('charging');
@@ -436,12 +628,17 @@ function updateBattery(totalWh, harvestMw, consumeMw) {
         chip.textContent = 'Idle';
         chip.className = 'status-chip chip-idle';
         headline.textContent = `${soc.toFixed(0)}% · Idle`;
-        sub.textContent = 'Harvest and load are balanced — no net charge or drain';
+        sub.textContent = 'No current flowing in or out of the battery';
     }
 
-    document.getElementById('flow-harvest').textContent = `${harvestMw.toFixed(0)} mW`;
-    document.getElementById('flow-load').textContent = `${consumeMw.toFixed(0)} mW`;
-    document.getElementById('flow-net').textContent = `${(netW * 1000).toFixed(0)} mW`;
+    sub.textContent += usingVoltage ? ' · % from battery voltage' : ' · % estimated from energy count';
+    document.getElementById('flow-batt').textContent = batteryV > 0 ? `${batteryV.toFixed(2)} V` : '—';
+    // Health is only known once the mat has measured the battery's internal resistance (needs a USB load to be plugged in)
+    document.getElementById('flow-health').textContent = internalMohms > 0 ? `${sohPercent.toFixed(0)}% · ${internalMohms.toFixed(0)} mΩ` : 'Measuring…';
+
+    document.getElementById('flow-harvest').textContent = `${(harvestW * 1000).toFixed(0)} mW`;
+    document.getElementById('flow-load').textContent = `${(consumeW * 1000).toFixed(0)} mW`;
+    document.getElementById('flow-net').textContent = `${(instNetW * 1000).toFixed(0)} mW`;
 }
 
 function formatDuration(hours) {
@@ -480,12 +677,130 @@ const powerChart = new Chart(ctx, {
     }
 });
 
+// --- 8. USB OUTPUT / DEVICE-CHARGING TRACKER ---
+// consume_ma > 0 means the battery is supplying the USB output. A "session" starts when
+// that current appears and ends after 10 s of no current. Energy delivered is integrated
+// from the telemetry timestamps; the device's % is then estimated from the battery size
+// and starting % the user enters (the mat cannot read the device's real battery level).
+const USB_ACTIVE_MA = 20;          // mA from the battery that counts as "a device is charging"
+const USB_IDLE_END_MS = 10000;     // no current for this long ends the session (10 s)
+const USB_EFFICIENCY = 0.75;       // converter + device charging losses (battery-side -> device battery)
+const DEVICE_NOMINAL_V = 3.85;     // typical phone cell voltage, used to turn mAh into Wh
+const usb = { active: false, hasSession: false, startT: 0, endT: 0, lastT: null, lastKey: null,
+              energyWh: 0, peakMa: 0, lastMa: 0, lastMw: 0, idleSince: null };
+
+function updateUsbOutput(key, ma, mw) {
+    if (!key || key === usb.lastKey) return;   // realtime + polling both deliver the same row
+    usb.lastKey = key;
+    const t = Date.parse(key);
+    if (isNaN(t)) return;
+
+    if (ma > USB_ACTIVE_MA) {
+        if (!usb.active) {
+            usb.active = true; usb.hasSession = true;
+            usb.startT = t; usb.energyWh = 0; usb.peakMa = 0; usb.lastT = null;
+        }
+        usb.idleSince = null;
+        if (usb.lastT !== null) {
+            const dt = t - usb.lastT;
+            if (dt > 0 && dt <= 30000) usb.energyWh += (Math.max(0, mw) / 1000) * USB_EFFICIENCY * (dt / 3600000);
+        }
+        usb.peakMa = Math.max(usb.peakMa, ma);
+        usb.lastMa = ma; usb.lastMw = mw; usb.endT = t;
+    } else if (usb.active) {
+        if (usb.idleSince === null) usb.idleSince = t;
+        if (t - usb.idleSince > USB_IDLE_END_MS) usb.active = false;
+    }
+    usb.lastT = t;
+    renderUsb();
+}
+
+function resetUsbSession() {
+    usb.active = false; usb.hasSession = false; usb.energyWh = 0; usb.peakMa = 0;
+    usb.lastT = null; usb.idleSince = null; usb.lastMa = 0; usb.lastMw = 0;
+    renderUsb();
+}
+
+function renderUsb() {
+    const ring = document.getElementById('usb-ring');
+    const dot = document.getElementById('usb-dot');
+    const chip = document.getElementById('usb-chip');
+    const headline = document.getElementById('usb-headline');
+    const status = document.getElementById('usb-status');
+    const pctEl = document.getElementById('usb-pct');
+    ring.style.strokeDasharray = RING_CIRCUMFERENCE;
+
+    // No session yet: idle display
+    if (!usb.hasSession) {
+        ring.style.strokeDashoffset = RING_CIRCUMFERENCE;
+        dot.classList.remove('charging');
+        pctEl.textContent = '—';
+        chip.textContent = 'Idle'; chip.className = 'status-chip chip-idle';
+        headline.textContent = 'No device connected';
+        status.textContent = 'Plug a device into the USB output to start tracking';
+        document.getElementById('usb-ma').textContent = '0 mA';
+        document.getElementById('usb-mw').textContent = '0 mW';
+        document.getElementById('usb-wh').textContent = '0.000 Wh';
+        document.getElementById('usb-time').textContent = '0:00';
+        return;
+    }
+
+    const capMah = Math.max(1, parseFloat(document.getElementById('usb-cap').value) || 4500);
+    const startPct = Math.min(100, Math.max(0, parseFloat(document.getElementById('usb-start').value) || 0));
+    const deviceWh = capMah * DEVICE_NOMINAL_V / 1000;
+
+    const pct = Math.min(100, startPct + (usb.energyWh / deviceWh) * 100);
+    const toDevW = usb.active ? (Math.max(0, usb.lastMw) / 1000) * USB_EFFICIENCY : 0;
+
+    // Time to full: full speed to 80%, then ~40% speed for the last stretch (charging tapers off)
+    let eta = '';
+    let nearlyFull = false;
+    if (usb.active) {
+        if (pct >= 99.5) {
+            eta = 'Should be full';
+        } else if (pct >= 85 && usb.lastMa < 0.35 * usb.peakMa) {
+            eta = 'Nearly full';
+            nearlyFull = true;
+        } else if (toDevW > 0.05) {
+            const toEighty = Math.max(0, 80 - pct) / 100 * deviceWh;
+            const rest = (100 - Math.max(pct, 80)) / 100 * deviceWh;
+            eta = `${formatDuration(toEighty / toDevW + rest / (toDevW * 0.4))} to full`;
+        }
+    }
+
+    // Ring + percentage
+    ring.style.strokeDashoffset = RING_CIRCUMFERENCE * (1 - pct / 100);
+    pctEl.textContent = `~${pct.toFixed(0)}%`;
+
+    if (usb.active) {
+        ring.style.stroke = (pct >= 99.5 || nearlyFull) ? 'var(--gold)' : 'var(--success)';
+        dot.classList.add('charging');
+        chip.textContent = pct >= 99.5 ? 'Full' : 'Charging';
+        chip.className = 'status-chip ' + (pct >= 99.5 ? 'chip-idle' : 'chip-charging');
+        headline.textContent = eta ? `Charging device · ${eta}` : 'Charging device';
+        status.textContent = `Drawing ${usb.lastMa.toFixed(0)} mA from the main battery`;
+    } else {
+        ring.style.stroke = 'var(--gold)';
+        dot.classList.remove('charging');
+        chip.textContent = 'Done'; chip.className = 'status-chip chip-idle';
+        headline.textContent = `Session ended · ~${pct.toFixed(0)}%`;
+        status.textContent = `Final estimate · ${usb.energyWh.toFixed(3)} Wh delivered`;
+    }
+
+    const endT = usb.active ? (usb.lastT || usb.endT) : usb.endT;
+    const secs = Math.max(0, Math.round((endT - usb.startT) / 1000));
+    document.getElementById('usb-ma').textContent = `${(usb.active ? usb.lastMa : 0).toFixed(0)} mA`;
+    document.getElementById('usb-mw').textContent = `${(toDevW * 1000).toFixed(0)} mW`;
+    document.getElementById('usb-wh').textContent = `${usb.energyWh.toFixed(3)} Wh`;
+    document.getElementById('usb-time').textContent = `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`;
+}
+
 function updateChart(harvestMw, consumeMw) {
     powerChart.data.datasets[0].data.shift();
     powerChart.data.datasets[0].data.push(harvestMw);
     powerChart.data.datasets[1].data.shift();
     powerChart.data.datasets[1].data.push(consumeMw);
-    powerChart.update();
+    powerChart.update('none');   // skip the 1 s redraw animation so new points appear immediately
 }
 
 // --- 9. LOGOUT ---

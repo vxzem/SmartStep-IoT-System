@@ -327,7 +327,7 @@
 
         const { data, error } = await supabaseClient
             .from('telemetry')
-            .select('steps, total_wh, created_at')
+            .select('steps, harvest_wh, created_at')
             .eq('mat_id', currentMatId)
             .gte('created_at', start)
             .lte('created_at', end)
@@ -366,13 +366,13 @@
             }
 
             if (!grouped[key]) grouped[key] = { wh: 0, steps: 0 };
-            grouped[key].wh += row.total_wh || 0;
+            grouped[key].wh += row.harvest_wh || 0;
             grouped[key].steps += row.steps || 0;
         });
 
         const labels = Object.keys(grouped);
         const whData = Object.values(grouped).map(v => (v.wh * 1000).toFixed(4));
-        const totalWh = data.reduce((sum, r) => sum + (r.total_wh || 0), 0);
+        const totalWh = data.reduce((sum, r) => sum + (r.harvest_wh || 0), 0);
         const totalSteps = data[data.length - 1]?.steps || 0;
 
         energyChart.data.labels = labels;
@@ -409,7 +409,7 @@
         data.forEach(row => {
             const hour = new Date(row.created_at).getHours();
             if (!hourly[hour]) hourly[hour] = 0;
-            hourly[hour] += row.total_wh || 0;
+            hourly[hour] += row.harvest_wh || 0;
         });
 
         const sorted = Object.entries(hourly).sort((a, b) => b[1] - a[1]);
@@ -465,7 +465,7 @@
 
         const { data, error } = await supabaseClient
             .from('telemetry')
-            .select('total_wh, created_at')
+            .select('harvest_wh, created_at')
             .eq('mat_id', currentMatId)
             .gte('created_at', weekAgo.toISOString())
             .order('created_at', { ascending: true });
@@ -496,7 +496,7 @@
                 const date = new Date(row.created_at);
                 const day = (date.getDay() + 6) % 7;
                 const timeSlot = Math.floor(date.getHours() / 2);
-                grid[day][timeSlot] += row.total_wh || 0;
+                grid[day][timeSlot] += row.harvest_wh || 0;
             });
         }
 

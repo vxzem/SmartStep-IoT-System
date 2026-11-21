@@ -111,9 +111,16 @@
     .pref-note { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px; }
     .pref-link { display: block; text-align: center; font-size: 0.8rem; font-weight: 600; color: var(--navy-dark); text-decoration: none; padding: 10px; border: 1.5px solid var(--border); border-radius: 8px; transition: 0.2s; }
     .pref-link:hover { border-color: var(--navy-dark); }
+
+    #toast { position: fixed; bottom: 24px; right: 24px; background: var(--navy-dark); color: white; padding: 12px 20px; border-radius: 10px; font-size: 0.85rem; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,0.2); transform: translateY(80px); opacity: 0; transition: all 0.3s ease; z-index: 999; }
+    #toast.show { transform: translateY(0); opacity: 1; }
+    #toast.toast-success { border-left: 4px solid var(--success); }
+    #toast.toast-error { border-left: 4px solid var(--danger); }
+    #toast.toast-info { border-left: 4px solid var(--gold); }
 </style>
 </head>
 <body>
+    <div id="toast"></div>
     <aside class="sidebar">
         <div class="logo">SmartStep</div>
         <div class="nav-section">Main</div>
@@ -336,15 +343,47 @@
         }, 250);
     }
 
+    function toast(msg, type = 'success') {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = `show toast-${type}`;
+        setTimeout(() => { t.className = ''; }, 3200);
+    }
+
     async function dismissAll() {
-        if (!currentMatId) return;
-        await db.from('notifications').delete().eq('mat_id', currentMatId);
+        if (!currentMatId) {
+            toast('No mat assigned — nothing to clear.', 'error');
+            return;
+        }
+        if (!confirm('Clear all notifications for this mat? This cannot be undone.')) return;
+
+        const { error } = await db.from('notifications').delete().eq('mat_id', currentMatId);
+
+        if (error) {
+            console.error('dismissAll error:', error);
+            toast('Failed to clear notifications: ' + error.message, 'error');
+            return;
+        }
+
+        toast('All notifications cleared.');
         loadNotifications();
     }
 
     async function markAllRead() {
-        if (!currentMatId) return;
-        await db.from('notifications').update({ is_read: true }).eq('mat_id', currentMatId).eq('is_read', false);
+        if (!currentMatId) {
+            toast('No mat assigned — nothing to mark.', 'error');
+            return;
+        }
+
+        const { error } = await db.from('notifications').update({ is_read: true }).eq('mat_id', currentMatId).eq('is_read', false);
+
+        if (error) {
+            console.error('markAllRead error:', error);
+            toast('Failed to mark notifications read: ' + error.message, 'error');
+            return;
+        }
+
+        toast('All notifications marked as read.');
         loadNotifications();
     }
 
