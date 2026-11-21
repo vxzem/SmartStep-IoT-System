@@ -514,16 +514,16 @@
       return;
     }
 
-    document.getElementById('peakOutputValue').textContent = `${fmtNum(stats.peak.harvest_mw, 0)} mW`;
+    document.getElementById('peakOutputValue').textContent = `${fmtNum(stats.peak.harvest_mw, 2)} mW`;
     document.getElementById('peakOutputTime').textContent  = formatPeakTime(stats.peak.created_at);
-    document.getElementById('avgDailyValue').textContent   = `${fmtNum(stats.avgDaily, 0)} Wh`;
+    document.getElementById('avgDailyValue').textContent   = `${fmtNum(stats.avgDaily, 2)} Wh`;
     document.getElementById('avgDailyLabel').textContent   = periodLabelMap[period];
 
-    document.getElementById('totalHarvestedValue').textContent = `${fmtNum(stats.totalHarvest, 0)} Wh`;
-    document.getElementById('parasiticDrawValue').textContent  = `${fmtNum(stats.totalConsume, 0)} Wh`;
-    document.getElementById('netEnergyValue').textContent      = `${fmtNum(stats.net, 0)} Wh`;
+    document.getElementById('totalHarvestedValue').textContent = `${fmtNum(stats.totalHarvest, 2)} Wh`;
+    document.getElementById('parasiticDrawValue').textContent  = `${fmtNum(stats.totalConsume, 2)} Wh`;
+    document.getElementById('netEnergyValue').textContent      = `${fmtNum(stats.net, 2)} Wh`;
     const effClamped = Math.max(0, Math.min(100, stats.efficiency));
-    document.getElementById('efficiencyValue').textContent     = `${fmtNum(stats.efficiency, 1)}%`;
+    document.getElementById('efficiencyValue').textContent     = `${fmtNum(stats.efficiency, 2)}%`;
     document.getElementById('efficiencyFill').style.width      = `${effClamped}%`;
   }
 
