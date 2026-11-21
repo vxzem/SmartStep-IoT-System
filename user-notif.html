@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -132,7 +132,7 @@
             <span class="notif-badge" id="sidebar-badge" style="display:none;">0</span>
         </a>
         <div class="sidebar-footer">
-            <div class="logout-btn" onclick="window.location.href='login1.html'">Sign Out</div>
+            <div class="logout-btn" onclick="window.location.href='login.html'">Sign Out</div>
             <div class="node-info">Node: —<br>Ver: 1.3.0-PRO · User Mode</div>
         </div>
     </aside>
@@ -226,7 +226,7 @@
 
     async function init() {
         const { data: { user } } = await db.auth.getUser();
-        if (!user) { window.location.href = 'login1.html'; return; }
+        if (!user) { window.location.href = 'login.html'; return; }
         currentUser = user;
 
         await loadProfile();

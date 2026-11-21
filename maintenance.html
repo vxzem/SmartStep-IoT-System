@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -165,7 +165,7 @@
   <nav>
     <a href="ad_dash.html"         class="nav-link">Live Monitoring</a>
     <a href="analytics.html"       class="nav-link">Energy Analytics</a>
-    <a href="maintenance(2).html"  class="nav-link active">System Maintenance</a>
+    <a href="maintenance.html"  class="nav-link active">System Maintenance</a>
     <a href="security.html"        class="nav-link">System Settings</a>
   </nav>
   <div class="sidebar-footer">
@@ -345,7 +345,7 @@
 
   // ── AUTH ──
   _supabase.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_OUT' || !session) window.location.href = 'login1.html';
+    if (event === 'SIGNED_OUT' || !session) window.location.href = 'login.html';
   });
 
   async function loadAdminProfile(uid) {
@@ -803,7 +803,7 @@
   // ── INIT ──
   window.addEventListener('load', async () => {
     const { data: { session } } = await _supabase.auth.getSession();
-    if (!session) { window.location.href = 'login1.html'; return; }
+    if (!session) { window.location.href = 'login.html'; return; }
     loadAdminProfile(session.user.id);
     loadUserList();
   });

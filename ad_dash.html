@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -122,9 +122,9 @@
   <div class="logo">SmartStep</div>
   <div class="nav-section">Admin</div>
   <nav>
-    <a href="dash.html"            class="nav-link active">Live Monitoring</a>
+    <a href="ad_dash.html"            class="nav-link active">Live Monitoring</a>
     <a href="analytics.html"       class="nav-link">Energy Analytics</a>
-    <a href="maintenance(2).html"  class="nav-link">System Maintenance</a>
+    <a href="maintenance.html"  class="nav-link">System Maintenance</a>
     <a href="security.html"        class="nav-link">System Settings</a>
   </nav>
   <div class="sidebar-footer">
@@ -242,7 +242,7 @@
 
   // ── AUTH GUARD ──
   _supabase.auth.onAuthStateChange((event, session) => {
-    if (event === 'SIGNED_OUT' || !session) window.location.href = 'login1.html';
+    if (event === 'SIGNED_OUT' || !session) window.location.href = 'login.html';
     else loadAdminProfile(session.user.id);
   });
 
@@ -495,7 +495,7 @@
 
   window.addEventListener('load', async () => {
     const { data: { session } } = await _supabase.auth.getSession();
-    if (!session) { window.location.href = 'login1.html'; return; }
+    if (!session) { window.location.href = 'login.html'; return; }
     loadAdminProfile(session.user.id);
     loadUserList();
   });

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -311,13 +311,13 @@ async function checkUser() {
         document.body.style.display = 'flex';
         loadUserProfile(session.user.id);
     } else {
-        window.location.href = 'login1.html';
+        window.location.href = 'login.html';
     }
 }
 checkUser();
 
 _supabase.auth.onAuthStateChange((event) => {
-    if (event === 'SIGNED_OUT') window.location.href = 'login1.html';
+    if (event === 'SIGNED_OUT') window.location.href = 'login.html';
 });
 
 // --- 2. LOAD USER PROFILE ---

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -540,7 +540,7 @@ async function init() {
     loading(true);
     try {
         const { data: { user }, error } = await db.auth.getUser();
-        if (error || !user) { window.location.href = 'login1.html'; return; }
+        if (error || !user) { window.location.href = 'login.html'; return; }
         currentUser = user;
         await loadProfile(user);
         await loadTelemetry(user.id);
@@ -907,7 +907,7 @@ async function triggerAction(type) {
 
 document.getElementById('logoutBtn').addEventListener('click', async () => {
     await db.auth.signOut();
-    window.location.href = 'login1.html';
+    window.location.href = 'login.html';
 });
 
 init();

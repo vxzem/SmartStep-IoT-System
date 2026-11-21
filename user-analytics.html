@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -259,7 +259,7 @@
     // --- LOGOUT ---
     window.handleLogout = async () => {
         await supabaseClient.auth.signOut();
-        window.location.href = "login1.html";
+        window.location.href = "login.html";
     };
 
     // --- LOAD USER ---
@@ -267,7 +267,7 @@
         const { data: { user }, error: authError } = await supabaseClient.auth.getUser();
 
         if (authError || !user) {
-            window.location.href = "login1.html";
+            window.location.href = "login.html";
             return;
         }
 
