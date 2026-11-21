@@ -833,12 +833,12 @@ async function loadTelemetry(userId) {
     document.getElementById('tileWarning').style.display = 'none';
 
     document.getElementById('matHealthBar').style.width = '98%';
-    document.getElementById('matHealthPct').textContent = '98.00%';
+    document.getElementById('matHealthPct').textContent = '98%';
 
-    const batt = Number(row?.battery_pct ?? 88).toFixed(2);
+    const batt = Math.round(row?.battery_pct ?? 88);
     const voltage = Number(row?.voltage ?? 12.6).toFixed(2);
     const chargeRate = Number(row?.charge_rate ?? 2.4).toFixed(2);
-    const battHealth = Number(row?.battery_health ?? 94).toFixed(2);
+    const battHealth = Math.round(row?.battery_health ?? 94);
     const cycles = row?.cycle_count ?? 142;
 
     document.getElementById('batteryPct').textContent = batt + '%';

@@ -453,9 +453,9 @@
     const sohPct = d.soh_percent ?? null;
     const rMohms = d.internal_resistance_mohms ?? 0;
     if (sohPct !== null && rMohms > 0) {
-      if (sohPct >= 80)      { healthVal = `Optimal (${sohPct.toFixed(2)}%)`;  healthRaw = 'optimal'; }
-      else if (sohPct >= 60) { healthVal = `Monitor (${sohPct.toFixed(2)}%)`;  healthRaw = 'monitor'; }
-      else                   { healthVal = `Critical (${sohPct.toFixed(2)}%)`; healthRaw = 'critical'; }
+      if (sohPct >= 80)      { healthVal = `Optimal (${sohPct.toFixed(0)}%)`;  healthRaw = 'optimal'; }
+      else if (sohPct >= 60) { healthVal = `Monitor (${sohPct.toFixed(0)}%)`;  healthRaw = 'monitor'; }
+      else                   { healthVal = `Critical (${sohPct.toFixed(0)}%)`; healthRaw = 'critical'; }
     } else {
       healthVal = 'Measuring�';   // no load step has been measured yet
     }

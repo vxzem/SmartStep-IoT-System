@@ -617,7 +617,7 @@
     const section = document.getElementById('batterySection');
     section.innerHTML = `
       <div class="diag-item">
-        <div class="diag-label">Battery Health Index <span class="diag-val">${healthPct !== null ? healthPct.toFixed(2) + '%' : '�'}</span></div>
+        <div class="diag-label">Battery Health Index <span class="diag-val">${healthPct !== null ? healthPct.toFixed(0) + '%' : '�'}</span></div>
         <div class="diag-bar"><div class="diag-fill ${healthPct >= 80 ? 'fill-good' : healthPct >= 60 ? 'fill-warn' : 'fill-danger'}" style="width:${healthPct ?? 0}%"></div></div>
         <div class="tech-info">Derived from cumulative energy output</div>
       </div>

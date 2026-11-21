@@ -609,7 +609,7 @@ function updateBattery(totalWh, harvestMw, consumeMw, harvestMa, consumeMa, batt
     const ring = document.getElementById('ring-fill');
     ring.style.strokeDasharray = RING_CIRCUMFERENCE;
     ring.style.strokeDashoffset = offset;
-    document.getElementById('soc-pct').innerText = `${soc.toFixed(2)}%`;
+    document.getElementById('soc-pct').innerText = `${soc.toFixed(0)}%`;
 
     const bolt = document.getElementById('soc-bolt');
     const chip = document.getElementById('charge-chip');
@@ -662,14 +662,14 @@ function updateBattery(totalWh, harvestMw, consumeMw, harvestMa, consumeMa, batt
         bolt.style.background = 'rgba(255,255,255,0.5)';
         chip.textContent = 'Idle';
         chip.className = 'status-chip chip-idle';
-        headline.textContent = `${soc.toFixed(2)}% · Idle`;
+        headline.textContent = `${soc.toFixed(0)}% · Idle`;
         sub.textContent = 'No current flowing in or out of the battery';
     }
 
     sub.textContent += usingVoltage ? ' · % from battery voltage' : ' · % estimated from energy count';
     document.getElementById('flow-batt').textContent = batteryV > 0 ? `${batteryV.toFixed(2)} V` : '—';
     // Health is only known once the mat has measured the battery's internal resistance (needs a USB load to be plugged in)
-    document.getElementById('flow-health').textContent = internalMohms > 0 ? `${sohPercent.toFixed(2)}% · ${internalMohms.toFixed(2)} mΩ` : 'Measuring…';
+    document.getElementById('flow-health').textContent = internalMohms > 0 ? `${sohPercent.toFixed(0)}% · ${internalMohms.toFixed(2)} mΩ` : 'Measuring…';
 
     document.getElementById('flow-harvest').textContent = `${(harvestW * 1000).toFixed(2)} mW`;
     document.getElementById('flow-load').textContent = `${(consumeW * 1000).toFixed(2)} mW`;
@@ -805,7 +805,7 @@ function renderUsb() {
 
     // Ring + percentage
     ring.style.strokeDashoffset = RING_CIRCUMFERENCE * (1 - pct / 100);
-    pctEl.textContent = `~${pct.toFixed(2)}%`;
+    pctEl.textContent = `~${pct.toFixed(0)}%`;
 
     if (usb.active) {
         ring.style.stroke = (pct >= 99.5 || nearlyFull) ? 'var(--gold)' : 'var(--success)';

@@ -523,7 +523,7 @@
     document.getElementById('parasiticDrawValue').textContent  = `${fmtNum(stats.totalConsume, 2)} Wh`;
     document.getElementById('netEnergyValue').textContent      = `${fmtNum(stats.net, 2)} Wh`;
     const effClamped = Math.max(0, Math.min(100, stats.efficiency));
-    document.getElementById('efficiencyValue').textContent     = `${fmtNum(stats.efficiency, 2)}%`;
+    document.getElementById('efficiencyValue').textContent     = `${fmtNum(stats.efficiency, 0)}%`;
     document.getElementById('efficiencyFill').style.width      = `${effClamped}%`;
   }
 
