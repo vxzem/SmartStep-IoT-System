@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Research & Empirical Data | SmartStep Engineering</title>
+    <title>Research & Empirical Data | SmartStep Project</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lexend:wght@600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -64,12 +64,6 @@
             font-family: 'Lexend', sans-serif;
             font-size: 1.35rem;
             font-weight: 700;
-        }
-
-        .brand-logo .logo-bolt {
-            color: var(--gold);
-            font-size: 1.4rem;
-            filter: drop-shadow(0 0 10px rgba(229, 193, 88, 0.6));
         }
 
         .brand-logo .gold-accent { color: var(--gold); }
@@ -290,12 +284,7 @@
             font-size: 1.35rem;
             color: var(--navy-dark);
             margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
-
-        .obj-box h3 .icon { color: var(--gold); }
 
         .obj-box p {
             color: var(--text-muted);
@@ -323,7 +312,7 @@
             height: 22px;
             border-radius: 50%;
             background: var(--gold-soft);
-            color: var(--gold);
+            color: var(--navy-dark);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -331,103 +320,8 @@
             font-weight: 700;
             flex-shrink: 0;
             margin-top: 2px;
-            border: 1px solid rgba(229, 193, 88, 0.3);
-        }
-
-        /* --- EFFICIENCY INFOGRAPHIC BOX --- */
-        .infographic-box {
-            background: linear-gradient(135deg, var(--navy-dark), var(--navy-mid));
-            border: 1.5px solid var(--gold);
-            border-radius: 24px;
-            padding: 50px 40px;
-            color: var(--white);
-            margin-bottom: 50px;
-            box-shadow: 0 15px 40px rgba(5, 22, 46, 0.15);
-            text-align: center;
-        }
-
-        .infographic-box h2 {
-            font-family: 'Lexend', sans-serif;
-            font-size: clamp(1.6rem, 3vw, 2.2rem);
-            color: var(--gold);
-            margin-bottom: 10px;
-        }
-
-        .infographic-box p.sub {
-            color: rgba(255, 255, 255, 0.7);
-            max-width: 600px;
-            margin: 0 auto 40px;
-            font-size: 0.95rem;
-        }
-
-        .comparison-bars-wrap {
-            display: flex;
-            justify-content: center;
-            align-items: flex-end;
-            height: 260px;
-            gap: 60px;
-            padding-bottom: 30px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 30px;
-        }
-
-        .comp-col {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100%;
-            justify-content: flex-end;
-            width: 140px;
-        }
-
-        .comp-bar {
-            width: 90px;
-            border-radius: 12px 12px 0 0;
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .comp-bar.solar {
-            background: linear-gradient(to top, #334155, #64748b);
-            height: 57.1%;
-        }
-
-        .comp-bar.smartstep {
-            background: linear-gradient(to top, var(--gold-hover), var(--gold));
-            height: 82.5%;
-            box-shadow: 0 0 25px rgba(229, 193, 88, 0.4);
-        }
-
-        .bar-pct {
-            position: absolute;
-            top: -34px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Lexend', sans-serif;
-            font-weight: 700;
-            font-size: 1.15rem;
-            color: var(--white);
-            white-space: nowrap;
-        }
-
-        .comp-bar.smartstep .bar-pct { color: var(--gold); }
-
-        .bar-name {
-            margin-top: 14px;
-            font-family: 'Lexend', sans-serif;
-            font-size: 0.88rem;
-            color: var(--white);
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .infographic-note {
-            font-size: 0.82rem;
-            color: rgba(255, 255, 255, 0.55);
-            font-style: italic;
-            max-width: 700px;
-            margin: 0 auto;
+            border: 1px solid rgba(229, 193, 88, 0.35);
+            font-family: 'JetBrains Mono', monospace;
         }
 
         /* --- LIMITATIONS BOX --- */
@@ -436,7 +330,7 @@
             border: 1.5px dashed var(--gold);
             border-radius: 20px;
             padding: 34px 30px;
-            margin-bottom: 70px;
+            margin-bottom: 60px;
         }
 
         .limitations-card h3 {
@@ -444,9 +338,6 @@
             color: #856404;
             font-size: 1.25rem;
             margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .limitations-card p {
@@ -487,7 +378,7 @@
 
         .search-bar {
             width: 100%;
-            padding: 11px 16px 11px 40px;
+            padding: 11px 16px;
             border: 1.5px solid var(--border);
             border-radius: 12px;
             font-family: 'Inter', sans-serif;
@@ -501,15 +392,6 @@
         .search-bar:focus {
             border-color: var(--gold);
             background: var(--white);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-size: 0.9rem;
         }
 
         .ref-count {
@@ -549,7 +431,7 @@
         .ref-table tr:hover td { background: var(--bg-slate); }
         .ref-year { font-family: 'JetBrains Mono', monospace; color: var(--gold); font-weight: 700; }
 
-        /* --- FOOTER (UNIFIED) --- */
+        /* --- FOOTER --- */
         .site-footer {
             background: #030d1b;
             color: var(--white);
@@ -624,7 +506,6 @@
         /* --- RESPONSIVENESS --- */
         @media (max-width: 1024px) {
             .objectives-grid { grid-template-columns: 1fr; }
-            .comparison-bars-wrap { gap: 30px; }
             .footer-grid { grid-template-columns: 1fr 1fr; }
         }
 
@@ -634,7 +515,6 @@
             .search-wrap { width: 100%; min-width: auto; }
             .footer-grid { grid-template-columns: 1fr; }
             .references-box { padding: 24px 18px; }
-            .infographic-box { padding: 36px 20px; }
             .section-padding { padding: 60px 0; }
         }
     </style>
@@ -645,7 +525,6 @@
     <header class="site-header">
         <div class="container nav-container">
             <a href="landing.html" class="brand-logo">
-                <span class="logo-bolt">⚡</span>
                 <span>Smart<span class="gold-accent">Step</span></span>
                 <span class="live-dot-badge" title="IoT Network Online"></span>
             </a>
@@ -688,9 +567,9 @@
     <!-- ACADEMIC HERO -->
     <section class="academic-hero">
         <div class="container">
-            <span class="academic-tag">// ACADEMIC REFERENCE & EMPIRICAL DATA</span>
-            <h1>Research & <span>Empirical Findings</span></h1>
-            <p>// DATA_SET_GILUTONGAN_2026 // HARVESTING_OPTIMIZATION_STUDY</p>
+            <span class="academic-tag">// ACADEMIC REFERENCE &amp; EMPIRICAL DATA</span>
+            <h1>Research &amp; <span>Empirical Findings</span></h1>
+            <p>// DATA_SET_CAMPUS_2026 // HARVESTING_OPTIMIZATION_STUDY</p>
         </div>
     </section>
 
@@ -698,12 +577,12 @@
     <section class="container section-padding">
         <div class="objectives-grid">
             <div class="obj-box">
-                <h3><span class="icon">🎯</span> General Objective</h3>
-                <p>To design, fabricate, and empirically validate an IoT-integrated piezoelectric footstep energy harvesting floor system capable of transforming pedestrian kinetic motion into regulated micro-power to address localized electrical deficits in off-grid Philippine communities.</p>
+                <h3>General Objective</h3>
+                <p>To design, fabricate, and empirically validate an IoT-integrated piezoelectric footstep energy harvesting floor system capable of transforming pedestrian kinetic motion into regulated micro-power across high-traffic campus walkways and corridors.</p>
             </div>
 
             <div class="obj-box">
-                <h3><span class="icon">🔍</span> Specific Research Objectives</h3>
+                <h3>Specific Research Objectives</h3>
                 <ul class="obj-list">
                     <li>
                         <span class="bullet">1</span>
@@ -711,52 +590,27 @@
                     </li>
                     <li>
                         <span class="bullet">2</span>
-                        <span><strong>Low-Loss BMS Regulation:</strong> Engineer rectification and battery management circuits capable of capturing rapid microsecond voltage spikes safely.</span>
+                        <span><strong>Low-Loss BMS Regulation:</strong> Integrate rectification and battery management circuits capable of capturing rapid microsecond voltage spikes safely.</span>
                     </li>
                     <li>
                         <span class="bullet">3</span>
-                        <span><strong>Edge Cloud Telemetry:</strong> Stream continuous footfall count, state-of-charge, and node health data to Supabase for automated maintenance.</span>
+                        <span><strong>Edge Cloud Telemetry:</strong> Stream continuous footfall count, state-of-charge, and node health data to Supabase for automated monitoring during campus testing and demonstrations.</span>
                     </li>
                 </ul>
             </div>
         </div>
 
-        <!-- EFFICIENCY COMPARISON -->
-        <div class="infographic-box">
-            <h2>Regional Renewable Efficiency Analysis</h2>
-            <p class="sub">Empirical conversion comparison: Standard Cebu regional solar insolation vs. SmartStep kinetic recovery efficiency under sustained pedestrian traffic.</p>
-
-            <div class="comparison-bars-wrap">
-                <div class="comp-col">
-                    <div class="comp-bar solar">
-                        <span class="bar-pct">57.10%</span>
-                    </div>
-                    <span class="bar-name">Solar (Cebu Avg)</span>
-                </div>
-
-                <div class="comp-col">
-                    <div class="comp-bar smartstep">
-                        <span class="bar-pct">82.50%</span>
-                    </div>
-                    <span class="bar-name">SmartStep Recovery</span>
-                </div>
-            </div>
-
-            <p class="infographic-note">*Note: The 57.10% benchmark reflects seasonal dust-soiling, cloud cover, and ambient thermal derating observed in coastal Cebu PV microgrids, contrasted with weather-independent indoor/outdoor kinetic harvesting yields.*</p>
-        </div>
-
         <!-- SCOPE & LIMITATIONS -->
         <div class="limitations-card">
-            <h3>⚠️ Scope & Engineering Limitations</h3>
-            <p>The SmartStep prototype is engineered specifically for <strong>localized low-wattage emergency infrastructure</strong> — including path illumination, auxiliary USB mobile communication charging, and IoT remote environmental sensors. It is not intended for inductive high-current industrial appliances (such as compressors or high-draw refrigeration). Data logging requires local Wi-Fi or cellular gateway handshake for persistent cloud telemetry sync.</p>
+            <h3>Scope &amp; Technical Limitations</h3>
+            <p>The SmartStep prototype is designed specifically for <strong>localized low-wattage auxiliary infrastructure</strong> — including path illumination, auxiliary USB mobile communication charging, and IoT remote environmental sensors. It is not intended for inductive high-current industrial appliances. Data logging requires local Wi-Fi or cellular gateway connectivity for persistent cloud telemetry sync.</p>
         </div>
 
         <!-- DYNAMIC ACADEMIC REFERENCES TABLE -->
         <div class="references-box">
             <div class="ref-header">
-                <h3>Literature & Technical Citations</h3>
+                <h3>Literature &amp; Technical Citations</h3>
                 <div class="search-wrap">
-                    <span class="search-icon">🔍</span>
                     <input type="text" id="refSearch" class="search-bar" placeholder="Filter citations (e.g. 'Piezoelectric', 'BMS', '2026')...">
                 </div>
             </div>
@@ -781,12 +635,12 @@
                         <tr>
                             <td><strong>Supapo et al.</strong></td>
                             <td class="ref-year">2021</td>
-                            <td><em>Off-Grid Island Power Systems in the Philippines: Operational Viability &amp; Decentralization Opportunities</em> — Energy Policy Review</td>
+                            <td><em>Off-Grid Power Systems: Operational Viability &amp; Decentralization Opportunities</em> — Energy Policy Review</td>
                         </tr>
                         <tr>
                             <td><strong>Geoman, C. J. et al. (Team 404)</strong></td>
                             <td class="ref-year">2026</td>
-                            <td><em>Bridging the 24.45% Wastage Gap: The Gilutongan Island Kinetic Harvesting Case Study</em> — Capstone Engineering Proceedings</td>
+                            <td><em>Energy Recovery from Pedestrian Locomotion: The Campus Walkway Kinetic Harvesting Case Study</em> — Capstone Proceedings</td>
                         </tr>
                         <tr>
                             <td><strong>Sodano, H. A., Inman, D. J., &amp; Park, G.</strong></td>
@@ -808,8 +662,8 @@
     <footer class="site-footer">
         <div class="container footer-grid">
             <div class="footer-brand">
-                <h4>⚡ Smart<span style="color:var(--white)">Step</span></h4>
-                <p>An IoT-enabled piezoelectric kinetic energy harvesting platform developed by Team 404 for smart urban infrastructure.</p>
+                <h4>Smart<span style="color:var(--white)">Step</span></h4>
+                <p>An IoT-enabled piezoelectric kinetic energy harvesting platform developed by Team 404 for campus and public infrastructure.</p>
                 <div class="footer-status-indicator">
                     <span style="width:7px; height:7px; background:#10b981; border-radius:50%; display:inline-block;"></span>
                     <span>All Systems Operational</span>
@@ -839,7 +693,7 @@
             <div class="footer-col">
                 <h5>Capstone Details</h5>
                 <ul>
-                    <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Team 404 Engineering</span></li>
+                    <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Team 404 Project</span></li>
                     <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Project SmartStep IoT</span></li>
                     <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Release v2.0 (2026)</span></li>
                 </ul>
@@ -847,8 +701,8 @@
         </div>
 
         <div class="container footer-bottom">
-            <div>&copy; 2026 SmartStep Engineering. All rights reserved.</div>
-            <div>Built with Supabase Cloud & PZT Energy Transducers</div>
+            <div>&copy; 2026 SmartStep Project. All rights reserved.</div>
+            <div>Built with Supabase Cloud &amp; PZT Energy Transducers</div>
         </div>
     </footer>
 

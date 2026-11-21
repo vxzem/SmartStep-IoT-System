@@ -19,13 +19,11 @@
             --text-muted: #64748b;
             --border: #e2e8f0;
             --success: #10b981;
-            --success-soft: #dcfce7;
             --danger: #ef4444;
             --warning: #f59e0b;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-
         html { scroll-behavior: smooth; }
 
         body {
@@ -71,12 +69,6 @@
             font-size: 1.35rem;
             font-weight: 700;
             letter-spacing: -0.5px;
-        }
-
-        .brand-logo .logo-bolt {
-            color: var(--gold);
-            font-size: 1.4rem;
-            filter: drop-shadow(0 0 10px rgba(229, 193, 88, 0.6));
         }
 
         .brand-logo .gold-accent {
@@ -378,9 +370,12 @@
             font-weight: 500;
         }
 
-        .highlight-item .icon {
-            color: var(--gold);
-            font-weight: bold;
+        .highlight-item .bullet {
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+            display: inline-block;
         }
 
         /* Hero Image Container */
@@ -410,7 +405,6 @@
             transform: scale(1.02);
         }
 
-        /* Floating live card overlay */
         .live-overlay-card {
             position: absolute;
             bottom: -25px;
@@ -432,17 +426,15 @@
             50% { transform: translateY(-8px); }
         }
 
-        .live-icon-box {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
+        .live-tag-box {
+            padding: 6px 12px;
+            border-radius: 8px;
             background: var(--gold-soft);
             border: 1px solid rgba(229, 193, 88, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-            color: var(--gold);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--navy-dark);
         }
 
         .overlay-meta h4 {
@@ -460,7 +452,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* --- LIVE METRICS RIBBON --- */
+        /* --- METRICS RIBBON --- */
         .metrics-ribbon {
             background: var(--white);
             border-bottom: 1px solid var(--border);
@@ -507,10 +499,10 @@
             letter-spacing: 0.8px;
         }
 
-        /* --- DYNAMIC INTERACTIVE ENERGY CALCULATOR --- */
-        .calculator-section {
-            padding: 90px 0;
-            background: var(--bg-slate);
+        /* --- FEATURES SECTION --- */
+        .features-section {
+            padding: 100px 0;
+            background: var(--white);
         }
 
         .section-header {
@@ -545,166 +537,6 @@
             font-size: 1rem;
         }
 
-        .calc-card {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 44px;
-            box-shadow: 0 12px 35px rgba(5, 22, 46, 0.05);
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: center;
-        }
-
-        .calc-controls h3 {
-            font-family: 'Lexend', sans-serif;
-            font-size: 1.4rem;
-            color: var(--navy-dark);
-            margin-bottom: 12px;
-        }
-
-        .calc-controls p {
-            color: var(--text-muted);
-            font-size: 0.92rem;
-            margin-bottom: 28px;
-        }
-
-        .slider-wrap {
-            margin-bottom: 32px;
-        }
-
-        .slider-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 12px;
-        }
-
-        .slider-label {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--navy-dark);
-        }
-
-        .slider-display {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--gold);
-        }
-
-        input[type="range"] {
-            width: 100%;
-            height: 8px;
-            background: #e2e8f0;
-            border-radius: 5px;
-            outline: none;
-            -webkit-appearance: none;
-            cursor: pointer;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--gold);
-            border: 3px solid var(--navy-dark);
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
-        }
-
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.15);
-        }
-
-        .preset-buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .preset-btn {
-            background: var(--bg-slate);
-            border: 1px solid var(--border);
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-main);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .preset-btn:hover, .preset-btn.active {
-            background: var(--navy-dark);
-            color: var(--gold);
-            border-color: var(--navy-dark);
-        }
-
-        .calc-results {
-            background: linear-gradient(135deg, var(--navy-dark), var(--navy-mid));
-            border-radius: 20px;
-            padding: 36px 32px;
-            color: var(--white);
-            border: 1px solid rgba(229, 193, 88, 0.2);
-            position: relative;
-        }
-
-        .calc-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-
-        .result-box {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 14px;
-            padding: 18px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: transform 0.2s;
-        }
-
-        .result-box:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-2px);
-        }
-
-        .result-icon {
-            font-size: 1.4rem;
-            margin-bottom: 8px;
-        }
-
-        .result-val {
-            font-family: 'Lexend', sans-serif;
-            font-size: 1.65rem;
-            font-weight: 700;
-            color: var(--gold);
-            line-height: 1.1;
-            margin-bottom: 4px;
-        }
-
-        .result-unit {
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.5);
-            font-weight: 500;
-        }
-
-        .result-label {
-            font-size: 0.78rem;
-            color: rgba(255, 255, 255, 0.85);
-            margin-top: 4px;
-            font-weight: 500;
-        }
-
-        /* --- FEATURES SECTION --- */
-        .features-section {
-            padding: 100px 0;
-            background: var(--white);
-        }
-
         .feature-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -729,18 +561,19 @@
             box-shadow: 0 20px 40px rgba(5, 22, 46, 0.08);
         }
 
-        .feat-icon-wrap {
-            width: 58px;
-            height: 58px;
-            background: var(--gold-soft);
-            border: 1px solid rgba(229, 193, 88, 0.25);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            margin-bottom: 24px;
+        .feat-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
             color: var(--navy-dark);
+            background: var(--gold-soft);
+            border: 1px solid rgba(229, 193, 88, 0.35);
+            padding: 4px 10px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            align-self: flex-start;
         }
 
         .feature-card h3 {
@@ -770,16 +603,16 @@
             margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             font-weight: 500;
         }
 
-        .feature-list li .check {
+        .feature-list li .dash {
             color: var(--gold);
             font-weight: bold;
         }
 
-        /* --- ARCHITECTURE PIPELINE PREVIEW --- */
+        /* --- PIPELINE SECTION --- */
         .pipeline-section {
             padding: 90px 0;
             background: var(--navy-dark);
@@ -893,9 +726,6 @@
             color: var(--gold);
             font-size: 1.4rem;
             margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .footer-brand p {
@@ -927,24 +757,15 @@
             letter-spacing: 0.4px;
         }
 
-        .footer-col ul {
-            list-style: none;
-        }
-
-        .footer-col li {
-            margin-bottom: 10px;
-        }
-
+        .footer-col ul { list-style: none; }
+        .footer-col li { margin-bottom: 10px; }
         .footer-col a {
             color: rgba(255, 255, 255, 0.6);
             text-decoration: none;
             font-size: 0.88rem;
             transition: color 0.25s ease;
         }
-
-        .footer-col a:hover {
-            color: var(--gold);
-        }
+        .footer-col a:hover { color: var(--gold); }
 
         .footer-bottom {
             padding-top: 28px;
@@ -958,12 +779,11 @@
             gap: 16px;
         }
 
-        /* --- RESPONSIVENESS (MOBILE / TABLET) --- */
+        /* --- RESPONSIVENESS --- */
         @media (max-width: 1024px) {
             .hero-grid { grid-template-columns: 1fr; text-align: center; }
             .hero-desc { margin-left: auto; margin-right: auto; }
             .hero-actions, .hero-highlights { justify-content: center; }
-            .calc-card { grid-template-columns: 1fr; gap: 36px; }
             .pipeline-grid { grid-template-columns: repeat(2, 1fr); }
             .footer-grid { grid-template-columns: 1fr 1fr; gap: 30px; }
             .live-overlay-card { left: 50%; transform: translateX(-50%); bottom: -20px; }
@@ -974,11 +794,8 @@
             .mobile-toggle { display: block; }
             .ribbon-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
             .ribbon-item:nth-child(2) { border-right: none; }
-            .ribbon-item { border-right: 1px solid var(--border); }
             .feature-grid { grid-template-columns: 1fr; }
             .pipeline-grid { grid-template-columns: 1fr; }
-            .calc-card { padding: 24px; }
-            .calc-grid { grid-template-columns: 1fr; }
             .footer-grid { grid-template-columns: 1fr; }
             .hero-section { padding: 60px 0 80px; }
         }
@@ -999,7 +816,6 @@
     <header class="site-header">
         <div class="container nav-container">
             <a href="landing.html" class="brand-logo">
-                <span class="logo-bolt">⚡</span>
                 <span>Smart<span class="gold-accent">Step</span></span>
                 <span class="live-dot-badge" title="IoT Network Online"></span>
             </a>
@@ -1045,25 +861,25 @@
         <div class="container hero-grid">
             <div class="hero-content">
                 <div class="hero-badge">
-                    <span>⚡ Kinetic Energy Harvesting System</span>
+                    <span>Kinetic Energy Harvesting System</span>
                 </div>
                 <h1 class="hero-title">Step Into the Future of <span>Renewable Energy</span></h1>
                 <p class="hero-desc">Transforming ordinary foot traffic into clean, usable electrical power through high-density piezoelectric floor arrays and intelligent IoT battery management.</p>
                 
                 <div class="hero-actions">
                     <a href="login.html" class="btn-gold-hero">Enter Portal →</a>
-                    <a href="#calculator" class="btn-outline-hero">Interactive Calculator</a>
+                    <a href="about.html" class="btn-outline-hero">About the Project</a>
                 </div>
 
                 <div class="hero-highlights">
                     <div class="highlight-item">
-                        <span class="icon">✓</span> Zero Carbon Emissions
+                        <span class="bullet"></span> Zero Carbon Emissions
                     </div>
                     <div class="highlight-item">
-                        <span class="icon">✓</span> Real-Time Cloud Telemetry
+                        <span class="bullet"></span> Real-Time Cloud Telemetry
                     </div>
                     <div class="highlight-item">
-                        <span class="icon">✓</span> Modular Hexagonal Tiles
+                        <span class="bullet"></span> Modular Hexagonal Tiles
                     </div>
                 </div>
             </div>
@@ -1073,10 +889,10 @@
                     <img src="image/div.png" alt="SmartStep Piezoelectric Energy Harvesting Floor Tiles">
                 </div>
                 <div class="live-overlay-card">
-                    <div class="live-icon-box">⚡</div>
+                    <div class="live-tag-box">PZT LIVE</div>
                     <div class="overlay-meta">
                         <h4 id="heroPulseVolt">18.4 V Spike</h4>
-                        <p>PZT Live Transduction</p>
+                        <p>Transduction Signal</p>
                     </div>
                 </div>
             </div>
@@ -1105,108 +921,46 @@
         </div>
     </section>
 
-    <!-- DYNAMIC INTERACTIVE ENERGY CALCULATOR -->
-    <section class="calculator-section" id="calculator">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">// HARVESTING ESTIMATOR</span>
-                <h2>Calculate Your Space's Energy Potential</h2>
-                <p>Simulate how much kinetic power can be captured from daily foot traffic in your building corridors, walkways, or transit concourses.</p>
-            </div>
-
-            <div class="calc-card">
-                <div class="calc-controls">
-                    <h3>Simulate Daily Footsteps</h3>
-                    <p>Adjust the slider or pick a location preset to estimate daily electrical generation and carbon offsets.</p>
-
-                    <div class="slider-wrap">
-                        <div class="slider-header">
-                            <span class="slider-label">Daily Pedestrian Footsteps</span>
-                            <span class="slider-display" id="stepDisplay">15,000 steps</span>
-                        </div>
-                        <input type="range" id="stepSlider" min="1000" max="60000" step="500" value="15000">
-                    </div>
-
-                    <div class="preset-buttons">
-                        <button class="preset-btn" onclick="setPreset(5000, this)">🏫 Campus Hallway (5k)</button>
-                        <button class="preset-btn active" onclick="setPreset(15000, this)">🏢 Office Lobby (15k)</button>
-                        <button class="preset-btn" onclick="setPreset(35000, this)">🛍️ Shopping Concourse (35k)</button>
-                        <button class="preset-btn" onclick="setPreset(50000, this)">🚆 Metro Station (50k)</button>
-                    </div>
-                </div>
-
-                <div class="calc-results">
-                    <div class="calc-grid">
-                        <div class="result-box">
-                            <div class="result-icon">⚡</div>
-                            <div class="result-val" id="resPower">75.0</div>
-                            <div class="result-unit">Watt-Hours / day</div>
-                            <div class="result-label">Electrical Generation</div>
-                        </div>
-                        <div class="result-box">
-                            <div class="result-icon">📱</div>
-                            <div class="result-val" id="resPhones">5</div>
-                            <div class="result-unit">Full Smartphone Cycles</div>
-                            <div class="result-label">Recharging Equivalent</div>
-                        </div>
-                        <div class="result-box">
-                            <div class="result-icon">💡</div>
-                            <div class="result-val" id="resLighting">7.5</div>
-                            <div class="result-unit">Hours Runtime</div>
-                            <div class="result-label">LED Pathway Lighting</div>
-                        </div>
-                        <div class="result-box">
-                            <div class="result-icon">🌱</div>
-                            <div class="result-val" id="resCarbon">10.9</div>
-                            <div class="result-unit">kg CO₂ / year</div>
-                            <div class="result-label">Annual Emission Saved</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- CORE FEATURES SECTION -->
     <section class="features-section">
         <div class="container">
             <div class="section-header">
                 <span class="section-tag">// ARCHITECTURE PILLARS</span>
-                <h2>Engineered for High-Traffic Scalability</h2>
+                <h2>Designed for High-Traffic Scalability</h2>
                 <p>Every element is optimized for durability, high-efficiency mechanical conversion, and seamless cloud integration.</p>
             </div>
 
             <div class="feature-grid">
                 <div class="feature-card">
-                    <div class="feat-icon-wrap">⚡</div>
+                    <span class="feat-tag">01 // TRANSDUCTION</span>
                     <h3>Direct Piezoelectric Array</h3>
                     <p>High-sensitivity PZT discs mounted inside hexagonal structural composite plates convert mechanical impact directly into electrical charge with near-zero latency.</p>
                     <ul class="feature-list">
-                        <li><span class="check">✓</span> High-yield PZT-5H crystal elements</li>
-                        <li><span class="check">✓</span> 500,000+ compression test rating</li>
-                        <li><span class="check">✓</span> Impact-absorbing rubberized top mat</li>
+                        <li><span class="dash">—</span> High-yield PZT-5H crystal elements</li>
+                        <li><span class="dash">—</span> 500,000+ compression test rating</li>
+                        <li><span class="dash">—</span> Impact-absorbing rubberized top mat</li>
                     </ul>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feat-icon-wrap">⚙️</div>
+                    <span class="feat-tag">02 // POWER MANAGEMENT</span>
                     <h3>Intelligent BMS Circuitry</h3>
                     <p>Active TP4056 charge regulation paired with INA219 high-side current and voltage sensing provides over-charge, over-discharge, and thermal protection.</p>
                     <ul class="feature-list">
-                        <li><span class="check">✓</span> Ultra-low dropout Schottky bridge</li>
-                        <li><span class="check">✓</span> Multi-cell Li-ion buffer topology</li>
-                        <li><span class="check">✓</span> Regulated 5V USB output rails</li>
+                        <li><span class="dash">—</span> Ultra-low dropout Schottky bridge</li>
+                        <li><span class="dash">—</span> Multi-cell Li-ion buffer topology</li>
+                        <li><span class="dash">—</span> Regulated 5V USB output rails</li>
                     </ul>
                 </div>
 
                 <div class="feature-card">
-                    <div class="feat-icon-wrap">🌐</div>
+                    <span class="feat-tag">03 // IOT & CLOUD</span>
                     <h3>IoT Live Telemetry</h3>
-                    <p>Integrated ESP8266 Wi-Fi microcontroller continuously streams tile voltages, battery state-of-charge, and footfall events to our Supabase database.</p>
+                    <p>Integrated ESP32 Wi-Fi microcontroller continuously streams tile voltages, battery state-of-charge, and footfall events to our Supabase database.</p>
                     <ul class="feature-list">
-                        <li><span class="check">✓</span> Micro-second hardware interrupt triggers</li>
-                        <li><span class="check">✓</span> Deep sleep power management</li>
-                        <li><span class="check">✓</span> Real-time User & Admin dashboards</li>
+                        <li><span class="dash">—</span> Micro-second hardware interrupt triggers</li>
+                        <li><span class="dash">—</span> Deep sleep power management</li>
+                        <li><span class="dash">—</span> Real-time User & Admin dashboards</li>
                     </ul>
                 </div>
             </div>
@@ -1241,7 +995,7 @@
                 <div class="pipeline-card">
                     <div class="pipe-num">04</div>
                     <h4>IoT Dashboard Sync</h4>
-                    <p>ESP8266 logs the telemetry payload directly to our cloud database.</p>
+                    <p>ESP32 logs the telemetry payload directly to our cloud database.</p>
                 </div>
             </div>
         </div>
@@ -1263,8 +1017,8 @@
     <footer class="site-footer">
         <div class="container footer-grid">
             <div class="footer-brand">
-                <h4>⚡ Smart<span style="color:var(--white)">Step</span></h4>
-                <p>An IoT-enabled piezoelectric kinetic energy harvesting platform developed by Team 404 for smart urban infrastructure.</p>
+                <h4>Smart<span style="color:var(--white)">Step</span></h4>
+                <p>An IoT-enabled piezoelectric kinetic energy harvesting platform developed by Team 404 for campus and public infrastructure.</p>
                 <div class="footer-status-indicator">
                     <span style="width:7px; height:7px; background:#10b981; border-radius:50%; display:inline-block;"></span>
                     <span>All Systems Operational</span>
@@ -1294,7 +1048,7 @@
             <div class="footer-col">
                 <h5>Capstone Details</h5>
                 <ul>
-                    <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Team 404 Engineering</span></li>
+                    <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Team 404 Project</span></li>
                     <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Project SmartStep IoT</span></li>
                     <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Release v2.0 (2026)</span></li>
                 </ul>
@@ -1302,7 +1056,7 @@
         </div>
 
         <div class="container footer-bottom">
-            <div>&copy; 2026 SmartStep Engineering. All rights reserved.</div>
+            <div>&copy; 2026 SmartStep Project. All rights reserved.</div>
             <div>Built with Supabase Cloud & PZT Energy Transducers</div>
         </div>
     </footer>
@@ -1346,41 +1100,6 @@
             } catch (e) {}
         };
         checkActiveSession();
-
-        // Energy Calculator Simulation
-        const stepSlider = document.getElementById('stepSlider');
-        const stepDisplay = document.getElementById('stepDisplay');
-        const resPower = document.getElementById('resPower');
-        const resPhones = document.getElementById('resPhones');
-        const resLighting = document.getElementById('resLighting');
-        const resCarbon = document.getElementById('resCarbon');
-
-        // Approx 0.005 Watt-hours per step generated through multi-tile array
-        function updateCalculator(steps) {
-            stepDisplay.textContent = Number(steps).toLocaleString() + ' steps';
-            
-            const wh = (steps * 0.005).toFixed(1);
-            const phones = Math.max(1, Math.round(wh / 14)); // ~14Wh per phone charge
-            const lightHours = (wh / 10).toFixed(1); // 10W LED fixture
-            const carbonKg = ((wh / 1000) * 0.4 * 365).toFixed(1); // Annual CO2 avoided
-
-            resPower.textContent = wh;
-            resPhones.textContent = phones;
-            resLighting.textContent = lightHours;
-            resCarbon.textContent = carbonKg;
-        }
-
-        stepSlider.addEventListener('input', (e) => {
-            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-            updateCalculator(e.target.value);
-        });
-
-        function setPreset(steps, btn) {
-            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-            if (btn) btn.classList.add('active');
-            stepSlider.value = steps;
-            updateCalculator(steps);
-        }
 
         // Live Voltage Spike Jitter Simulation
         setInterval(() => {

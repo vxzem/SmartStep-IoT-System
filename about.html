@@ -37,7 +37,7 @@
             padding: 0 24px;
         }
 
-        /* --- HEADER & NAVIGATION (UNIFIED) --- */
+        /* --- HEADER & NAVIGATION --- */
         .site-header {
             background: rgba(5, 22, 46, 0.94);
             backdrop-filter: blur(16px);
@@ -64,12 +64,6 @@
             font-family: 'Lexend', sans-serif;
             font-size: 1.35rem;
             font-weight: 700;
-        }
-
-        .brand-logo .logo-bolt {
-            color: var(--gold);
-            font-size: 1.4rem;
-            filter: drop-shadow(0 0 10px rgba(229, 193, 88, 0.6));
         }
 
         .brand-logo .gold-accent { color: var(--gold); }
@@ -385,16 +379,18 @@
             align-items: flex-start;
         }
 
-        .bullet-icon {
-            width: 44px;
-            height: 44px;
+        .bullet-tag {
+            width: 36px;
+            height: 36px;
             background: var(--gold-soft);
-            border: 1px solid rgba(229, 193, 88, 0.3);
-            border-radius: 12px;
+            border: 1px solid rgba(229, 193, 88, 0.35);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 0.82rem;
             color: var(--navy-dark);
             flex-shrink: 0;
         }
@@ -631,7 +627,7 @@
             line-height: 1.5;
         }
 
-        /* --- FOOTER (UNIFIED) --- */
+        /* --- FOOTER --- */
         .site-footer {
             background: #030d1b;
             color: var(--white);
@@ -732,7 +728,6 @@
     <header class="site-header">
         <div class="container nav-container">
             <a href="landing.html" class="brand-logo">
-                <span class="logo-bolt">⚡</span>
                 <span>Smart<span class="gold-accent">Step</span></span>
                 <span class="live-dot-badge" title="IoT Network Online"></span>
             </a>
@@ -777,7 +772,7 @@
         <div class="container">
             <span class="hero-tag">// CAPSTONE INITIATIVE // TEAM 404</span>
             <h1>Bridging the Gap in <span>Renewable Energy</span></h1>
-            <p>Developing decentralized, self-powering piezoelectric floor tiles to alleviate power deficits in off-grid facilities and smart urban transit corridors.</p>
+            <p>Developing decentralized, self-powering piezoelectric floor tiles to capture localized kinetic power along campus hallways and public pedestrian walkways.</p>
         </div>
     </section>
 
@@ -786,18 +781,18 @@
         <div class="challenge-grid">
             <div class="stat-card-highlight">
                 <div class="stat-big">24.45<span>%</span></div>
-                <div class="stat-subtitle">Energy Loss in Traditional Micro-Grids</div>
-                <p class="stat-desc">Centralized diesel generators in island communities suffer from high fuel logistics overhead, voltage drop, and carbon emissions while continuous foot traffic kinetic energy remains entirely uncaptured.</p>
+                <div class="stat-subtitle">Lost Footfall Potential in Public Buildings</div>
+                <p class="stat-desc">High-traffic public walkways and school corridors absorb thousands of footfalls daily. Without kinetic capture, this mechanical energy dissipates as friction and ambient vibration rather than usable micro-power.</p>
             </div>
 
             <div class="challenge-text">
-                <h2>The Off-Grid Challenge</h2>
-                <p>Traditional energy generation systems struggle with geographical isolation. In island settings such as <strong>Gilutongan Island</strong>, residents experience intermittent electrical access, limiting essential educational equipment and community lighting.</p>
-                <p>SmartStep was created by Team 404 to convert everyday mechanical locomotion into a sustainable, localized micropower source — decentralizing generation to where people actually walk.</p>
+                <h2>The Kinetic Opportunity</h2>
+                <p>In educational facilities, transit hubs, and campus environments, dense foot traffic represents an uncaptured source of renewable energy. Everyday pedestrian locomotion can be harvested right at the floor level to power auxiliary loads.</p>
+                <p>SmartStep was created by Team 404 to convert continuous foot locomotion into a reliable, localized micropower source — decentralizing energy collection directly where people walk.</p>
 
                 <div class="location-callout">
-                    <strong>Target Field Pilot: Gilutongan Island Community Center</strong>
-                    <p>Designed for public footways, school hallways, and multi-purpose civic plazas.</p>
+                    <strong>Pilot Testing &amp; Demo: On-Campus Walkways &amp; Corridors</strong>
+                    <p>Designed for testing along high-traffic campus hallways, entrance lobbies, and student walkways.</p>
                 </div>
             </div>
         </div>
@@ -812,16 +807,16 @@
 
                 <div class="feature-bullets">
                     <div class="bullet-item">
-                        <div class="bullet-icon">🌱</div>
+                        <div class="bullet-tag">01</div>
                         <div class="bullet-content">
                             <h4>Zero-Carbon Kinetic Harvesting</h4>
-                            <p>Produces usable electrical power entirely from passive human movement without reliance on weather or fossil fuels.</p>
+                            <p>Produces usable electrical power entirely from passive human movement without reliance on weather conditions.</p>
                         </div>
                     </div>
                     <div class="bullet-item">
-                        <div class="bullet-icon">🌐</div>
+                        <div class="bullet-tag">02</div>
                         <div class="bullet-content">
-                            <h4>Cloud Telemetry & Smart BMS</h4>
+                            <h4>Cloud Telemetry &amp; Smart BMS</h4>
                             <p>Real-time voltage, capacity, and tile health streaming to Supabase with predictive maintenance notifications.</p>
                         </div>
                     </div>
@@ -852,16 +847,16 @@
         <div class="container">
             <div class="section-header" style="text-align: center; max-width: 650px; margin: 0 auto 30px;">
                 <span class="hero-tag" style="background: rgba(229,193,88,0.15);">// THE MINDS BEHIND SMARTSTEP</span>
-                <h2>The Team 404 Engineers</h2>
-                <p>Multidisciplinary research engineers uniting hardware electronics, embedded firmware, cloud architectures, and kinetic energy design.</p>
+                <h2>The Team 404 Members</h2>
+                <p>Multidisciplinary research team members uniting hardware electronics, embedded firmware, cloud architectures, and kinetic energy design.</p>
             </div>
 
             <!-- Team Filter Tabs -->
             <div class="team-filter">
-                <button class="filter-btn active" onclick="filterTeam('all', this)">All Engineers</button>
-                <button class="filter-btn" onclick="filterTeam('lead', this)">Leadership & Research</button>
-                <button class="filter-btn" onclick="filterTeam('hw', this)">Hardware & Power</button>
-                <button class="filter-btn" onclick="filterTeam('sw', this)">Software & Cloud</button>
+                <button class="filter-btn active" onclick="filterTeam('all', this)">All Members</button>
+                <button class="filter-btn" onclick="filterTeam('lead', this)">Leadership &amp; Research</button>
+                <button class="filter-btn" onclick="filterTeam('hw', this)">Hardware &amp; Power</button>
+                <button class="filter-btn" onclick="filterTeam('sw', this)">Software &amp; Cloud</button>
             </div>
 
             <div class="team-grid">
@@ -882,15 +877,15 @@
                 <div class="team-card" data-cat="hw">
                     <div class="avatar-ring">MA</div>
                     <h4>Magalso</h4>
-                    <span class="role-tag">Hardware Engineer</span>
-                    <p class="bio">Engineers PZT matrix wiring, TP4056 BMS modules, and mechanical tile enclosure resistance.</p>
+                    <span class="role-tag">Hardware Specialist</span>
+                    <p class="bio">Focuses on PZT matrix wiring, TP4056 BMS modules, and mechanical tile enclosure resistance.</p>
                 </div>
 
                 <div class="team-card" data-cat="sw">
                     <div class="avatar-ring">RE</div>
                     <h4>Revillas</h4>
                     <span class="role-tag">Software Systems</span>
-                    <p class="bio">Develops IoT cloud telemetry, ESP8266 REST communications, and real-time dashboard UI.</p>
+                    <p class="bio">Develops IoT cloud telemetry, ESP32 REST communications, and real-time dashboard UI.</p>
                 </div>
 
                 <div class="team-card" data-cat="lead">
@@ -907,7 +902,7 @@
     <section class="timeline-section">
         <div class="container">
             <div class="section-header" style="text-align: center; max-width: 650px; margin: 0 auto;">
-                <span class="hero-tag" style="background: rgba(229,193,88,0.15); color: var(--navy-dark); border-color: var(--border);">// ROADMAP & LIFECYCLE</span>
+                <span class="hero-tag" style="background: rgba(229,193,88,0.15); color: var(--navy-dark); border-color: var(--border);">// ROADMAP &amp; LIFECYCLE</span>
                 <h2 style="color:var(--navy-dark)">Capstone Development Journey</h2>
                 <p style="color:var(--text-muted)">From theoretical piezoelectric formulations to working IoT prototypes.</p>
             </div>
@@ -920,18 +915,18 @@
                 </div>
                 <div class="timeline-item">
                     <span class="phase-badge">PHASE 02</span>
-                    <h4>Rectification & BMS</h4>
+                    <h4>Rectification &amp; BMS</h4>
                     <p>Designed ultra-low-loss full-wave Schottky bridge circuits and integrated TP4056 lithium battery buffers.</p>
                 </div>
                 <div class="timeline-item">
                     <span class="phase-badge">PHASE 03</span>
-                    <h4>IoT & Cloud Dashboards</h4>
-                    <p>Programmed ESP8266 microcontroller firmware to stream telemetry via Supabase Edge and Realtime websockets.</p>
+                    <h4>IoT &amp; Cloud Dashboards</h4>
+                    <p>Programmed ESP32 microcontroller firmware to stream telemetry via Supabase Edge and Realtime websockets.</p>
                 </div>
                 <div class="timeline-item">
                     <span class="phase-badge">PHASE 04</span>
-                    <h4>Island Pilot Testing</h4>
-                    <p>Validating real-world tile wear, foot traffic count accuracy, and localized LED illumination reliability.</p>
+                    <h4>Campus Testing &amp; Demo</h4>
+                    <p>Validating real-world tile wear, foot traffic count accuracy, and localized LED illumination during campus demonstrations.</p>
                 </div>
             </div>
         </div>
@@ -941,8 +936,8 @@
     <footer class="site-footer">
         <div class="container footer-grid">
             <div class="footer-brand">
-                <h4>⚡ Smart<span style="color:var(--white)">Step</span></h4>
-                <p>An IoT-enabled piezoelectric kinetic energy harvesting platform developed by Team 404 for smart urban infrastructure.</p>
+                <h4>Smart<span style="color:var(--white)">Step</span></h4>
+                <p>An IoT-enabled piezoelectric kinetic energy harvesting platform developed by Team 404 for campus and public infrastructure.</p>
                 <div class="footer-status-indicator">
                     <span style="width:7px; height:7px; background:#10b981; border-radius:50%; display:inline-block;"></span>
                     <span>All Systems Operational</span>
@@ -972,7 +967,7 @@
             <div class="footer-col">
                 <h5>Capstone Details</h5>
                 <ul>
-                    <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Team 404 Engineering</span></li>
+                    <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Team 404 Project</span></li>
                     <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Project SmartStep IoT</span></li>
                     <li><span style="color:rgba(255,255,255,0.4); font-size:0.85rem;">Release v2.0 (2026)</span></li>
                 </ul>
@@ -980,7 +975,7 @@
         </div>
 
         <div class="container footer-bottom">
-            <div>&copy; 2026 SmartStep Engineering. All rights reserved.</div>
+            <div>&copy; 2026 SmartStep Project. All rights reserved.</div>
             <div>Built with Supabase Cloud & PZT Energy Transducers</div>
         </div>
     </footer>
