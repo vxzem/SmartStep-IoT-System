@@ -237,7 +237,7 @@
     </nav>
     <div class="sidebar-footer">
         <div class="logout-btn" id="logoutBtn">Sign Out</div>
-        <div class="node-info">Node: ESP32-031<br>Ver: 1.3.0-PRO � Admin Mode</div>
+        <div class="node-info">Node: ESP32-031<br>Ver: 1.3.0-PRO · Admin Mode</div>
     </div>
 </aside>
 
@@ -247,7 +247,7 @@
     <!-- HEADER -->
     <div class="top-header-row">
         <div class="page-header-content">
-            <p class="eyebrow">System Preference Configuration � Section 4</p>
+            <p class="eyebrow">System Preference Configuration · Section 4</p>
             <h1>Global System Preferences</h1>
             <p>UI settings, data management, and user provisioning</p>
         </div>
@@ -256,7 +256,7 @@
                 <div class="avatar" id="adminAvatar">--</div>
                 <div>
                     <div class="user-name" id="adminName">Loading...</div>
-                    <div class="user-role">ADMIN � ACTIVE</div>
+                    <div class="user-role">ADMIN · ACTIVE</div>
                 </div>
             </div>
         </div>
@@ -355,13 +355,13 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">High-V Alert</label>
-                                <input class="form-input has-default" type="number" step="0.01" id="mat-high-v-alert" placeholder="4.20" value="4.20">
-                                <div class="form-hint">Default: 4.20V</div>
+                                <input class="form-input has-default" type="number" step="0.01" id="mat-high-v-alert" placeholder="14.40" value="14.40">
+                                <div class="form-hint">Default: 14.40V (12V Battery safety limit)</div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">LVCO Threshold</label>
-                                <input class="form-input has-default" type="number" step="0.01" id="mat-lvco-threshold" placeholder="3.00" value="3.00">
-                                <div class="form-hint">Default: 3.00V</div>
+                                <input class="form-input has-default" type="number" step="0.01" id="mat-lvco-threshold" placeholder="10.50" value="10.50">
+                                <div class="form-hint">Default: 10.50V (12V Battery cut-off)</div>
                             </div>
                         </div>
 
@@ -517,7 +517,7 @@
         const countEl = document.getElementById('matCount');
 
         if (error || !data?.length) {
-            list.innerHTML = '<div class="empty-state"><div class="empty-icon">�</div><p>No mats provisioned yet</p></div>';
+            list.innerHTML = '<div class="empty-state"><div class="empty-icon">—</div><p>No mats provisioned yet</p></div>';
             countEl.textContent = '';
             populateMatDropdown([], assignedSet);
             populateExportFilter([]);
@@ -533,7 +533,7 @@
                     <div class="mat-row-icon">MAT</div>
                     <div class="mat-row-info">
                         <div class="mat-row-id">${m.mat_id}</div>
-                        <div class="mat-row-meta">Sensor ${m.sensor_threshold ?? '�'} � HV ${m.high_v_alert ?? '�'}V � LVCO ${m.lvco_threshold ?? '�'}V � Status: ${m.current_status ?? '�'}</div>
+                        <div class="mat-row-meta">Sensor ${m.sensor_threshold ?? '—'} · HV ${m.high_v_alert ?? '—'}V · LVCO ${m.lvco_threshold ?? '—'}V · Status: ${m.current_status ?? '—'}</div>
                     </div>
                     <span class="mat-row-status ${isAssigned ? 'status-active' : 'status-unassigned'}">${isAssigned ? 'Assigned' : 'Unassigned'}</span>
                     <div class="user-row-actions">
@@ -581,7 +581,7 @@
         document.getElementById('mat-id').classList.remove('input-error');
         feedback.style.display = 'none';
 
-        // Mat ID is the only required field � everything else falls back to its DB default
+        // Mat ID is the only required field — everything else falls back to its DB default
         if (!matId) {
             document.getElementById('mat-id').classList.add('input-error');
             showFeedback('mat', 'error', 'Mat ID is required.');
@@ -589,8 +589,8 @@
         }
 
         const sensorThreshold = sensorInput.value.trim() === '' ? 0.05 : parseFloat(sensorInput.value);
-        const highVAlert = highVInput.value.trim() === '' ? 4.20 : parseFloat(highVInput.value);
-        const lvcoThreshold = lvcoInput.value.trim() === '' ? 3.00 : parseFloat(lvcoInput.value);
+        const highVAlert = highVInput.value.trim() === '' ? 14.40 : parseFloat(highVInput.value);
+        const lvcoThreshold = lvcoInput.value.trim() === '' ? 10.50 : parseFloat(lvcoInput.value);
 
         btn.disabled = true;
         btn.textContent = 'Provisioning...';
@@ -613,8 +613,8 @@
 
             document.getElementById('mat-id').value = '';
             sensorInput.value = '0.05';
-            highVInput.value = '4.20';
-            lvcoInput.value = '3.00';
+            highVInput.value = '14.40';
+            lvcoInput.value = '10.50';
 
             await loadMatList();
 
@@ -661,7 +661,7 @@
         const countEl = document.getElementById('userCount');
 
         if (error || !data?.length) {
-            list.innerHTML = '<div class="empty-state"><div class="empty-icon">�</div><p>No users registered yet</p></div>';
+            list.innerHTML = '<div class="empty-state"><div class="empty-icon">—</div><p>No users registered yet</p></div>';
             countEl.textContent = '';
             return;
         }
@@ -673,7 +673,7 @@
             const fullName = `${u.first_name || ''} ${u.last_name || ''}`.trim();
             const joined = u.created_at
                 ? new Date(u.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                : '�';
+                : '—';
             return `
                 <div class="user-row" id="urow-${u.id}">
                     <div class="user-row-avatar">${initials}</div>
@@ -681,7 +681,7 @@
                         <div class="user-row-name">${fullName}</div>
                         <div class="user-row-meta">Joined ${joined}</div>
                     </div>
-                    <span class="user-row-mat">${u.mat_id || '�'}</span>
+                    <span class="user-row-mat">${u.mat_id || '—'}</span>
                     <div class="user-row-actions">
                         <button class="row-btn row-btn-del" onclick="deleteUser('${u.id}', '${fullName}')">Remove</button>
                     </div>
@@ -704,7 +704,7 @@
         const badge = document.getElementById('reqBadge');
 
         if (error || !data?.length) {
-            list.innerHTML = '<div class="empty-state"><div class="empty-icon">�</div><p>No pending requests</p></div>';
+            list.innerHTML = '<div class="empty-state"><div class="empty-icon">—</div><p>No pending requests</p></div>';
             countEl.textContent = '';
             badge.style.display = 'none';
             return;
@@ -714,7 +714,7 @@
         badge.textContent = data.length;
         badge.style.display = 'inline-flex';
 
-        // Requests only store user_id � pull names from profiles in one extra query
+        // Requests only store user_id — pull names from profiles in one extra query
         const uids = [...new Set(data.map(r => r.user_id))];
         const { data: profs } = await _supabase
             .from('profiles')
@@ -726,7 +726,7 @@
             const name = nameById.get(r.user_id) || 'Unknown user';
             const when = r.created_at
                 ? new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })
-                : '�';
+                : '—';
             return `
                 <div class="request-row" id="reqrow-${r.id}">
                     <div class="request-row-info">
@@ -748,7 +748,7 @@
     // That key must never be shipped to the browser, so this calls a Supabase
     // Edge Function ('approve-email-change') that holds the service_role key
     // server-side and performs the update. See the accompanying edge function
-    // file � it must be deployed for Accept to work.
+    // file — it must be deployed for Accept to work.
     async function approveEmailChange(requestId, uid, newEmail, name) {
         if (!confirm(`Approve email change for ${name}?\n\n${newEmail} will become their new sign-in email.`)) return;
 
@@ -843,7 +843,7 @@
             if (authErr) throw authErr;
  
             const newUid = authData?.user?.id;
-            if (!newUid) throw new Error('User creation failed � no UID returned.');
+            if (!newUid) throw new Error('User creation failed — no UID returned.');
  
             // Step 2: Upsert profile row with all fields
             const { error: profileErr } = await _supabase.from('profiles').upsert({
@@ -856,7 +856,7 @@
  
             if (profileErr) throw profileErr;
  
-            // Mat assignment is tracked via profiles.mat_id (set above) � the
+            // Mat assignment is tracked via profiles.mat_id (set above) — the
             // mat_management_settings table itself has no per-user columns.
  
             // Success
@@ -887,7 +887,7 @@
     // -- DELETE USER --
     // NOTE: like the email-approval flow, actually removing someone from
     // auth.users requires the Supabase Admin API (auth.admin.deleteUser),
-    // which needs the service_role key � never exposed to the browser. This
+    // which needs the service_role key — never exposed to the browser. This
     // calls a 'delete-user' Edge Function that holds that key server-side.
     async function deleteUser(uid, name) {
         if (!confirm(`Remove user "${name}" from SmartStep?\n\nThis permanently deletes their profile AND their login (auth) account. This cannot be undone.`)) return;

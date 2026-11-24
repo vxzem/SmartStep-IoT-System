@@ -205,7 +205,7 @@
   </nav>
   <div class="sidebar-footer">
     <div class="logout-btn" id="logoutBtn">Sign Out</div>
-    <div class="node-info">Node: ESP32-031<br>Ver: 1.3.0-PRO � Admin Mode</div>
+    <div class="node-info">Node: ESP32-031<br>Ver: 1.3.0-PRO · Admin Mode</div>
   </div>
 </aside>
 
@@ -215,7 +215,7 @@
   <!-- HEADER -->
   <div class="top-header-row">
     <div class="page-header-content">
-      <p class="eyebrow">Core Configuration � Section 3</p>
+      <p class="eyebrow">Core Configuration · Section 3</p>
       <h1>Hardware Control Center</h1>
       <p>Per-mat diagnostics, firmware control, and notification status</p>
     </div>
@@ -224,7 +224,7 @@
         <div class="avatar" id="adminAvatar">--</div>
         <div>
           <div class="user-name" id="adminName">Loading...</div>
-          <div class="user-role">ADMIN � ACTIVE</div>
+          <div class="user-role">ADMIN · ACTIVE</div>
         </div>
       </div>
     </div>
@@ -234,9 +234,9 @@
   <div class="selector-bar">
     <span class="selector-label">Monitoring:</span>
     <select class="mat-select" id="matSelector" onchange="onMatChange()">
-      <option value="">� Select a User �</option>
+      <option value="">— Select a User —</option>
     </select>
-    <span class="selected-meta" id="selectedMeta">User ID: �</span>
+    <span class="selected-meta" id="selectedMeta">User ID: —</span>
     <div class="last-sync" id="lastSyncWrap" style="display:none;">
       <span class="sync-dot"></span>
       <span id="lastSyncText">Synced just now</span>
@@ -250,7 +250,7 @@
     <div class="card">
       <div class="card-title">
         Firmware &amp; Operation
-        <span class="ct-right" id="fwVersion">Ver: �</span>
+        <span class="ct-right" id="fwVersion">Ver: —</span>
       </div>
       <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:18px;line-height:1.6;">
         Execute remote hardware commands to the selected mat's ESP32 controller. Actions are logged to the audit trail.
@@ -282,7 +282,7 @@
       <!-- Harvest voltage readings from telemetry -->
       <div id="tileVoltageSection" style="display:none;">
         <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted);margin-bottom:10px;margin-top:18px;border-top:1px solid var(--border);padding-top:14px;">
-          Harvest Voltage � Last 4 Readings
+          Harvest Voltage — Last 4 Readings
         </div>
         <div class="tile-v-grid" id="tileVoltageGrid"></div>
       </div>
@@ -307,7 +307,7 @@
           <option value="unread">Unread</option>
           <option value="read">Read</option>
         </select>
-        <span class="ct-right" id="notifCount">� notifications</span>
+        <span class="ct-right" id="notifCount">— notifications</span>
       </div>
       <div id="notifInbox">
         <div class="empty-state"><p>Select a mat to view its notifications</p></div>
@@ -323,19 +323,19 @@
         <div class="slider-group">
           <div class="slider-label">
             Low-Voltage Cut-off (LVCO)
-            <span class="threshold-val" id="lvco-val">3.00V</span>
+            <span class="threshold-val" id="lvco-val">10.50V</span>
           </div>
-          <p class="slider-desc">Shuts down output to protect the cell when voltage drops below this level.</p>
-          <input type="range" id="lvco-slider" min="2.50" max="3.50" step="0.05" value="3.00"
+          <p class="slider-desc">Shuts down output to protect the 12V battery when voltage drops below this level.</p>
+          <input type="range" id="lvco-slider" min="9.50" max="12.00" step="0.05" value="10.50"
             oninput="document.getElementById('lvco-val').textContent = parseFloat(this.value).toFixed(2) + 'V'">
         </div>
         <div class="slider-group">
           <div class="slider-label">
             High-Voltage Alert
-            <span class="threshold-val" id="hv-val">4.20V</span>
+            <span class="threshold-val" id="hv-val">14.40V</span>
           </div>
-          <p class="slider-desc">Triggers an alert if charging voltage exceeds safety limits.</p>
-          <input type="range" id="hv-slider" min="3.80" max="4.30" step="0.05" value="4.20"
+          <p class="slider-desc">Triggers an alert if charging voltage exceeds 12V battery safety limits.</p>
+          <input type="range" id="hv-slider" min="13.50" max="15.50" step="0.05" value="14.40"
             oninput="document.getElementById('hv-val').textContent = parseFloat(this.value).toFixed(2) + 'V'">
         </div>
         <div class="slider-group">
@@ -409,12 +409,12 @@
 
     if (error) { console.error(error); return; }
     const sel = document.getElementById('matSelector');
-    sel.innerHTML = '<option value="">� Select a User �</option>';
+    sel.innerHTML = '<option value="">— Select a User —</option>';
     (data || []).forEach(u => {
       const opt = document.createElement('option');
       opt.value = u.id;
       opt.textContent = `${(u.first_name || '').trim()} ${(u.last_name || '').trim()}`.trim() || 'Unnamed User';
-      opt.dataset.matId = u.mat_id || '�';
+      opt.dataset.matId = u.mat_id || '—';
       sel.appendChild(opt);
     });
   }
@@ -428,7 +428,7 @@
     const opt = sel.options[sel.selectedIndex];
     currentUserId = uid;
     currentUserName = opt.textContent;
-    const matId = opt.dataset.matId || '�';
+    const matId = opt.dataset.matId || '—';
     currentMatId = matId;
 
     document.getElementById('selectedMeta').textContent = `User ID: ${uid}`;
@@ -439,7 +439,7 @@
     // Enable firmware buttons
     document.getElementById('btnRestart').disabled = false;
     document.getElementById('btnRecal').disabled = false;
-    document.getElementById('fwStatusPill').innerHTML = `<span class="status-pill">Controller Online � ${matId}</span>`;
+    document.getElementById('fwStatusPill').innerHTML = `<span class="status-pill">Controller Online · ${matId}</span>`;
 
     await Promise.all([
       loadActionLog(uid),
@@ -455,9 +455,9 @@
 
   // -- RESET --
   function resetAll() {
-    document.getElementById('selectedMeta').textContent = 'User ID: �';
+    document.getElementById('selectedMeta').textContent = 'User ID: —';
     document.getElementById('lastSyncWrap').style.display = 'none';
-    document.getElementById('fwVersion').textContent = 'Ver: �';
+    document.getElementById('fwVersion').textContent = 'Ver: —';
     document.getElementById('btnRestart').disabled = true;
     document.getElementById('btnRecal').disabled = true;
     document.getElementById('fwStatusPill').innerHTML = '<span class="status-pill">Select a mat to enable controls</span>';
@@ -466,13 +466,13 @@
     document.getElementById('tileVoltageSection').style.display = 'none';
     document.getElementById('notifStatusSection').style.display = 'none';
     document.getElementById('notifInbox').innerHTML = '<div class="empty-state"><p>Select a mat to view its notifications</p></div>';
-    document.getElementById('notifCount').textContent = '� notifications';
+    document.getElementById('notifCount').textContent = '— notifications';
     currentNotifications = [];
     document.getElementById('notifFilter').value = 'all';
     applyThresholdsToUI(THRESHOLD_DEFAULTS);
   }
 
-  // -- FIRMWARE TRIGGER (restart only � recalibration has its own flow below) --
+  // -- FIRMWARE TRIGGER (restart only · recalibration has its own flow below) --
   async function triggerAction(type) {
     if (!currentUserId) return;
     const labels = { restart: 'System Restart' };
@@ -497,8 +497,8 @@
 
   // -- RECALIBRATE SENSORS: resets mat_management_settings to factory defaults + logs it --
   const THRESHOLD_DEFAULTS = {
-    lvco_threshold: 3.00,
-    high_v_alert: 4.20,
+    lvco_threshold: 10.50,
+    high_v_alert: 14.40,
     sensor_threshold: 0.05,
     parasitic_draw_limit_ma: 50,
   };
@@ -547,7 +547,7 @@
     const { error: logError } = await _supabase.from('action_log').insert({
       user_id: currentUserId,
       action_type: 'recalibration',
-      label: 'Sensor Recalibration � thresholds reset to factory defaults',
+      label: 'Sensor Recalibration — thresholds reset to factory defaults',
       triggered_by: document.getElementById('adminName').innerText || 'Admin',
     });
 
@@ -556,7 +556,7 @@
     if (logError) {
       showToast('Sensors reset, but failed to log action: ' + logError.message, 'error');
     } else {
-      showToast('Sensor recalibration complete � thresholds reset to defaults.', 'success');
+      showToast('Sensor recalibration complete — thresholds reset to defaults.', 'success');
     }
 
     await loadActionLog(currentUserId);
@@ -591,7 +591,7 @@
         <div class="log-item" style="border-left-color:${color};">
           <div>
             <div class="log-label">${a.label}</div>
-            <div class="log-meta">${dateStr} � ${timeStr} � by ${a.triggered_by || 'Admin'}</div>
+            <div class="log-meta">${dateStr} · ${timeStr} · by ${a.triggered_by || 'Admin'}</div>
           </div>
         </div>`;
     }).join('');
@@ -617,17 +617,17 @@
     const section = document.getElementById('batterySection');
     section.innerHTML = `
       <div class="diag-item">
-        <div class="diag-label">Battery Health Index <span class="diag-val">${healthPct !== null ? healthPct.toFixed(0) + '%' : '�'}</span></div>
+        <div class="diag-label">Battery Health Index <span class="diag-val">${healthPct !== null ? healthPct.toFixed(0) + '%' : '—'}</span></div>
         <div class="diag-bar"><div class="diag-fill ${healthPct >= 80 ? 'fill-good' : healthPct >= 60 ? 'fill-warn' : 'fill-danger'}" style="width:${healthPct ?? 0}%"></div></div>
         <div class="tech-info">Derived from cumulative energy output</div>
       </div>
       <div class="diag-item">
-        <div class="diag-label">Total Energy Harvested <span class="diag-val">${totalWh !== null ? totalWh.toFixed(2) + ' Wh' : '�'}</span></div>
+        <div class="diag-label">Total Energy Harvested <span class="diag-val">${totalWh !== null ? totalWh.toFixed(2) + ' Wh' : '—'}</span></div>
         <div class="diag-bar"><div class="diag-fill fill-good" style="width:${totalWh !== null ? Math.min((totalWh / 10000) * 100, 100) : 0}%"></div></div>
         <div class="tech-info">Cumulative from all sessions</div>
       </div>
       <div class="diag-item">
-        <div class="diag-label">Total Steps Logged <span class="diag-val">${steps !== null ? steps.toLocaleString() : '�'}</span></div>
+        <div class="diag-label">Total Steps Logged <span class="diag-val">${steps !== null ? steps.toLocaleString() : '—'}</span></div>
         <div class="diag-bar"><div class="diag-fill fill-good" style="width:${steps !== null ? Math.min((steps / 50000) * 100, 100) : 0}%"></div></div>
         <div class="tech-info">Lifetime footfall count on this mat</div>
       </div>
@@ -670,7 +670,7 @@
       return `
         <div class="tile-v-item">
           <div class="tile-v-name">${t.name}</div>
-          <div class="tile-v-val ${cls}">${v !== null ? v.toFixed(2) + 'V' : '�'}</div>
+          <div class="tile-v-val ${cls}">${v !== null ? v.toFixed(2) + 'V' : '—'}</div>
           <div class="tile-v-status" style="color:${color}">${label}</div>
         </div>`;
     }).join('');
@@ -717,7 +717,7 @@
   async function loadNotifications(matId) {
     const container = document.getElementById('notifInbox');
 
-    if (!matId || matId === '�') {
+    if (!matId || matId === '—') {
       currentNotifications = [];
       container.innerHTML = '<div class="empty-state"><p>No notifications found for this mat</p></div>';
       document.getElementById('notifCount').textContent = '0 notifications';
@@ -751,7 +751,7 @@
     const filter = document.getElementById('notifFilter').value;
 
     const unreadCount = currentNotifications.filter(n => !n.is_read).length;
-    document.getElementById('notifCount').textContent = `${currentNotifications.length} total � ${unreadCount} unread`;
+    document.getElementById('notifCount').textContent = `${currentNotifications.length} total · ${unreadCount} unread`;
 
     const data = currentNotifications.filter(n => {
       if (filter === 'unread') return !n.is_read;
@@ -768,7 +768,7 @@
 
     container.innerHTML = `<div class="notif-inbox">` + data.map(n => {
       const date = new Date(n.created_at);
-      const timeStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' � ' +
+      const timeStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' · ' +
         date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
       const type = n.type || 'info';
       return `
@@ -814,7 +814,7 @@
     const { error: logError } = await _supabase.from('action_log').insert({
       user_id: currentUserId,
       action_type: 'threshold_save',
-      label: `Thresholds saved � LVCO: ${lvco.toFixed(2)}V, HV: ${hv.toFixed(2)}V, Sensor: ${sensor.toFixed(2)}, Parasitic: ${parasitic}mA`,
+      label: `Thresholds saved — LVCO: ${lvco.toFixed(2)}V, HV: ${hv.toFixed(2)}V, Sensor: ${sensor.toFixed(2)}, Parasitic: ${parasitic}mA`,
       triggered_by: document.getElementById('adminName').innerText || 'Admin',
     });
 
